@@ -1,0 +1,23 @@
+.post{
+    padding: 10px;
+    background:rgb(177, 176, 181);
+    border-radius: 20px;
+}
+.post h2{
+    font-size: 20px;
+    color: #2a4a55;
+    transition: .5s;
+}
+.post h2:hover{
+    transform: scale(1.2);
+}
+.post ul{
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.post div{
+    font-size: 18px;
+    font-weight: 500;
+}
