@@ -1,0 +1,41 @@
+.mainPage {
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+
+  .custom-calendar {
+    height: 100vh;
+    width: 100%;
+    background-color: #f0f0f0;
+  }
+
+  .custom-header {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .fc {
+    height: 100%;
+
+    .fc-scrollgrid-sync-inner {
+      a {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+      }
+    }
+
+    .fc-scrollgrid-shrink-cushion {
+      font-size: 14px !important;
+      font-weight: 400 !important;
+      text-align: left !important;
+    }
+
+    > div {
+      margin-bottom: 10px !important;
+    }
+
+    .fc-timegrid-event-harness .fc-timegrid-event-harness-inset {
+      inset: 0;
+    }
+  }
+}
