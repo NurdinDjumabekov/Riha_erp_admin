@@ -12,6 +12,25 @@
     top: 0px;
   }
 
+  .countsAll {
+    position: relative !important;
+    background: transparent !important;
+
+    p {
+      position: absolute;
+      right: -10px;
+      top: -7px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #fff;
+      color: #222;
+      padding: 1px 5px;
+      border-radius: 50%;
+      min-width: 25px;
+      height: 25px;
+    }
+  }
+
   .selectsAll {
     display: flex;
     align-items: flex-end;

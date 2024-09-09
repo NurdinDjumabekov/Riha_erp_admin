@@ -9,10 +9,10 @@ import MainLayouts from "../layouts/MainLayouts/MainLayouts";
 
 //// components
 // import { Preloader } from "../components/Preloader/Preloader";
-// import Alerts from "../components/Alerts/Alerts";
 
 ////fns
 
+/////// pages
 import MainPage from "../pages/MainPage/MainPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
 
@@ -23,11 +23,12 @@ const MainRoutes = () => {
 
   const { dataSave } = useSelector((state) => state.saveDataSlice);
 
-  console.log(dataSave, "dataSave");
+  // console.log(dataSave, "dataSave");
 
   return (
     <>
       <Routes>
+        {/* {false ? ( */}
         {!!!dataSave?.guid ? (
           <Route path="/" element={<LoginPage />} />
         ) : (
@@ -37,8 +38,7 @@ const MainRoutes = () => {
         )}
         {/* <Route path="*" element={<NotFoundPage />} /> */}
       </Routes>
-      {/* <Alerts />
-      <Preloader /> */}
+      {/*<Preloader /> */}
     </>
   );
 };

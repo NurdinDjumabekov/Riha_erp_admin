@@ -40,30 +40,6 @@ export const transformTime = (dateString) => {
   return `${hours}:${minutes}`;
 };
 
-export const generateNowWeek = () => {
-  //// генерирую дату этой недели
-  const now = new Date();
-
-  const currentDay = now?.getDay();
-
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(
-    now?.getDate() - currentDay + (currentDay === 0 ? -6 : 1)
-  );
-  startOfWeek.setHours(0, 0, 0, 0); // Устанавливаем время на начало дня
-
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek?.setDate(startOfWeek?.getDate() + 6);
-  endOfWeek?.setHours(23, 59, 59, 999); // Устанавливаем время на конец дня
-
-  const formatDate = (date) => date?.toISOString()?.split("T")[0];
-
-  return {
-    date_from: formatDate(startOfWeek),
-    date_to: formatDate(endOfWeek),
-  };
-};
-
 export const extractEndTime = (timeRange) => {
   //// 11:00 - 12:00 ====> 11:00
   const parts = timeRange?.split(" - ");

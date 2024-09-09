@@ -1,6 +1,6 @@
 /////// hooks
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 ////// components
 import FullCalendar from "@fullcalendar/react";
@@ -9,64 +9,89 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import ruLocale from "@fullcalendar/core/locales/ru";
 import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
+import ModalOrderCRUD from "../../components/MainPage/ModalOrderCRUD/ModalOrderCRUD";
+import {
+  startOfWeek,
+  endOfWeek,
+  format,
+  startOfMonth,
+  endOfMonth,
+} from "date-fns";
+import { ru } from "date-fns/locale";
 
 /////// style
 import "./style.scss";
 
 ////// helpers
-import { generateColor } from "../../helpers/LocalData";
+import { confirmAllDay } from "../../helpers/LocalData";
 import { transformDateTime } from "../../helpers/transformDate";
+import { myAlert } from "../../helpers/MyAlert";
 
 ////// fns
-import { addOrdersInList } from "../../store/reducers/requestSlice";
-import ModalOrderCRUD from "../../components/MainPage/ModalOrderCRUD/ModalOrderCRUD";
+import { setActiveDate } from "../../store/reducers/requestSlice";
+import { getListOrders } from "../../store/reducers/requestSlice";
+import { createInvoice } from "../../store/reducers/requestSlice";
+import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
 
 const MainPage = () => {
   const dispatch = useDispatch();
 
-  const { listOrders, listTA } = useSelector((state) => state.requestSlice);
+  const calendarRef = useRef(null);
 
-  const [modalOrder, setModalOrder] = useState(false);
-
-  // console.log(listOrders, "listOrders");
+  const { listOrders, activeDate } = useSelector((state) => state.requestSlice);
+  const { listTA } = useSelector((state) => state.requestSlice);
 
   const addTodo = (selectInfo) => {
-    setModalOrder(true); /// открываю модалку
-    // const start = transformDateTime(selectInfo.start);
-    const start = transformDateTime(selectInfo.start);
-    const date_to = transformDateTime(selectInfo.end);
+    const date_from = transformDateTime(selectInfo?.start);
+    const date_to = transformDateTime(selectInfo?.end);
 
-    dispatch(
-      addOrdersInList({
-        start,
-        title: "asdasdas",
-        allDay: false, /// для всего дня
-        color: generateColor(),
-        status: 1,
-        total_price: "1000",
-        agent: "Джумабеков Нурдин",
-      })
-    );
+    // Проверяем, что это не выбор на весь день (т.е. выбранные часы должны отличаться)
+    const isAllDaySelection =
+      selectInfo?.allDay ||
+      (selectInfo?.start?.getHours() == 0 && selectInfo?.end?.getHours() == 0);
+
+    if (isAllDaySelection) {
+      myAlert(confirmAllDay);
+      return;
+    }
+
+    dispatch(createInvoice({ date_from, date_to }));
   };
 
-  function handleEventClick(clickInfo) {
-    // if (
-    //   confirm(
-    //     `Are you sure you want to delete the event '${clickInfo.event.title}'`
-    //   )
-    // ) {
-    //   clickInfo.event.remove();
-    // }
-  }
+  function handleEventClick(clickInfo) {}
 
-  function handleEvents(events) {
-    // console.log(events, "12312");
-  }
+  // для диапазон для месяца или недели
+  const updateDateRange = () => {
+    if (calendarRef?.current) {
+      const calendarApi = calendarRef.current?.getApi();
+      const currentDate = calendarApi?.getDate(); // Получаем активную дату календаря
+      const currentView = calendarApi?.view?.type; // Получаем текущее представление (день, неделя, месяц и т.д.)
+
+      if (currentView === "dayGridMonth") {
+        // Если текущее представление - это месяц
+        dispatch(setActiveDate(getMonthRange(currentDate)));
+      } else {
+        // Иначе - неделя
+        dispatch(setActiveDate(getWeek(currentDate)));
+      }
+    }
+  };
+
+  useEffect(() => {
+    updateDateRange();
+  }, []);
+
+  useEffect(() => {
+    const agents_guid = searchActiveOrdersTA(listTA);
+    dispatch(getListOrders({ ...activeDate, agents_guid }));
+    //// когда будет меняться диапозон надо get заявки с обновленным диапозоном
+  }, [activeDate?.date_from]);
 
   return (
     <>
       <div className="mainPage">
         <FullCalendar
+          ref={calendarRef}
           height="100%"
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{
@@ -83,9 +108,9 @@ const MainPage = () => {
           weekends={true}
           initialEvents={listOrders}
           events={listOrders}
-          eventContent={EveryDateInfo}
+          eventContent={(content) => <EveryDateInfo content={content} />}
           eventClick={handleEventClick}
-          eventsSet={handleEvents}
+          eventsSet={updateDateRange}
           slotMinTime="05:00:00"
           slotMaxTime="22:00:00"
           slotLabelInterval="01:00"
@@ -96,13 +121,34 @@ const MainPage = () => {
             hour12: false,
           }}
           locale={ruLocale}
-          style={{ height: "100vh", width: "100%" }}
           expandRows={true}
         />
       </div>
-      <ModalOrderCRUD props={{ setModalOrder, modalOrder }} />
+      <ModalOrderCRUD />
     </>
   );
 };
 
 export default MainPage;
+
+const getWeek = (date) => {
+  const start = startOfWeek(date, { weekStartsOn: 1 }); // Начало недели (понедельник)
+  const end = endOfWeek(date, { weekStartsOn: 1 }); // Конец недели (воскресенье)
+  return {
+    date_from: format(start, "yyyy-MM-dd", { locale: ru }),
+    // Форматируем дату начала недели
+    date_to: format(end, "yyyy-MM-dd", { locale: ru }),
+    // Форматируем дату конца недели
+  };
+};
+
+const getMonthRange = (date) => {
+  const start = startOfMonth(date); // Начало месяца
+  const end = endOfMonth(date); // Конец месяца
+  return {
+    date_from: format(start, "yyyy-MM-dd", { locale: ru }),
+    // Форматируем дату начала месяца
+    date_to: format(end, "yyyy-MM-dd", { locale: ru }),
+    // Форматируем дату конца месяца
+  };
+};

@@ -8,7 +8,6 @@ import "./style.scss";
 
 import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
 import { getListTA, getListWorkShop } from "../../store/reducers/requestSlice";
-import { generateNowWeek } from "../../helpers/transformDate";
 import LogOut from "../../components/ActionSettings/LogOut/LogOut";
 
 import SettingsSuggestOutlinedIcon from "@mui/icons-material/SettingsSuggestOutlined";
@@ -21,9 +20,11 @@ const MainLayouts = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
+  const { activeDate } = useSelector((state) => state.requestSlice);
+
   useEffect(() => {
     dispatch(getListWorkShop());
-    dispatch(getListTA({ first: true }));
+    dispatch(getListTA({ first: true, activeDate }));
   }, []);
 
   return (

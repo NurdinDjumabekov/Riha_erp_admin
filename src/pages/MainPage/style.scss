@@ -27,7 +27,7 @@
     .fc-scrollgrid-shrink-cushion {
       font-size: 14px !important;
       font-weight: 400 !important;
-      text-align: left !important;
+      text-align: center !important;
     }
 
     > div {
@@ -36,6 +36,10 @@
 
     .fc-timegrid-event-harness .fc-timegrid-event-harness-inset {
       inset: 0;
+    }
+
+    .fc-timegrid-slot-label-frame {
+      text-align: center !important;
     }
   }
 }

@@ -1,5 +1,5 @@
 ////// hooks
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 /////// style
@@ -14,7 +14,7 @@ import plus from "../../../assets/icons/plus-square.svg";
 import minus from "../../../assets/icons/minus-square.svg";
 
 ////// fns
-import { updateListTA } from "../../../store/reducers/requestSlice";
+import { getListOrders } from "../../../store/reducers/requestSlice";
 import { editListAgents } from "../../../store/reducers/requestSlice";
 import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 
@@ -41,13 +41,19 @@ const Android12Switch = styled(Switch)(() => ({
 const MenuLeft = () => {
   const dispatch = useDispatch();
 
-  const { listWorkshop, listTA } = useSelector((state) => state.requestSlice);
+  const { listTA, activeDate } = useSelector((state) => state.requestSlice);
   const [look, setLook] = useState(true);
+  const [checked, setChecked] = useState(true);
 
-  const onChange = (e, guid) => {
+  const onChange = async (e, guid) => {
     dispatch(editListAgents(guid));
-    dispatch(updateListTA({ guid }));
+    setChecked(!checked);
   };
+
+  useEffect(() => {
+    const agents_guid = searchActiveOrdersTA(listTA);
+    dispatch(getListOrders({ ...activeDate, agents_guid }));
+  }, [checked]);
 
   return (
     <div className="menuLeft">
@@ -65,7 +71,7 @@ const MenuLeft = () => {
               <FormControlLabel
                 control={<Android12Switch />}
                 label={item?.fio}
-                checked={item?.bool}
+                checked={!!item?.is_checked}
                 onChange={(e) => onChange(e, item?.guid)}
               />
             </li>

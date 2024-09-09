@@ -1,5 +1,6 @@
 /////// hooks
 import React from "react";
+import { useDispatch } from "react-redux";
 
 /////// style
 import "./style.scss";
@@ -13,6 +14,10 @@ import { Tooltip, tooltipClasses } from "@mui/material";
 ////// helpers
 import { objStatusOrders } from "../../../helpers/objs";
 import { texts } from "../../../helpers/LocalData";
+
+/////// fns
+import { setInvoiceGuid } from "../../../store/reducers/requestSlice";
+import { getListProdsInInvoice } from "../../../store/reducers/requestSlice";
 
 const CustomWidthTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -31,9 +36,17 @@ const CustomWidthTooltip = styled(({ className, ...props }) => (
   },
 });
 
-const EveryDateInfo = (content) => {
-  const { status, agent } = content.event._def.extendedProps;
-  const { total_price } = content.event._def.extendedProps;
+const EveryDateInfo = ({ content }) => {
+  const { status, agent, invoice_guid } = content?.event?._def?.extendedProps;
+  const { total_price } = content?.event?._def?.extendedProps;
+
+  const dispatch = useDispatch();
+
+  const editInvoice = () => {
+    ///// редактирвоание заявки ( action: 2)
+    dispatch(setInvoiceGuid({ guid: invoice_guid, action: 2 }));
+    dispatch(getListProdsInInvoice(invoice_guid));
+  };
 
   return (
     <div className="everyOrder">
@@ -54,7 +67,7 @@ const EveryDateInfo = (content) => {
               title={objStatusOrders?.[status]?.text}
               placement="right-start"
             >
-              <div className="status__inner">
+              <div className="status__inner" onClick={editInvoice}>
                 {objStatusOrders?.[status]?.img}
               </div>
             </Tooltip>

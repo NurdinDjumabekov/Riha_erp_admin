@@ -49,8 +49,10 @@ const LoginPage = () => {
       minWidth: 200.0,
       scale: 1.0,
       scaleMobile: 1.0,
-      color: 0x3f53ff,
-      backgroundColor: 0x200d41,
+      color: 0xff0000, // Change this to match your theme, e.g., red dots in the image
+      backgroundColor: 0xfff3e0, // Light, clean background similar to the image
+      maxDistance: 15.0, // Reducing distance between points to make it subtle
+      spacing: 20.0, // Increase spacing if needed for a cleaner look
     });
   }, []);
 

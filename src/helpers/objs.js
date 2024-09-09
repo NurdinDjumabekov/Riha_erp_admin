@@ -4,6 +4,10 @@ import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 
 export const objStatusOrders = {
+  0: {
+    text: "Редактировать",
+    img: <CreateOutlinedIcon sx={{ color: "#3788d8" }} />,
+  },
   1: {
     text: "Редактировать",
     img: <CreateOutlinedIcon sx={{ color: "#3788d8" }} />,

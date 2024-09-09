@@ -11,7 +11,9 @@ import { TableRow, Paper } from "@mui/material";
 /////// fns
 import {
   addDataOrders,
-  clearDataOrders,
+  changeCountListProds,
+  changeCountOrders,
+  clearListOrders,
   delDataOrders,
   getListWorkShop,
 } from "../../../store/reducers/requestSlice";
@@ -19,14 +21,16 @@ import {
 ////// style
 import "./style.scss";
 
-const ListProdCRUD = ({ modalOrder }) => {
+////// helpers
+import { chechListOrders } from "../../../helpers/searchActiveOrdersTA";
+import { validNums } from "../../../helpers/validations";
+
+const ListProdCRUD = () => {
   const dispatch = useDispatch();
 
-  const { listProds, listSendOrders } = useSelector(
-    (state) => state.requestSlice
-  );
-
-  //   console.log(listProds);
+  const { listProds } = useSelector((state) => state.requestSlice);
+  const { invoiceGuid } = useSelector((state) => state.requestSlice);
+  const { listSendOrders } = useSelector((state) => state.requestSlice);
 
   const onChangeCheck = (e, item) => {
     const checked = e?.target?.checked;
@@ -40,16 +44,33 @@ const ListProdCRUD = ({ modalOrder }) => {
     }
   };
 
-  console.log(listSendOrders, "listSendOrders");
+  const onChangeCount = (e, item) => {
+    const count = e?.target?.value?.replace(",", ".");
+
+    if (validNums(count)) {
+      //// валидцаия на числа
+      return;
+    }
+
+    const check = chechListOrders(listSendOrders, item?.product_guid);
+    dispatch(changeCountListProds({ ...item, count }));
+    /////изменение ключа count в списке товаров
+    if (check) {
+      dispatch(changeCountOrders({ ...item, count }));
+      /////изменение ключа count в списке товаров временной корзины
+    }
+  };
+
+  // console.log(listProds, "listProds");
 
   useEffect(() => {
-    if (modalOrder) {
+    if (!!invoiceGuid?.guid) {
       dispatch(getListWorkShop({ listInner: true }));
       //// срабатывает только тогда, когда модалка открывается
-      dispatch(clearDataOrders());
+      dispatch(clearListOrders());
       ///// очищаю временный список для отправки создания заказа от ТА
     }
-  }, [modalOrder]);
+  }, [!!invoiceGuid?.guid]);
 
   return (
     <div className="listProdCRUD">
@@ -84,33 +105,45 @@ const ListProdCRUD = ({ modalOrder }) => {
                 <TableCell
                   component="th"
                   scope="row"
-                  style={{ borderRight: "1px solid rgba(224, 224, 224, 1)" }}
+                  style={{
+                    borderRight: "1px solid rgba(224, 224, 224, 1)",
+                    width: "65%",
+                  }}
                 >
                   {row?.product_name}
                 </TableCell>
                 <TableCell
                   align="left"
-                  style={{ borderRight: "1px solid rgba(224, 224, 224, 1)" }}
+                  style={{
+                    borderRight: "1px solid rgba(224, 224, 224, 1)",
+                    width: "10%",
+                  }}
                 >
                   {row?.workshop_price} сом
                 </TableCell>
                 <TableCell
                   align="left"
-                  style={{ borderRight: "1px solid rgba(224, 224, 224, 1)" }}
+                  style={{
+                    borderRight: "1px solid rgba(224, 224, 224, 1)",
+                    width: "10%",
+                  }}
                 >
                   <input
                     type="checkbox"
                     onChange={(e) => onChangeCheck(e, row)}
                     className="checkboxInner"
                     name="check"
+                    checked={chechListOrders(listSendOrders, row?.product_guid)}
                   />
                 </TableCell>
-                <TableCell align="left">
+                <TableCell align="left" style={{ width: "15%" }}>
                   <input
                     type="text"
-                    // onChange={(e) => onChange(e, row)}
+                    onChange={(e) => onChangeCount(e, row)}
                     name="counts"
-                    value={"1"}
+                    value={row?.count}
+                    maxLength={10}
+                    className="counts"
                   />
                 </TableCell>
               </TableRow>
