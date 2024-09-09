@@ -9,14 +9,10 @@ import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 /////// fns
-import {
-  addDataOrders,
-  changeCountListProds,
-  changeCountOrders,
-  clearListOrders,
-  delDataOrders,
-  getListWorkShop,
-} from "../../../store/reducers/requestSlice";
+import { addDataOrders } from "../../../store/reducers/requestSlice";
+import { changeCountListProds } from "../../../store/reducers/requestSlice";
+import { changeCountOrders } from "../../../store/reducers/requestSlice";
+import { delDataOrders } from "../../../store/reducers/requestSlice";
 
 ////// style
 import "./style.scss";
@@ -24,12 +20,11 @@ import "./style.scss";
 ////// helpers
 import { chechListOrders } from "../../../helpers/searchActiveOrdersTA";
 import { validNums } from "../../../helpers/validations";
+import { sumCountsFN, totalSum } from "../../../helpers/totals";
 
-const ListProdCRUD = () => {
+const ListProdCRUD = ({ list }) => {
   const dispatch = useDispatch();
 
-  const { listProds } = useSelector((state) => state.requestSlice);
-  const { invoiceGuid } = useSelector((state) => state.requestSlice);
   const { listSendOrders } = useSelector((state) => state.requestSlice);
 
   const onChangeCheck = (e, item) => {
@@ -61,16 +56,7 @@ const ListProdCRUD = () => {
     }
   };
 
-  // console.log(listProds, "listProds");
-
-  useEffect(() => {
-    if (!!invoiceGuid?.guid) {
-      dispatch(getListWorkShop({ listInner: true }));
-      //// срабатывает только тогда, когда модалка открывается
-      dispatch(clearListOrders());
-      ///// очищаю временный список для отправки создания заказа от ТА
-    }
-  }, [!!invoiceGuid?.guid]);
+  console.log(list, "list");
 
   return (
     <div className="listProdCRUD">
@@ -100,7 +86,7 @@ const ListProdCRUD = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {listProds?.map((row) => (
+            {list?.map((row) => (
               <TableRow key={row?.product_guid}>
                 <TableCell
                   component="th"
@@ -148,6 +134,18 @@ const ListProdCRUD = () => {
                 </TableCell>
               </TableRow>
             ))}
+            <TableRow>
+              <TableCell
+                colSpan={3}
+                align="left"
+                style={{ fontWeight: "bold" }}
+              >
+                Итоговая сумма: {totalSum(list, "count", "workshop_price")} сом
+              </TableCell>
+              <TableCell align="left" style={{ fontWeight: "bold" }}>
+                {sumCountsFN(list, "count")} шт
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>

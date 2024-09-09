@@ -7,6 +7,7 @@ import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
 import { createEventId } from "../../helpers/LocalData";
 import { setActiveCategs, setActiveWorkShop } from "./selectsSlice";
 import { transformListsProds } from "../../helpers/transformLists";
+import { generateNowWeek } from "../../helpers/transformDate";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -139,14 +140,15 @@ export const searchListProds = createAsyncThunk(
 ////// getListTA - список Тоговых агентов
 export const getListTA = createAsyncThunk(
   "getListTA",
-  async function ({ first, activeDate }, { dispatch, rejectWithValue }) {
+  async function ({ first }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_agent`;
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         if (first) {
           const agents_guid = searchActiveOrdersTA(response?.data);
-          dispatch(getListOrders({ ...activeDate, agents_guid }));
+          const weekNow = generateNowWeek();
+          dispatch(getListOrders({ ...weekNow, agents_guid }));
         }
         return response?.data;
       } else {
@@ -214,7 +216,7 @@ export const getListProdsInInvoice = createAsyncThunk(
   }
 );
 
-////// createInvoice - создание заявок ( action: 1)
+////// createInvoice - создание заявок
 export const createInvoice = createAsyncThunk(
   "createInvoice",
   async function (data, { dispatch, rejectWithValue }) {
@@ -223,7 +225,24 @@ export const createInvoice = createAsyncThunk(
       const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         const guid = response?.data?.invoice_guid;
-        dispatch(setInvoiceGuid({ guid, action: 1 }));
+        dispatch(setInvoiceGuid({ guid, action: 1 })); //// 1 - создание
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// editInvoice - редактирование заявок
+export const editInvoice = createAsyncThunk(
+  "editInvoice",
+  async function (data, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/update_application`;
+    try {
+      const response = await axiosInstance.put(url, data);
+      if (response.status >= 200 && response.status < 300) {
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -245,9 +264,9 @@ export const createInvoice = createAsyncThunk(
 // total_price: "1000",
 // agent: "Джумабеков Нурдин",
 
-////// createProdInInvoice - добавление и редактирование товаров в заявоки
-export const createProdInInvoice = createAsyncThunk(
-  "createProdInInvoice",
+////// createEditProdInInvoice - добавление и редактирование товаров в заявоки
+export const createEditProdInInvoice = createAsyncThunk(
+  "createEditProdInInvoice",
   async function (props, { dispatch, rejectWithValue }) {
     const { forGetInvoice, forCreate, invoiceGuid } = props;
 
@@ -256,7 +275,7 @@ export const createProdInInvoice = createAsyncThunk(
     const { action, guid } = invoiceGuid;
 
     const urlCreate = `${REACT_APP_API_URL}/ta/create_application_product`;
-    const urlEdit = `${REACT_APP_API_URL}/ta/create_application_product`;
+    const urlEdit = `${REACT_APP_API_URL}/ta/update_application_product`;
 
     const objUrl = { 1: urlCreate, 2: urlEdit }; /// 1 - создание, 2 - редактирование
 
@@ -458,10 +477,11 @@ const requestSlice = createSlice({
     ///////////// getListProdsInInvoice
     builder.addCase(getListProdsInInvoice.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listSendOrders = action.payload;
-      // ?.map((i) => {
-      //   return { ...i, allDay: false, start: i?.date_from };
-      // });
+      state.listSendOrders = action.payload?.map(
+        ({ count, price, product_guid }) => {
+          return { count, workshop_price: price, product_guid };
+        }
+      );
     });
     builder.addCase(getListProdsInInvoice.rejected, (state, action) => {
       state.error = action.payload;

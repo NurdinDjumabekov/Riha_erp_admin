@@ -22,8 +22,10 @@ const MainRoutes = () => {
   const location = useLocation();
 
   const { dataSave } = useSelector((state) => state.saveDataSlice);
+  const { listProds } = useSelector((state) => state.requestSlice);
+  const { listSendOrders } = useSelector((state) => state.requestSlice);
 
-  // console.log(dataSave, "dataSave");
+  console.log(listSendOrders, "listSendOrders");
 
   return (
     <>

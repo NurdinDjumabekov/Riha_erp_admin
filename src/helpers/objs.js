@@ -1,7 +1,11 @@
-/////// icons
+///////
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
+
+///////
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 
 export const objStatusOrders = {
   0: {
@@ -18,6 +22,17 @@ export const objStatusOrders = {
   },
   3: {
     text: "Редактировать",
-    img: <DoneOutlinedIcon sx={{ color: "rgb(16, 165, 16)" }} />,
+    img: <DoneOutlinedIcon sx={{ color: "#1b5f20" }} />,
+  },
+};
+
+export const objActionInvoice = {
+  1: {
+    text: "Сохранить",
+    img: <AddOutlinedIcon sx={{ width: 16, height: 16 }} />,
+  },
+  2: {
+    text: "Редактировать",
+    img: <BorderColorOutlinedIcon sx={{ width: 16, height: 16 }} />,
   },
 };

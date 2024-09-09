@@ -28,7 +28,7 @@ import { transformDateTime } from "../../helpers/transformDate";
 import { myAlert } from "../../helpers/MyAlert";
 
 ////// fns
-import { setActiveDate } from "../../store/reducers/requestSlice";
+import { editInvoice, setActiveDate } from "../../store/reducers/requestSlice";
 import { getListOrders } from "../../store/reducers/requestSlice";
 import { createInvoice } from "../../store/reducers/requestSlice";
 import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
@@ -87,6 +87,26 @@ const MainPage = () => {
     //// когда будет меняться диапозон надо get заявки с обновленным диапозоном
   }, [activeDate?.date_from]);
 
+  const handleEventDrop = (content) => {
+    const { invoice_guid, status } = content?.event?._def?.extendedProps;
+    const oldStart = content?.oldEvent?.start; // Начальная дата до перемещения
+    const newStart = content?.event?.start; // Новая начальная дата
+
+    // проверка, время не является "весь день"
+    if (content?.event?.allDay) {
+      myAlert("Перетаскивание в заголовок дня запрещено!");
+      content.revert(); // отмена перемещения, если событие перемещено заголовок
+      return;
+    }
+
+    const date_from = transformDateTime(newStart); /// откуда взял
+    const date_to = transformDateTime(oldStart); //// куда перетащил
+
+    const data = { date_from, date_to, date_from, invoice_guid, status };
+
+    dispatch(editInvoice(data)); /// редактирование заявок
+  };
+
   return (
     <>
       <div className="mainPage">
@@ -95,9 +115,9 @@ const MainPage = () => {
           height="100%"
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{
-            left: "prev,next today",
+            left: "dayGridMonth,timeGridWeek,timeGridDay",
             center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
+            right: "prev,next today",
           }}
           initialView="timeGridWeek"
           editable={true}
@@ -110,6 +130,7 @@ const MainPage = () => {
           events={listOrders}
           eventContent={(content) => <EveryDateInfo content={content} />}
           eventClick={handleEventClick}
+          eventDrop={handleEventDrop}
           eventsSet={updateDateRange}
           slotMinTime="05:00:00"
           slotMaxTime="22:00:00"

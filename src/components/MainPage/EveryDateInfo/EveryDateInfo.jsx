@@ -66,6 +66,11 @@ const EveryDateInfo = ({ content }) => {
             <Tooltip
               title={objStatusOrders?.[status]?.text}
               placement="right-start"
+              slotProps={{
+                popper: {
+                  modifiers: [{ name: "offset", options: { offset: [0, -8] } }],
+                },
+              }}
             >
               <div className="status__inner" onClick={editInvoice}>
                 {objStatusOrders?.[status]?.img}

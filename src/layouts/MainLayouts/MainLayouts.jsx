@@ -20,12 +20,28 @@ const MainLayouts = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const { activeDate } = useSelector((state) => state.requestSlice);
-
   useEffect(() => {
     dispatch(getListWorkShop());
-    dispatch(getListTA({ first: true, activeDate }));
+    dispatch(getListTA({ first: true }));
   }, []);
+
+//   <Toolbar>
+//   <IconButton
+//     edge="start"
+//     color="inherit"
+//     onClick={handleClose}
+//     aria-label="close"
+//   >
+//     <CloseIcon />
+//   </IconButton>
+//   <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+//     Добавление заявки
+//   </Typography>
+//   <Button autoFocus color="inherit" className="countsAll">
+//     Количество выбранных товаров
+//     <p>{listSendOrders?.length}</p>
+//   </Button>
+// </Toolbar>
 
   return (
     <div className="layouts">
