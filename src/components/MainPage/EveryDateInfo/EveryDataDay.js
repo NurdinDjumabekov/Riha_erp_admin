@@ -11,10 +11,11 @@ import { Tooltip, tooltipClasses } from "@mui/material";
 
 ////// helpers
 import { objStatusOrders } from "../../../helpers/objs";
-import { texts } from "../../../helpers/LocalData";
 
 /////// fns
 import { setInvoiceGuid } from "../../../store/reducers/requestSlice";
+import { getEveryIngredient } from "../../../store/reducers/requestSlice";
+import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 
 const CustomWidthTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -33,10 +34,10 @@ const CustomWidthTooltip = styled(({ className, ...props }) => (
 const EveryDataDay = ({ content }) => {
   const { status, agents_counts } = content?.event?._def?.extendedProps;
   const { total_sum, total_count } = content?.event?._def?.extendedProps;
-  const { invoice_guid } = content?.event?._def?.extendedProps;
+  const { invoice_guid, date_from } = content?.event?._def?.extendedProps;
   const { list_ingredient } = content?.event?._def?.extendedProps;
 
-  const { listOrders, activeDate } = useSelector((state) => state.requestSlice);
+  const { listTA, activeDate } = useSelector((state) => state.requestSlice);
   const { invoiceGuid } = useSelector((state) => state.requestSlice);
 
   // console.log(content?.event?._def?.extendedProps, "content");
@@ -45,8 +46,13 @@ const EveryDataDay = ({ content }) => {
   const dispatch = useDispatch();
 
   const readAllInvoiceEveryDay = () => {
-    ///// просмотр всех заявок ( action: 3)
+    console.log(content, "content");
+    ///// просмотр всех ингредиентов ( action: 3)
     dispatch(setInvoiceGuid({ guid: invoice_guid, action: 3 }));
+
+    const agents_guid = searchActiveOrdersTA(listTA);
+    const data = { agents_guid, date_from, date_to: date_from };
+    dispatch(getEveryIngredient(data));
   };
 
   return (

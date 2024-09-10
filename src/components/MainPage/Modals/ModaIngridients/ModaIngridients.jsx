@@ -11,15 +11,14 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import ListInvoice from "../../ListInvoice/ListInvoice";
-import ListAcceptInvoice from "../../ListAcceptInvoice/ListAcceptInvoice";
+import { Table, TableBody, TableCell } from "@mui/material";
+import { TableContainer, TableHead } from "@mui/material";
+import { TableRow, Paper } from "@mui/material";
 
 ////// style
 import "./style.scss";
 
 ////// fns
-import { clearListOrders } from "../../../../store/reducers/requestSlice";
-import { getListWorkShop } from "../../../../store/reducers/requestSlice";
 import { setInvoiceGuid } from "../../../../store/reducers/requestSlice";
 
 ////// icons
@@ -33,30 +32,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ModaIngridients = () => {
   const dispatch = useDispatch();
 
-  const [active, setActive] = useState(1); // 1,2
-
   const { invoiceGuid } = useSelector((state) => state.requestSlice);
+  const { dataIngredients } = useSelector((state) => state.requestSlice);
   const { listSendOrders } = useSelector((state) => state.requestSlice);
 
   const handleClose = () => dispatch(setInvoiceGuid({ guid: "", action: 0 }));
 
-  const objType = { 1: <ListInvoice />, 2: <ListAcceptInvoice /> };
-  //ListInvoice - список всех товаров,
-  //ListAcceptInvoice - список выбранных т0варов
-
-  useEffect(() => {
-    if (!!invoiceGuid?.guid) {
-      dispatch(getListWorkShop({ listInner: true }));
-      //// срабатывает только тогда, когда модалка открывается
-      dispatch(clearListOrders());
-      ///// очищаю временный список для отправки создания заказа от ТА
-      setActive(invoiceGuid?.action); //// для показа галвного списка
-    }
-  }, [!!invoiceGuid?.guid]);
-
-  const clickSort = (type) => setActive(type);
-
-  const noneData = listSendOrders?.length == 0;
+  console.log(dataIngredients, "dataIngredients");
 
   return (
     <Dialog
@@ -69,11 +51,19 @@ const ModaIngridients = () => {
         <div className="mainBlockIngrid__inner">
           <AppBar sx={{ position: "relative" }}>
             <Toolbar>
+              <Typography sx={{ marginRight: 5 }} variant="p" component="div">
+                Кол-во агентов: {dataIngredients?.agents_counts}
+              </Typography>
+              <Typography sx={{ marginRight: 5 }} variant="p" component="div">
+                Сумма: {dataIngredients?.total_sum} сом
+              </Typography>
               <Typography
-                sx={{ flex: 1 }}
-                variant="h6"
+                sx={{ marginRight: 5, flex: 1 }}
+                variant="p"
                 component="div"
-              ></Typography>
+              >
+                Общее кол-во: {dataIngredients?.total_count}
+              </Typography>
               <IconButton
                 edge="start"
                 color="inherit"
@@ -85,7 +75,94 @@ const ModaIngridients = () => {
             </Toolbar>
           </AppBar>
         </div>
-        {/* {objType?.[active]} */}
+        <div className="mainBlockIngrid__table">
+          <TableContainer component={Paper}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ width: "3%" }}>№</TableCell>
+                  <TableCell style={{ width: "62%" }}>Продукт</TableCell>
+                  <TableCell align="left" style={{ width: "10%" }}>
+                    Цена
+                  </TableCell>
+                  <TableCell align="left" style={{ width: "15%" }}>
+                    Кол-во/вес
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{ width: "10%" }}
+                    className="titleCheckbox"
+                  >
+                    *
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {dataIngredients?.list_ingredient?.map((row, index) => (
+                  <TableRow hover key={row?.product_guid}>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{ width: "3%" }}
+                    >
+                      {index + 1}
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{ width: "62%" }}
+                    >
+                      {row?.name}
+                    </TableCell>
+                    <TableCell align="left" style={{ width: "10%" }}>
+                      {row?.total_price} сом
+                    </TableCell>
+                    <TableCell align="left" style={{ width: "15%" }}>
+                      {row?.amount}
+                      {/* <input
+                        type="text"
+                        onChange={(e) => onChangeCount(e, row)}
+                        name="counts"
+                        value={row?.count}
+                        maxLength={10}
+                        className="counts"
+                      /> */}
+                    </TableCell>
+                    <TableCell align="left" style={{ width: "10%" }}>
+                      {/* <input
+                        type="checkbox"
+                        onChange={(e) => onChangeCheck(e, row)}
+                        className="checkboxInner"
+                        name="check"
+                        checked={chechListOrders(
+                          listSendOrders,
+                          row?.product_guid
+                        )}
+                      /> */}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {/* {footer && (
+                  <TableRow>
+                    <TableCell colSpan={2} align="left" className="footerTable">
+                      Итого
+                    </TableCell>
+                    <TableCell align="left" className="footerTable">
+                      {totalSum(list, "count", "workshop_price")} сом
+                    </TableCell>
+                    <TableCell
+                      colSpan={2}
+                      align="left"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      {sumCountsFN(list, "count")} шт
+                    </TableCell>
+                  </TableRow>
+                )} */}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
       </div>
     </Dialog>
   );

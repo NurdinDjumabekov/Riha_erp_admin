@@ -19,6 +19,7 @@ const initialState = {
   listOrders: [], //// список заказов на каждый час
   listTitleOrders: [], //// список итоговых заказов на целый день
   listSendOrders: [], //// временный список для хранения списка заказа ТА
+  dataIngredients: {}, //// временный список для хранения ингредиентов
   invoiceGuid: { guid: "", action: 0 },
   /// guid заявки и действие 1 - создание, 2 - редактирование, 3 - простое чтение
   activeDate: { date_from: "", date_to: "" },
@@ -205,6 +206,26 @@ export const getListOrders = createAsyncThunk(
 ////// getListTitleOrders - список заголовков заказа
 export const getListTitleOrders = createAsyncThunk(
   "getListTitleOrders",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { agents_guid, date_from, date_to } = props;
+    const url = `${REACT_APP_API_URL}/ta/get_application_ingredient`;
+    const data = { agents_guid, date_from, date_to };
+    try {
+      const response = await axiosInstance.post(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getEveryIngredient - get список ингредиентов целого дня
+export const getEveryIngredient = createAsyncThunk(
+  "getEveryIngredient",
   async function (props, { dispatch, rejectWithValue }) {
     const { agents_guid, date_from, date_to } = props;
     const url = `${REACT_APP_API_URL}/ta/get_application_ingredient`;
@@ -510,9 +531,7 @@ const requestSlice = createSlice({
     ////////////// getListTitleOrders
     builder.addCase(getListTitleOrders.fulfilled, (state, action) => {
       state.preloader = false;
-      const list = action.payload;
-
-      state.listTitleOrders = list?.map((i) => ({
+      state.listTitleOrders = action.payload?.map((i) => ({
         ...i,
         allDay: true,
         start: i?.date_from,
@@ -523,6 +542,19 @@ const requestSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getListTitleOrders.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ////////////// getEveryIngredient
+    builder.addCase(getEveryIngredient.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.dataIngredients = action.payload?.[0];
+    });
+    builder.addCase(getEveryIngredient.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getEveryIngredient.pending, (state, action) => {
       state.preloader = true;
     });
 

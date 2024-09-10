@@ -59,7 +59,7 @@ const ListProdCRUD = ({ list, footer }) => {
   return (
     <div className="listProdCRUD">
       <TableContainer component={Paper}>
-        <Table stickyHeader>
+        <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell style={{ width: "3%" }}>№</TableCell>

@@ -1,9 +1,7 @@
 .listProdCRUD {
-  max-height: 100%;
-  overflow-y: scroll;
+  height: 100%;
 
   table {
-    position: relative;
     thead {
       tr {
         th {
@@ -71,31 +69,33 @@
     }
   }
 
-  &::-webkit-scrollbar {
-    min-width: 7px;
-    max-width: 7px;
-    border-radius: 3px;
-  }
+  > div {
+    max-height: 100%;
 
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-    min-width: 7px;
-    max-width: 7px;
-    border-radius: 3px;
-  }
+    &::-webkit-scrollbar {
+      min-width: 7px;
+      max-width: 7px;
+    }
 
-  &::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    cursor: pointer;
-    max-height: 35px;
-    min-height: 35px;
-  }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+      min-width: 7px;
+      max-width: 7px;
+    }
 
-  &::-webkit-scrollbar-track {
-    background-color: #fffefe;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #87b5e3;
-    border-radius: 2px;
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      cursor: pointer;
+      max-height: 35px;
+      min-height: 35px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: #fffefe;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #5da3e9;
+      border-radius: 2px;
+    }
   }
 }
