@@ -8,8 +8,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import ruLocale from "@fullcalendar/core/locales/ru";
-import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
-import ModalOrderCRUD from "../../components/MainPage/ModalOrderCRUD/ModalOrderCRUD";
+import ModalOrderCRUD from "../../components/MainPage/Modals/ModalOrderCRUD/ModalOrderCRUD";
 import {
   startOfWeek,
   endOfWeek,
@@ -32,13 +31,17 @@ import { editInvoice, setActiveDate } from "../../store/reducers/requestSlice";
 import { getListOrders } from "../../store/reducers/requestSlice";
 import { createInvoice } from "../../store/reducers/requestSlice";
 import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
+import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
+import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/ModaIngridients";
 
 const MainPage = () => {
   const dispatch = useDispatch();
 
   const calendarRef = useRef(null);
 
+  const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
   const { listOrders, activeDate } = useSelector((state) => state.requestSlice);
+  const { listTitleOrders } = useSelector((state) => state.requestSlice);
   const { listTA } = useSelector((state) => state.requestSlice);
 
   const addTodo = (selectInfo) => {
@@ -92,19 +95,25 @@ const MainPage = () => {
     const oldStart = content?.oldEvent?.start; // Начальная дата до перемещения
     const newStart = content?.event?.start; // Новая начальная дата
 
-    // проверка, время не является "весь день"
-    if (content?.event?.allDay) {
-      myAlert("Перетаскивание в заголовок дня запрещено!");
-      content.revert(); // отмена перемещения, если событие перемещено заголовок
+    // Если событие перетаскивается в заголовок дня (весь день) или изначально было в заголовке дня
+    if (
+      content?.event?.allDay ||
+      content?.oldEvent?.allDay ||
+      content?.event?.start?.getHours() === 0
+    ) {
+      myAlert("Перетаскивание событий в заголовок дня или из него запрещено!");
+      content.revert(); // Отменяем перемещение
       return;
     }
 
-    const date_from = transformDateTime(newStart); /// откуда взял
-    const date_to = transformDateTime(oldStart); //// куда перетащил
+    const date_from = transformDateTime(newStart); // Откуда взял
+    const date_to = transformDateTime(oldStart); // Куда перетащил
 
-    const data = { date_from, date_to, date_from, invoice_guid, status };
+    const data = { date_from, date_to, invoice_guid, status };
 
-    dispatch(editInvoice(data)); /// редактирование заявок
+    const agents_guid = searchActiveOrdersTA(listTA);
+
+    dispatch(editInvoice({ data, agents_guid, activeDate })); // Редактирование заявок
   };
 
   return (
@@ -126,9 +135,9 @@ const MainPage = () => {
           dayMaxEvents={true}
           select={addTodo}
           weekends={true}
-          initialEvents={listOrders}
-          events={listOrders}
-          eventContent={(content) => <EveryDateInfo content={content} />}
+          initialEvents={[...listOrders, ...listTitleOrders]}
+          events={[...listOrders, ...listTitleOrders]}
+          eventContent={(e) => <EveryDateInfo content={e} />}
           eventClick={handleEventClick}
           eventDrop={handleEventDrop}
           eventsSet={updateDateRange}
@@ -143,9 +152,11 @@ const MainPage = () => {
           }}
           locale={ruLocale}
           expandRows={true}
+          allDaySlot={user_type == 2} /// отображать только у админа
         />
       </div>
       <ModalOrderCRUD />
+      <ModaIngridients />
     </>
   );
 };

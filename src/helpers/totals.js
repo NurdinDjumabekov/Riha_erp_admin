@@ -5,5 +5,5 @@ export const totalSum = (list, count, keyPrice) => {
 };
 
 export const sumCountsFN = (list, keyCount) => {
-  return list.reduce((prev, item) => +prev + item?.[keyCount], 0);
+  return list.reduce((prev, item) => +prev + +item?.[keyCount], 0);
 };

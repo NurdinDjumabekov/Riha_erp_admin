@@ -1,0 +1,64 @@
+.mainBlockIngrid {
+  width: 100%;
+  padding: 140px 25px 2px;
+  height: 100vh;
+  position: relative;
+
+  &__inner {
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    right: 0px;
+    top: 0px;
+
+    .actionsBtns {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 2px 6px 2px;
+        background: transparent;
+        border-radius: 5px;
+        border: 1px solid #d5d2d2;
+
+        p {
+          font-size: 13px;
+          font-weight: 600;
+          color: #fff;
+        }
+      }
+
+      .activeBtn {
+        background: #fff;
+
+        p {
+          color: #1976d2;
+        }
+      }
+    }
+  }
+
+  .countsAll {
+    position: relative !important;
+    background: transparent !important;
+
+    p {
+      position: absolute;
+      right: -10px;
+      top: -7px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #fff;
+      color: #222;
+      padding: 1px 5px;
+      border-radius: 50%;
+      min-width: 25px;
+      height: 25px;
+    }
+  }
+}

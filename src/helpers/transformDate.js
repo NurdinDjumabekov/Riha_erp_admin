@@ -72,3 +72,10 @@ export const extractEndTime = (timeRange) => {
     return parts[1]?.trim();
   }
 };
+
+// export const editDateFN = (dateTime) => {
+//   //// 2024-09-11 11:00 ====> 2024-09-11
+//   const dateOnly = dateTime?.split(" ")?.[0];
+
+//   return dateOnly;
+// };

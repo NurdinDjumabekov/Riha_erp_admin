@@ -1,6 +1,6 @@
 .mainOrders {
   width: 100%;
-  padding: 160px 25px 2px;
+  padding: 140px 25px 2px;
   height: 100vh;
   position: relative;
 
@@ -22,13 +22,21 @@
         justify-content: center;
         gap: 5px;
         padding: 2px 6px 2px;
-        border: 1px solid #d5d2d2;
-        background: #fff;
+        background: transparent;
         border-radius: 5px;
+        border: 1px solid #d5d2d2;
 
         p {
           font-size: 13px;
           font-weight: 600;
+          color: #fff;
+        }
+      }
+
+      .activeBtn {
+        background: #fff;
+
+        p {
           color: #1976d2;
         }
       }

@@ -26,6 +26,9 @@ import { getListWorkShop } from "../../../store/reducers/requestSlice";
 import { searchListProds } from "../../../store/reducers/requestSlice";
 import { objActionInvoice } from "../../../helpers/objs";
 
+////// icons
+import AddBoxIcon from "@mui/icons-material/AddBox";
+
 const ListInvoice = () => {
   const dispatch = useDispatch();
 
@@ -108,42 +111,45 @@ const ListInvoice = () => {
   return (
     <div className="listInvoice">
       <div className="selectsAll">
-        <div className="myInputs">
-          <h6>Поиск товаров </h6>
-          <input
-            type="text"
-            className="input"
-            onChange={onChangeSearch}
-            value={search}
-          />
+        <div className="selectsAll__inner">
+          <div className="myInputs">
+            <h6>Поиск товаров </h6>
+            <input
+              type="text"
+              className="input"
+              onChange={onChangeSearch}
+              value={search}
+            />
+          </div>
+          <div className="myInputs">
+            <h6>Цех</h6>
+            <Select
+              options={workShop}
+              className="select"
+              onChange={onChangeWS}
+              value={activeWorkShop}
+            />
+          </div>
+          <div className="myInputs">
+            <h6>Категории</h6>
+            <Select
+              options={categs}
+              className="select"
+              onChange={onChangeCateg}
+              value={activeCategs}
+            />
+          </div>
+          <div className="myInputs">
+            <h6>Комментарий</h6>
+            <input
+              type="text"
+              className="input"
+              value={comment}
+              onChange={onChangeComm}
+            />
+          </div>
         </div>
-        <div className="myInputs">
-          <h6>Цех</h6>
-          <Select
-            options={workShop}
-            className="select"
-            onChange={onChangeWS}
-            value={activeWorkShop}
-          />
-        </div>
-        <div className="myInputs">
-          <h6>Категории</h6>
-          <Select
-            options={categs}
-            className="select"
-            onChange={onChangeCateg}
-            value={activeCategs}
-          />
-        </div>
-        <div className="myInputs">
-          <h6>Комментарий</h6>
-          <input
-            type="text"
-            className="input"
-            value={comment}
-            onChange={onChangeComm}
-          />
-        </div>
+
         <button className="saveAction" onClick={actionsProdInInvoice}>
           {objActionInvoice?.[invoiceGuid?.action]?.img}
           <p>{objActionInvoice?.[invoiceGuid?.action]?.text}</p>

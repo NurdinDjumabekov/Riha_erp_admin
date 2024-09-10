@@ -22,7 +22,7 @@ import { chechListOrders } from "../../../helpers/searchActiveOrdersTA";
 import { validNums } from "../../../helpers/validations";
 import { sumCountsFN, totalSum } from "../../../helpers/totals";
 
-const ListProdCRUD = ({ list }) => {
+const ListProdCRUD = ({ list, footer }) => {
   const dispatch = useDispatch();
 
   const { listSendOrders } = useSelector((state) => state.requestSlice);
@@ -56,71 +56,40 @@ const ListProdCRUD = ({ list }) => {
     }
   };
 
-  console.log(list, "list");
-
   return (
     <div className="listProdCRUD">
       <TableContainer component={Paper}>
-        <Table>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell
-                style={{ borderRight: "1px solid rgba(224, 224, 224, 1)" }}
-              >
-                Продукт
-              </TableCell>
-              <TableCell
-                align="left"
-                style={{ borderRight: "1px solid rgba(224, 224, 224, 1)" }}
-              >
+              <TableCell style={{ width: "3%" }}>№</TableCell>
+              <TableCell style={{ width: "62%" }}>Продукт</TableCell>
+              <TableCell align="left" style={{ width: "10%" }}>
                 Цена
               </TableCell>
+              <TableCell align="left" style={{ width: "15%" }}>
+                Кол-во
+              </TableCell>
               <TableCell
                 align="left"
-                style={{ borderRight: "1px solid rgba(224, 224, 224, 1)" }}
+                style={{ width: "10%" }}
                 className="titleCheckbox"
               >
                 *
               </TableCell>
-              <TableCell align="left">Кол-во</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {list?.map((row) => (
+            {list?.map((row, index) => (
               <TableRow key={row?.product_guid}>
-                <TableCell
-                  component="th"
-                  scope="row"
-                  style={{
-                    borderRight: "1px solid rgba(224, 224, 224, 1)",
-                    width: "65%",
-                  }}
-                >
+                <TableCell component="th" scope="row" style={{ width: "3%" }}>
+                  {index + 1}
+                </TableCell>
+                <TableCell component="th" scope="row" style={{ width: "62%" }}>
                   {row?.product_name}
                 </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    borderRight: "1px solid rgba(224, 224, 224, 1)",
-                    width: "10%",
-                  }}
-                >
+                <TableCell align="left" style={{ width: "10%" }}>
                   {row?.workshop_price} сом
-                </TableCell>
-                <TableCell
-                  align="left"
-                  style={{
-                    borderRight: "1px solid rgba(224, 224, 224, 1)",
-                    width: "10%",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    onChange={(e) => onChangeCheck(e, row)}
-                    className="checkboxInner"
-                    name="check"
-                    checked={chechListOrders(listSendOrders, row?.product_guid)}
-                  />
                 </TableCell>
                 <TableCell align="left" style={{ width: "15%" }}>
                   <input
@@ -132,20 +101,34 @@ const ListProdCRUD = ({ list }) => {
                     className="counts"
                   />
                 </TableCell>
+                <TableCell align="left" style={{ width: "10%" }}>
+                  <input
+                    type="checkbox"
+                    onChange={(e) => onChangeCheck(e, row)}
+                    className="checkboxInner"
+                    name="check"
+                    checked={chechListOrders(listSendOrders, row?.product_guid)}
+                  />
+                </TableCell>
               </TableRow>
             ))}
-            <TableRow>
-              <TableCell
-                colSpan={3}
-                align="left"
-                style={{ fontWeight: "bold" }}
-              >
-                Итоговая сумма: {totalSum(list, "count", "workshop_price")} сом
-              </TableCell>
-              <TableCell align="left" style={{ fontWeight: "bold" }}>
-                {sumCountsFN(list, "count")} шт
-              </TableCell>
-            </TableRow>
+            {footer && (
+              <TableRow>
+                <TableCell colSpan={2} align="left" className="footerTable">
+                  Итого
+                </TableCell>
+                <TableCell align="left" className="footerTable">
+                  {totalSum(list, "count", "workshop_price")} сом
+                </TableCell>
+                <TableCell
+                  colSpan={2}
+                  align="left"
+                  style={{ fontWeight: "bold" }}
+                >
+                  {sumCountsFN(list, "count")} шт
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

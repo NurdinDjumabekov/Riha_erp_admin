@@ -6,6 +6,7 @@ import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
 ///////
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 
 export const objStatusOrders = {
   0: {
@@ -29,7 +30,7 @@ export const objStatusOrders = {
 export const objActionInvoice = {
   1: {
     text: "Сохранить",
-    img: <AddOutlinedIcon sx={{ width: 16, height: 16 }} />,
+    img: <LibraryAddIcon sx={{ width: 16, height: 16 }} />,
   },
   2: {
     text: "Редактировать",

@@ -19,21 +19,16 @@ import { editListAgents } from "../../../store/reducers/requestSlice";
 import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 
 const Android12Switch = styled(Switch)(() => ({
-  paddingBottom: 10,
-  paddingTop: 10,
-  paddingRight: 11,
-  paddingLeft: 9,
-
   "& .MuiSwitch-track": {
     borderRadius: 22 / 2,
   },
 
   "& .MuiSwitch-thumb": {
     boxShadow: "none",
-    width: 14,
-    height: 14,
-    margin: 2,
-    marginTop: 3,
+    width: 12,
+    height: 12,
+    margin: 5,
+    marginTop: 4,
     background: "#fff",
   },
 }));
@@ -42,10 +37,11 @@ const MenuLeft = () => {
   const dispatch = useDispatch();
 
   const { listTA, activeDate } = useSelector((state) => state.requestSlice);
+
   const [look, setLook] = useState(true);
   const [checked, setChecked] = useState(true);
 
-  const onChange = async (e, guid) => {
+  const onChange = (e, guid) => {
     dispatch(editListAgents(guid));
     setChecked(!checked);
   };
@@ -53,6 +49,7 @@ const MenuLeft = () => {
   useEffect(() => {
     const agents_guid = searchActiveOrdersTA(listTA);
     dispatch(getListOrders({ ...activeDate, agents_guid }));
+    /// get обновленный список каждой заявки по часам
   }, [checked]);
 
   return (

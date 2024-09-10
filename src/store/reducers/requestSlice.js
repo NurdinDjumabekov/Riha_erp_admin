@@ -16,10 +16,13 @@ const initialState = {
   listCategs: [],
   listProds: [],
   listTA: [],
-  listOrders: [],
+  listOrders: [], //// список заказов на каждый час
+  listTitleOrders: [], //// список итоговых заказов на целый день
   listSendOrders: [], //// временный список для хранения списка заказа ТА
-  invoiceGuid: { guid: "", action: 0 }, /// guid заявки и действие 1 - создание, 2 - редактирование
-  activeDate: { date_from: "", date_to: "" }, // Состояние для диапазона активной недели
+  invoiceGuid: { guid: "", action: 0 },
+  /// guid заявки и действие 1 - создание, 2 - редактирование, 3 - простое чтение
+  activeDate: { date_from: "", date_to: "" },
+  // Состояние для диапазона активной недели
 };
 
 ////// logInAccount - логинизация
@@ -148,7 +151,7 @@ export const getListTA = createAsyncThunk(
         if (first) {
           const agents_guid = searchActiveOrdersTA(response?.data);
           const weekNow = generateNowWeek();
-          dispatch(getListOrders({ ...weekNow, agents_guid }));
+          dispatch(getListOrders({ ...weekNow, agents_guid })); /// данные заказов по часам в течении дня
         }
         return response?.data;
       } else {
@@ -184,6 +187,27 @@ export const getListOrders = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const { agents_guid, date_from, date_to } = props;
     const url = `${REACT_APP_API_URL}/ta/get_applications`;
+    const data = { agents_guid, date_from, date_to };
+    try {
+      const response = await axiosInstance.post(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        dispatch(getListTitleOrders(data)); //// get данные целого дня
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getListTitleOrders - список заголовков заказа
+export const getListTitleOrders = createAsyncThunk(
+  "getListTitleOrders",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { agents_guid, date_from, date_to } = props;
+    const url = `${REACT_APP_API_URL}/ta/get_application_ingredient`;
     const data = { agents_guid, date_from, date_to };
     try {
       const response = await axiosInstance.post(url, data);
@@ -235,14 +259,21 @@ export const createInvoice = createAsyncThunk(
   }
 );
 
-////// editInvoice - редактирование заявок
+////// editInvoice - редактирование и удаление заявок
 export const editInvoice = createAsyncThunk(
   "editInvoice",
-  async function (data, { dispatch, rejectWithValue }) {
+  async function (props, { dispatch, rejectWithValue }) {
+    const { data, agents_guid, activeDate } = props;
     const url = `${REACT_APP_API_URL}/ta/update_application`;
     try {
       const response = await axiosInstance.put(url, data);
       if (response.status >= 200 && response.status < 300) {
+        dispatch(getListOrders({ ...activeDate, agents_guid }));
+        /// get обновленный список
+        if (data?.status == -1) {
+          dispatch(setInvoiceGuid({ guid: "", action: 0 })); //// для закрытия модалки добавления
+          myAlert("Заявка удалена!");
+        }
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -251,6 +282,8 @@ export const editInvoice = createAsyncThunk(
     }
   }
 );
+
+/// // dispatch(getListTitleOrders(data)); /// get обновленный список заголовков
 
 // "date_from": "2024-09-09 18:00",
 // "date_to": "2024-09-09 18:30",
@@ -287,7 +320,7 @@ export const createEditProdInInvoice = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         dispatch(setInvoiceGuid({ guid: "", action: 0 })); //// для закрытия модалки добавления
         myAlert("Заявка успешно создана!");
-        ///// для get обновленныхз данных с добавленной заявкой
+        ///// для get обновленных данных с добавленной заявкой
         const agents_guid = searchActiveOrdersTA(listTA);
         dispatch(getListOrders({ ...activeDate, agents_guid }));
       } else {
@@ -384,7 +417,7 @@ const requestSlice = createSlice({
     ////////////// getListWorkShop
     builder.addCase(getListWorkShop.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listWorkshop = action.payload?.map((i) => ({ ...i, bool: true }));
+      state.listWorkshop = action.payload;
     });
     builder.addCase(getListWorkShop.rejected, (state, action) => {
       state.error = action.payload;
@@ -474,12 +507,31 @@ const requestSlice = createSlice({
       state.preloader = true;
     });
 
+    ////////////// getListTitleOrders
+    builder.addCase(getListTitleOrders.fulfilled, (state, action) => {
+      state.preloader = false;
+      const list = action.payload;
+
+      state.listTitleOrders = list?.map((i) => ({
+        ...i,
+        allDay: true,
+        start: i?.date_from,
+      }));
+    });
+    builder.addCase(getListTitleOrders.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getListTitleOrders.pending, (state, action) => {
+      state.preloader = true;
+    });
+
     ///////////// getListProdsInInvoice
     builder.addCase(getListProdsInInvoice.fulfilled, (state, action) => {
       state.preloader = false;
       state.listSendOrders = action.payload?.map(
-        ({ count, price, product_guid }) => {
-          return { count, workshop_price: price, product_guid };
+        ({ count, price, product_guid, codeid }) => {
+          return { count, workshop_price: price, product_guid, codeid };
         }
       );
     });

@@ -6,84 +6,37 @@ import { useDispatch, useSelector } from "react-redux";
 ////// components
 import ListProdCRUD from "../ListProdCRUD/ListProdCRUD";
 import debounce from "debounce";
-import Select from "react-select";
 
 ////// style
 import "./style.scss";
 
 ////// helpers
-import { transformLists } from "../../../helpers/transformLists";
 import { myAlert } from "../../../helpers/MyAlert";
 import { chechEmptyCount } from "../../../helpers/validations";
 
 ////// fns
-import { setActiveWorkShop } from "../../../store/reducers/selectsSlice";
-import { setActiveCategs } from "../../../store/reducers/selectsSlice";
-import { createEditProdInInvoice } from "../../../store/reducers/requestSlice";
-import { getListCategs } from "../../../store/reducers/requestSlice";
-import { getListProds } from "../../../store/reducers/requestSlice";
-import { getListWorkShop } from "../../../store/reducers/requestSlice";
-import { searchListProds } from "../../../store/reducers/requestSlice";
+import {
+  createEditProdInInvoice,
+  editInvoice,
+} from "../../../store/reducers/requestSlice";
 import { objActionInvoice } from "../../../helpers/objs";
+
+////// icons
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ConfirmModal from "../../../common/ConfirmModal/ConfirmModal";
+import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 
 const ListAcceptInvoice = () => {
   const dispatch = useDispatch();
 
-  const [search, setSearch] = useState("");
   const [comment, setComment] = useState("");
+  const [delInvoice, setDelInvoice] = useState(false);
 
-  const { listWorkshop } = useSelector((state) => state.requestSlice);
-  const { listCategs, listTA } = useSelector((state) => state.requestSlice);
+  const { listTA } = useSelector((state) => state.requestSlice);
   const { listSendOrders } = useSelector((state) => state.requestSlice);
   const { activeDate } = useSelector((state) => state.requestSlice);
   const { invoiceGuid } = useSelector((state) => state.requestSlice);
   const { listProds } = useSelector((state) => state.requestSlice);
-
-  const { activeWorkShop } = useSelector((state) => state.selectsSlice);
-  const { activeCategs } = useSelector((state) => state.selectsSlice);
-
-  const workShop = transformLists(listWorkshop, "guid", "name");
-  const categs = transformLists(listCategs, "category_guid", "category_name");
-
-  const onChangeWS = (item) => {
-    dispatch(setActiveWorkShop(item)); ///// выбор селекта цехов
-    dispatch(getListCategs(item)); /// для получение категорий
-  };
-
-  const onChangeCateg = (item) => {
-    dispatch(setActiveCategs(item)); ///// выбор селекта категорий
-
-    const obj = { guid: activeWorkShop?.guid, guidCateg: item?.category_guid };
-    dispatch(getListProds(obj));
-    /// для получение списка товаров
-  };
-
-  const onChangeComm = (e) => {
-    const value = e.target.value;
-    if (value?.includes("'")) {
-      return;
-    }
-    setComment(value);
-  };
-
-  const handleSearch = useCallback(
-    //// поиск товара через запрос
-    debounce((value) => {
-      dispatch(searchListProds(value));
-    }, 500),
-    []
-  );
-
-  const onChangeSearch = (e) => {
-    const value = e?.target?.value;
-    setSearch(value);
-
-    if (value.length === 0) {
-      dispatch(getListWorkShop());
-    } else {
-      handleSearch(value);
-    }
-  };
 
   const actionsProdInInvoice = () => {
     ///// создание и редактирование твоаров в заявке
@@ -112,9 +65,39 @@ const ListAcceptInvoice = () => {
     guids?.includes(product_guid)
   );
 
+  const delIInvoice = () => {
+    const agents_guid = searchActiveOrdersTA(listTA);
+    const data = { invoice_guid: invoiceGuid?.guid, status: -1 }; /// удаление -1 заявки
+    const time = { date_from: "2024-09-09 18:00", date_to: "2024-09-09 21:30" };
+    const send = { data: { ...data, ...time }, activeDate, agents_guid };
+    dispatch(editInvoice(send));
+  };
+
   return (
     <div className="listInvoice accepts">
-      <ListProdCRUD list={listSort} />
+      <div className="acceptActions">
+        <h5>№ {listSendOrders?.[0]?.codeid}</h5>
+        <div className="acceptActions__inner">
+          <button
+            className="saveAction del"
+            onClick={() => setDelInvoice(true)}
+          >
+            <DeleteOutlineIcon sx={{ width: 18, height: 18 }} />
+            <p>Удалить запись</p>
+          </button>
+          <ConfirmModal
+            state={delInvoice}
+            yesFN={delIInvoice}
+            noFN={() => setDelInvoice(false)}
+            title={"Удалить заявку ?"}
+          />
+          <button className="saveAction" onClick={actionsProdInInvoice}>
+            {objActionInvoice?.[invoiceGuid?.action]?.img}
+            <p>{objActionInvoice?.[invoiceGuid?.action]?.text}</p>
+          </button>
+        </div>
+      </div>
+      <ListProdCRUD list={listSort} footer={true} />
       {/* <div className="selectsAll">
         <div className="myInputs">
           <h6>Комментарий</h6>
@@ -125,10 +108,6 @@ const ListAcceptInvoice = () => {
             onChange={onChangeComm}
           />
         </div>
-        <button className="saveAction" onClick={actionsProdInInvoice}>
-          {objActionInvoice?.[invoiceGuid?.action]?.img}
-          <p>{objActionInvoice?.[invoiceGuid?.action]?.text}</p>
-        </button>
       </div> */}
     </div>
   );

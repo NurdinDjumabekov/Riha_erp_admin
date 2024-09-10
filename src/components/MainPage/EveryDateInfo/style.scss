@@ -58,13 +58,6 @@
     }
   }
 
-  .moreInfoOrders {
-    background: red;
-    p {
-      font-size: 10px;
-    }
-  }
-
   @keyframes spin {
     0% {
       transform: rotate(0deg);
@@ -73,4 +66,11 @@
       transform: rotate(360deg);
     }
   }
+}
+.day {
+  height: 100%;
+  width: 100%;
+  padding: 3px;
+  padding-right: 0;
+  height: 55px;
 }

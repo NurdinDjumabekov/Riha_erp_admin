@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
     const user_type = state?.saveDataSlice?.dataSave?.user_type;
 
     // Добавляем guid в тело запроса, если это POST запрос
-    if (config.method === "post" && user_guid) {
+    if ((config.method === "post" || config.method === "put") && user_guid) {
       config.data = { ...config.data, user_guid, user_type, agent_guid };
     }
 

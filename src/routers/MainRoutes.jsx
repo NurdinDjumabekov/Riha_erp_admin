@@ -22,10 +22,12 @@ const MainRoutes = () => {
   const location = useLocation();
 
   const { dataSave } = useSelector((state) => state.saveDataSlice);
-  const { listProds } = useSelector((state) => state.requestSlice);
-  const { listSendOrders } = useSelector((state) => state.requestSlice);
+  const { listProds, listTA } = useSelector((state) => state.requestSlice);
+  const { listTitleOrders } = useSelector((state) => state.requestSlice);
+  const { listOrders } = useSelector((state) => state.requestSlice);
 
-  console.log(listSendOrders, "listSendOrders");
+  console.log(listTitleOrders, "listTitleOrders");
+  // console.log(listOrders, "listOrders");
 
   return (
     <>
@@ -46,3 +48,4 @@ const MainRoutes = () => {
 };
 
 export default MainRoutes;
+/// user_type 2 - админ, 1 - агент

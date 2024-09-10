@@ -20,32 +20,20 @@ const MainLayouts = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
+  const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
+
+  
+
   useEffect(() => {
     dispatch(getListWorkShop());
     dispatch(getListTA({ first: true }));
   }, []);
 
-//   <Toolbar>
-//   <IconButton
-//     edge="start"
-//     color="inherit"
-//     onClick={handleClose}
-//     aria-label="close"
-//   >
-//     <CloseIcon />
-//   </IconButton>
-//   <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-//     Добавление заявки
-//   </Typography>
-//   <Button autoFocus color="inherit" className="countsAll">
-//     Количество выбранных товаров
-//     <p>{listSendOrders?.length}</p>
-//   </Button>
-// </Toolbar>
+  const objType = { 2: <MenuLeft /> };
 
   return (
     <div className="layouts">
-      <MenuLeft />
+      {objType?.[user_type]}
       <div className="pages">
         <Outlet />
       </div>

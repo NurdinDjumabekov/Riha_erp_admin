@@ -1,6 +1,6 @@
 ////// hooks
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
@@ -11,23 +11,20 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
+import ListInvoice from "../../ListInvoice/ListInvoice";
+import ListAcceptInvoice from "../../ListAcceptInvoice/ListAcceptInvoice";
 
 ////// style
 import "./style.scss";
 
 ////// fns
-import {
-  clearListOrders,
-  getListWorkShop,
-  setInvoiceGuid,
-} from "../../../store/reducers/requestSlice";
+import { clearListOrders } from "../../../../store/reducers/requestSlice";
+import { getListWorkShop } from "../../../../store/reducers/requestSlice";
+import { setInvoiceGuid } from "../../../../store/reducers/requestSlice";
 
 ////// icons
 import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
-import ListInvoice from "../ListInvoice/ListInvoice";
-import ListAcceptInvoice from "../ListAcceptInvoice/ListAcceptInvoice";
-import { useEffect } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -57,17 +54,18 @@ const ModalOrderCRUD = () => {
     }
   }, [!!invoiceGuid?.guid]);
 
-  const clickSort = (type) => {
-    setActive(type);
-    dispatch(getListWorkShop({ listInner: true }));
-  };
+  const clickSort = (type) => setActive(type);
 
   const noneData = listSendOrders?.length == 0;
+
+  const { guid, action } = invoiceGuid;
+
+  const check = !!guid && (action == 1 || action == 2);
 
   return (
     <Dialog
       fullScreen
-      open={!!invoiceGuid?.guid}
+      open={check}
       onClose={handleClose}
       TransitionComponent={Transition}
     >
@@ -77,16 +75,28 @@ const ModalOrderCRUD = () => {
             <Toolbar>
               <Typography sx={{ flex: 1 }} variant="h6" component="div">
                 <div className="actionsBtns">
-                  <button onClick={() => clickSort(1)}>
+                  <button
+                    onClick={() => clickSort(1)}
+                    className={active == 1 ? "activeBtn" : ""}
+                  >
                     <ContentPasteSearchOutlinedIcon
-                      sx={{ color: "#1976d2", width: 16 }}
+                      sx={{
+                        color: active == 1 ? "#1976d2" : "#fff",
+                        width: 16,
+                      }}
                     />
                     <p>Заявка</p>
                   </button>
                   {!noneData && (
-                    <button onClick={() => clickSort(2)}>
+                    <button
+                      onClick={() => clickSort(2)}
+                      className={active == 2 ? "activeBtn" : ""}
+                    >
                       <InventoryOutlinedIcon
-                        sx={{ color: "#1976d2", width: 16 }}
+                        sx={{
+                          color: active == 2 ? "#1976d2" : "#fff",
+                          width: 16,
+                        }}
                       />
                       <p>Выбранные товары</p>
                     </button>
