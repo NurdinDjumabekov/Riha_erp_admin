@@ -1,6 +1,5 @@
 ////// hooks
 import React from "react";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
@@ -22,7 +21,7 @@ import { chechListOrders } from "../../../helpers/searchActiveOrdersTA";
 import { validNums } from "../../../helpers/validations";
 import { sumCountsFN, totalSum } from "../../../helpers/totals";
 
-const ListProdCRUD = ({ list, footer }) => {
+const ListAcceptProd = ({ list }) => {
   const dispatch = useDispatch();
 
   const { listSendOrders } = useSelector((state) => state.requestSlice);
@@ -56,14 +55,16 @@ const ListProdCRUD = ({ list, footer }) => {
     }
   };
 
+  console.log(list, "list");
+
   return (
     <div className="listProdCRUD">
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ maxHeight: "100%" }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: "3%" }}>№</TableCell>
-              <TableCell style={{ width: "62%" }}>Продукт</TableCell>
+              <TableCell style={{ width: "5%" }}>№</TableCell>
+              <TableCell style={{ width: "60%" }}>Продукт</TableCell>
               <TableCell align="left" style={{ width: "10%" }}>
                 Цена
               </TableCell>
@@ -82,14 +83,14 @@ const ListProdCRUD = ({ list, footer }) => {
           <TableBody>
             {list?.map((row, index) => (
               <TableRow key={row?.product_guid}>
-                <TableCell component="th" scope="row" style={{ width: "3%" }}>
+                <TableCell component="th" scope="row" style={{ width: "5%" }}>
                   {index + 1}
                 </TableCell>
-                <TableCell component="th" scope="row" style={{ width: "62%" }}>
+                <TableCell component="th" scope="row" style={{ width: "60%" }}>
                   {row?.product_name}
                 </TableCell>
                 <TableCell align="left" style={{ width: "10%" }}>
-                  {row?.workshop_price} сом
+                  {row?.price} сом
                 </TableCell>
                 <TableCell align="left" style={{ width: "15%" }}>
                   <input
@@ -112,23 +113,21 @@ const ListProdCRUD = ({ list, footer }) => {
                 </TableCell>
               </TableRow>
             ))}
-            {footer && (
-              <TableRow>
-                <TableCell colSpan={2} align="left" className="footerTable">
-                  Итого
-                </TableCell>
-                <TableCell align="left" className="footerTable">
-                  {totalSum(list, "count", "workshop_price")} сом
-                </TableCell>
-                <TableCell
-                  colSpan={2}
-                  align="left"
-                  style={{ fontWeight: "bold" }}
-                >
-                  {sumCountsFN(list, "count")} шт
-                </TableCell>
-              </TableRow>
-            )}
+            <TableRow>
+              <TableCell colSpan={2} align="left" className="footerTable">
+                Итого
+              </TableCell>
+              <TableCell align="left" className="footerTable">
+                {totalSum(list, "count", "price")} сом
+              </TableCell>
+              <TableCell
+                colSpan={2}
+                align="left"
+                style={{ fontWeight: "bold" }}
+              >
+                {sumCountsFN(list, "count")} шт
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
@@ -136,4 +135,4 @@ const ListProdCRUD = ({ list, footer }) => {
   );
 };
 
-export default ListProdCRUD;
+export default ListAcceptProd;

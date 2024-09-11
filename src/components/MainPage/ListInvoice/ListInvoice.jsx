@@ -4,30 +4,23 @@ import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
-import ListProdCRUD from "../ListProdCRUD/ListProdCRUD";
 import debounce from "debounce";
 import Select from "react-select";
+import ListProds from "../ListProds/ListProds";
 
 ////// style
 import "./style.scss";
 
 ////// helpers
 import { transformLists } from "../../../helpers/transformLists";
-import { myAlert } from "../../../helpers/MyAlert";
-import { chechEmptyCount } from "../../../helpers/validations";
 
 ////// fns
 import { setActiveWorkShop } from "../../../store/reducers/selectsSlice";
 import { setActiveCategs } from "../../../store/reducers/selectsSlice";
-import { createEditProdInInvoice } from "../../../store/reducers/requestSlice";
 import { getListCategs } from "../../../store/reducers/requestSlice";
 import { getListProds } from "../../../store/reducers/requestSlice";
 import { getListWorkShop } from "../../../store/reducers/requestSlice";
 import { searchListProds } from "../../../store/reducers/requestSlice";
-import { objActionInvoice } from "../../../helpers/objs";
-
-////// icons
-import AddBoxIcon from "@mui/icons-material/AddBox";
 
 const ListInvoice = () => {
   const dispatch = useDispatch();
@@ -36,10 +29,7 @@ const ListInvoice = () => {
   const [comment, setComment] = useState("");
 
   const { listWorkshop } = useSelector((state) => state.requestSlice);
-  const { listCategs, listTA } = useSelector((state) => state.requestSlice);
-  const { listSendOrders } = useSelector((state) => state.requestSlice);
-  const { activeDate } = useSelector((state) => state.requestSlice);
-  const { invoiceGuid } = useSelector((state) => state.requestSlice);
+  const { listCategs } = useSelector((state) => state.requestSlice);
   const { listProds } = useSelector((state) => state.requestSlice);
 
   const { activeWorkShop } = useSelector((state) => state.selectsSlice);
@@ -81,31 +71,11 @@ const ListInvoice = () => {
     const value = e?.target?.value;
     setSearch(value);
 
-    if (value.length === 0) {
+    if (value?.length === 0) {
       dispatch(getListWorkShop());
     } else {
       handleSearch(value);
     }
-  };
-
-  const actionsProdInInvoice = () => {
-    ///// создание и редактирование твоаров в заявке
-    if (listSendOrders?.length === 0) {
-      myAlert("Выберите товар", "error");
-      return;
-    }
-
-    if (chechEmptyCount(listSendOrders)) {
-      myAlert("Поля не должны быть пустыми или равны 0", "error");
-      return;
-    }
-
-    const forCreate = { listSendOrders, comment };
-    const forGetInvoice = { activeDate, listTA };
-    dispatch(
-      createEditProdInInvoice({ forGetInvoice, forCreate, invoiceGuid })
-    );
-    ///// добавление и редактирование товаров в заявке
   };
 
   return (
@@ -149,14 +119,9 @@ const ListInvoice = () => {
             />
           </div>
         </div>
-
-        <button className="saveAction" onClick={actionsProdInInvoice}>
-          {objActionInvoice?.[invoiceGuid?.action]?.img}
-          <p>{objActionInvoice?.[invoiceGuid?.action]?.text}</p>
-        </button>
       </div>
 
-      <ListProdCRUD list={listProds} />
+      <ListProds list={listProds} />
     </div>
   );
 };

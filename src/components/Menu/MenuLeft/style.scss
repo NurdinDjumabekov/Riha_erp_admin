@@ -86,31 +86,28 @@
       }
 
       &::-webkit-scrollbar {
-        min-width: 5px;
-        max-width: 5px;
-        border-radius: 3px;
+        min-width: 7px;
+        max-width: 7px;
       }
 
       &::-webkit-scrollbar-track {
         background-color: transparent;
-        min-width: 5px;
-        max-width: 5px;
-        border-radius: 3px;
+        min-width: 8px;
+        max-width: 8px;
       }
 
       &::-webkit-scrollbar-thumb {
         background-color: transparent;
         cursor: pointer;
-        max-height: 35px;
-        min-height: 35px;
+        max-height: 135px;
+        min-height: 135px;
       }
 
       &::-webkit-scrollbar-track {
         background-color: #fffefe;
       }
       &::-webkit-scrollbar-thumb {
-        background-color: #87b5e3;
-        border-radius: 2px;
+        background-color: #23a5d9;
       }
     }
   }

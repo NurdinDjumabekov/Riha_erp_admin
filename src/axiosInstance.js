@@ -23,7 +23,7 @@ axiosInstance.interceptors.request.use(
 
     // Добавляем guid в тело запроса, если это POST запрос
     if ((config.method === "post" || config.method === "put") && user_guid) {
-      config.data = { ...config.data, user_guid, user_type, agent_guid };
+      config.data = { user_guid, user_type, agent_guid, ...config.data };
     }
 
     return config;

@@ -1,0 +1,67 @@
+.zames {
+  padding: 0 0 10px 0px;
+  margin: 0 auto;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+  }
+
+  .mix {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 10px 10px 5px;
+    background-color: #f9f9f9;
+    width: 350px;
+
+    h3 {
+      color: #444;
+      font-weight: 500;
+      margin: 0 0 5px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 5px;
+      border-left: 1px solid #ddd;
+    }
+
+    thead {
+      background-color: #eee;
+    }
+
+    th,
+    td {
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #23a5d9;
+      font-size: 14px;
+    }
+
+    td {
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    @media (max-width: 600px) {
+      table {
+        font-size: 14px;
+      }
+    }
+  }
+}

@@ -24,10 +24,12 @@ const MainRoutes = () => {
   const { dataSave } = useSelector((state) => state.saveDataSlice);
   const { listProds, listTA } = useSelector((state) => state.requestSlice);
   const { listTitleOrders } = useSelector((state) => state.requestSlice);
-  const { listOrders } = useSelector((state) => state.requestSlice);
+  const { listOrders, invoiceInfo } = useSelector(
+    (state) => state.requestSlice
+  );
 
-  console.log(listTitleOrders, "listTitleOrders");
-  // console.log(listOrders, "listOrders");
+  // console.log(listTitleOrders, "listTitleOrders");
+  // console.log(dataSave, "dataSave");
 
   return (
     <>

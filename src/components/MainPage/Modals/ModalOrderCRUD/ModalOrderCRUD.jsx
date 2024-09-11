@@ -20,11 +20,10 @@ import "./style.scss";
 ////// fns
 import { clearListOrders } from "../../../../store/reducers/requestSlice";
 import { getListWorkShop } from "../../../../store/reducers/requestSlice";
-import { setInvoiceGuid } from "../../../../store/reducers/requestSlice";
+import { setInvoiceInfo } from "../../../../store/reducers/requestSlice";
 
 ////// icons
 import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
-import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -35,30 +34,28 @@ const ModalOrderCRUD = () => {
 
   const [active, setActive] = useState(1); // 1,2
 
-  const { invoiceGuid } = useSelector((state) => state.requestSlice);
+  const { invoiceInfo } = useSelector((state) => state.requestSlice);
   const { listSendOrders } = useSelector((state) => state.requestSlice);
 
-  const handleClose = () => dispatch(setInvoiceGuid({ guid: "", action: 0 }));
+  const handleClose = () => dispatch(setInvoiceInfo({ guid: "", action: 0 }));
 
   const objType = { 1: <ListInvoice />, 2: <ListAcceptInvoice /> };
   //ListInvoice - список всех товаров,
   //ListAcceptInvoice - список выбранных т0варов
 
   useEffect(() => {
-    if (!!invoiceGuid?.guid) {
+    if (!!invoiceInfo?.guid) {
       dispatch(getListWorkShop({ listInner: true }));
       //// срабатывает только тогда, когда модалка открывается
       dispatch(clearListOrders());
       ///// очищаю временный список для отправки создания заказа от ТА
-      setActive(invoiceGuid?.action); //// для показа галвного списка
+      setActive(invoiceInfo?.action); //// для показа галвного списка
     }
-  }, [!!invoiceGuid?.guid]);
+  }, [!!invoiceInfo?.guid]);
 
   const clickSort = (type) => setActive(type);
 
-  const noneData = listSendOrders?.length == 0;
-
-  const { guid, action } = invoiceGuid;
+  const { guid, action } = invoiceInfo;
 
   const check = !!guid && (action == 1 || action == 2);
 
@@ -75,32 +72,12 @@ const ModalOrderCRUD = () => {
             <Toolbar>
               <Typography sx={{ flex: 1 }} variant="h6" component="div">
                 <div className="actionsBtns">
-                  <button
-                    onClick={() => clickSort(1)}
-                    className={active == 1 ? "activeBtn" : ""}
-                  >
+                  <button onClick={() => clickSort(1)} className={"activeBtn"}>
                     <ContentPasteSearchOutlinedIcon
-                      sx={{
-                        color: active == 1 ? "#1976d2" : "#fff",
-                        width: 16,
-                      }}
+                      sx={{ color: "#1976d2", width: 16 }}
                     />
                     <p>Заявка</p>
                   </button>
-                  {!noneData && (
-                    <button
-                      onClick={() => clickSort(2)}
-                      className={active == 2 ? "activeBtn" : ""}
-                    >
-                      <InventoryOutlinedIcon
-                        sx={{
-                          color: active == 2 ? "#1976d2" : "#fff",
-                          width: 16,
-                        }}
-                      />
-                      <p>Выбранные товары</p>
-                    </button>
-                  )}
                 </div>
               </Typography>
               <IconButton
@@ -114,7 +91,10 @@ const ModalOrderCRUD = () => {
             </Toolbar>
           </AppBar>
         </div>
-        {objType?.[active]}
+        <div className="listsCRUD">
+          <ListAcceptInvoice />
+          <ListInvoice />
+        </div>
       </div>
     </Dialog>
   );

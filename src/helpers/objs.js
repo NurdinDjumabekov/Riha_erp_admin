@@ -8,6 +8,11 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 
+///////
+import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
+import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
+import EventRepeatIcon from "@mui/icons-material/EventRepeat";
+
 export const objStatusOrders = {
   0: {
     text: "Редактировать",
@@ -37,3 +42,26 @@ export const objActionInvoice = {
     img: <BorderColorOutlinedIcon sx={{ width: 16, height: 16 }} />,
   },
 };
+
+export const listActionsTitle = [
+  {
+    id: 1,
+    name: "Список товаров",
+    img: <ContentPasteSearchOutlinedIcon sx={{ color: "#fff", width: 16 }} />,
+    imgActive: (
+      <ContentPasteSearchOutlinedIcon sx={{ color: "#1976d2", width: 16 }} />
+    ),
+  },
+  {
+    id: 2,
+    name: "Ингредиенты",
+    img: <ChecklistRtlIcon sx={{ color: "#fff", width: 16 }} />,
+    imgActive: <ChecklistRtlIcon sx={{ color: "#1976d2", width: 16 }} />,
+  },
+  {
+    id: 3,
+    name: "Замесы",
+    img: <EventRepeatIcon sx={{ color: "#fff", width: 16 }} />,
+    imgActive: <EventRepeatIcon sx={{ color: "#1976d2", width: 16 }} />,
+  },
+];

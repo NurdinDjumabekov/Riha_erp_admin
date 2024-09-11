@@ -16,7 +16,7 @@ import { objStatusOrders } from "../../../helpers/objs";
 import { texts } from "../../../helpers/LocalData";
 
 /////// fns
-import { setInvoiceGuid } from "../../../store/reducers/requestSlice";
+import { setInvoiceInfo } from "../../../store/reducers/requestSlice";
 import { getListProdsInInvoice } from "../../../store/reducers/requestSlice";
 
 const CustomWidthTooltip = styled(({ className, ...props }) => (
@@ -40,19 +40,20 @@ const EveryDataHour = ({ content }) => {
   const { status, agent, invoice_guid } = content?.event?._def?.extendedProps;
   const { total_price } = content?.event?._def?.extendedProps;
 
-  //   console.log(content, "content");
-
   const dispatch = useDispatch();
 
   const editEveryInvoice = () => {
     ///// редактирвоание заявки ( action: 2)
-    dispatch(setInvoiceGuid({ guid: invoice_guid, action: 2 }));
+    dispatch(setInvoiceInfo({ guid: invoice_guid, action: 2 }));
     dispatch(getListProdsInInvoice(invoice_guid));
   };
 
+  const objAction = { 0: editEveryInvoice, 1: editEveryInvoice };
+
   return (
-    <div className="everyOrder">
-      <CustomWidthTooltip
+    <div className="everyOrder" onClick={objAction?.[status]}>
+      {/* <CustomWidthTooltip
+        disableInteractive
         title={
           <div className="moreInfoOrders">
             <p>{texts}</p>
@@ -60,27 +61,27 @@ const EveryDataHour = ({ content }) => {
         }
         placement="top"
         arrow
-      >
-        <div className="everyOrder__inner">
-          <h6>{agent}</h6>
-          <p className="name">{total_price} сом</p>
-          <div className="status">
-            <Tooltip
-              title={objStatusOrders?.[status]?.text}
-              placement="right-start"
-              slotProps={{
-                popper: {
-                  modifiers: [{ name: "offset", options: { offset: [0, -1] } }],
-                },
-              }}
-            >
-              <div className="status__inner" onClick={editEveryInvoice}>
-                {objStatusOrders?.[status]?.img}
-              </div>
-            </Tooltip>
-          </div>
+      > */}
+      <div className="everyOrder__inner">
+        <h6>{agent}</h6>
+        <p className="name">{total_price} сом</p>
+        <div className="status">
+          <Tooltip
+            title={objStatusOrders?.[status]?.text}
+            placement="right-start"
+            slotProps={{
+              popper: {
+                modifiers: [{ name: "offset", options: { offset: [0, -1] } }],
+              },
+            }}
+          >
+            <div className="status__inner">
+              {objStatusOrders?.[status]?.img}
+            </div>
+          </Tooltip>
         </div>
-      </CustomWidthTooltip>
+      </div>
+      {/* </CustomWidthTooltip> */}
     </div>
   );
 };

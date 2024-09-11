@@ -73,6 +73,18 @@ export const extractEndTime = (timeRange) => {
   }
 };
 
+export const addDateFN = (date) => {
+  //// 2024-09-11 ====> 2024-09-11 11:00 и 2024-09-11 12:00
+  if (!date) return "";
+
+  const num = Math?.floor(Math?.random() * (19 - 9 + 1)) + 10;
+
+  const date_from = `${date} ${num}:00`;
+  const date_to = `${date} ${num + 1}:00`;
+
+  return { date_from, date_to };
+};
+
 // export const editDateFN = (dateTime) => {
 //   //// 2024-09-11 11:00 ====> 2024-09-11
 //   const dateOnly = dateTime?.split(" ")?.[0];

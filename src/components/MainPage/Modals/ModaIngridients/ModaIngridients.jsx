@@ -11,19 +11,28 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import { Table, TableBody, TableCell } from "@mui/material";
-import { TableContainer, TableHead } from "@mui/material";
-import { TableRow, Paper } from "@mui/material";
+import ListIngredients from "../../ActionsAllDay/ListIngredients/ListIngredients";
+import ListProds from "../../ActionsAllDay/ListProds/ListProds";
+import ListZames from "../../ActionsAllDay/ListZames/ListZames";
 
 ////// style
 import "./style.scss";
 
 ////// fns
-import { setInvoiceGuid } from "../../../../store/reducers/requestSlice";
+import {
+  actionsInvoiceAllDay,
+  getListTA,
+  getListWorkShop,
+} from "../../../../store/reducers/requestSlice";
+import { setInvoiceInfo } from "../../../../store/reducers/requestSlice";
+
+////// helpers
+import { listActionsTitle } from "../../../../helpers/objs";
+import { searchActiveOrdersTA } from "../../../../helpers/searchActiveOrdersTA";
 
 ////// icons
-import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
-import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import AddProdInDay from "../../ActionsAllDay/AddProdInDay/AddProdInDay";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -31,19 +40,54 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ModaIngridients = () => {
   const dispatch = useDispatch();
+  const [active, setActive] = useState(1); // 1,2,3
 
-  const { invoiceGuid } = useSelector((state) => state.requestSlice);
-  const { dataIngredients } = useSelector((state) => state.requestSlice);
-  const { listSendOrders } = useSelector((state) => state.requestSlice);
+  const { invoiceInfo } = useSelector((state) => state.requestSlice);
+  const { listsForProduction } = useSelector((state) => state.requestSlice);
+  const { list_ingredient, list_products } = listsForProduction;
+  const { listTA, activeDate } = useSelector((state) => state.requestSlice);
 
-  const handleClose = () => dispatch(setInvoiceGuid({ guid: "", action: 0 }));
+  const handleClose = () => dispatch(setInvoiceInfo({ guid: "", action: 0 }));
 
-  console.log(dataIngredients, "dataIngredients");
+  const sendProduction = () => {
+    //// для обновление списка
+    const agents_guid = searchActiveOrdersTA(listTA);
+    const props = { activeDate, agents_guid };
+
+    /// отправить в производство (изменение статуса)
+    ///(status: 1 - в произ-во, (обработку)
+    const data = { invoice_guids: invoiceInfo?.listInvoice, status: 1 };
+    dispatch(actionsInvoiceAllDay({ data, props }));
+  };
+
+  const obj = {
+    1: {
+      comp: <ListProds list={list_products} />,
+      length: list_products?.length,
+    },
+    2: {
+      comp: <ListIngredients list={list_ingredient} />,
+      length: list_ingredient?.length,
+    },
+    3: {
+      comp: <ListZames list={[]} />,
+      length: 5,
+    },
+  };
+
+  useEffect(() => {
+    if (invoiceInfo?.action == 0) {
+      setActive(1);
+    } else if (invoiceInfo?.action == 3) {
+      dispatch(getListWorkShop()); /// get список цехов
+      dispatch(getListTA({ first: true })); /// get список агентов
+    }
+  }, [invoiceInfo?.action]);
 
   return (
     <Dialog
       fullScreen
-      open={invoiceGuid?.action == 3}
+      open={invoiceInfo?.action == 3}
       onClose={handleClose}
       TransitionComponent={Transition}
     >
@@ -51,117 +95,48 @@ const ModaIngridients = () => {
         <div className="mainBlockIngrid__inner">
           <AppBar sx={{ position: "relative" }}>
             <Toolbar>
-              <Typography sx={{ marginRight: 5 }} variant="p" component="div">
-                Кол-во агентов: {dataIngredients?.agents_counts}
+              <Typography sx={{ flex: 1 }} variant="h6" component="div">
+                <div className="actionsBtns">
+                  {listActionsTitle?.map((item) => (
+                    <button
+                      key={item?.id}
+                      onClick={() => setActive(item?.id)}
+                      className={active == item?.id ? "activeBtn" : ""}
+                    >
+                      {active == item?.id ? item?.imgActive : item?.img}
+                      <p>
+                        {item?.name} [{obj?.[item?.id]?.length}]
+                      </p>
+                    </button>
+                  ))}
+                </div>
               </Typography>
-              <Typography sx={{ marginRight: 5 }} variant="p" component="div">
-                Сумма: {dataIngredients?.total_sum} сом
-              </Typography>
-              <Typography
-                sx={{ marginRight: 5, flex: 1 }}
-                variant="p"
-                component="div"
-              >
-                Общее кол-во: {dataIngredients?.total_count}
-              </Typography>
-              <IconButton
-                edge="start"
-                color="inherit"
-                onClick={handleClose}
-                aria-label="close"
-              >
-                <CloseIcon />
-              </IconButton>
+              <span>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleClose}
+                  aria-label="close"
+                >
+                  <CloseIcon />
+                </IconButton>
+              </span>
             </Toolbar>
           </AppBar>
         </div>
         <div className="mainBlockIngrid__table">
-          <TableContainer component={Paper}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ width: "3%" }}>№</TableCell>
-                  <TableCell style={{ width: "62%" }}>Продукт</TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Цена
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
-                    Кол-во/вес
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    style={{ width: "10%" }}
-                    className="titleCheckbox"
-                  >
-                    *
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dataIngredients?.list_ingredient?.map((row, index) => (
-                  <TableRow hover key={row?.product_guid}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ width: "3%" }}
-                    >
-                      {index + 1}
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ width: "62%" }}
-                    >
-                      {row?.name}
-                    </TableCell>
-                    <TableCell align="left" style={{ width: "10%" }}>
-                      {row?.total_price} сом
-                    </TableCell>
-                    <TableCell align="left" style={{ width: "15%" }}>
-                      {row?.amount}
-                      {/* <input
-                        type="text"
-                        onChange={(e) => onChangeCount(e, row)}
-                        name="counts"
-                        value={row?.count}
-                        maxLength={10}
-                        className="counts"
-                      /> */}
-                    </TableCell>
-                    <TableCell align="left" style={{ width: "10%" }}>
-                      {/* <input
-                        type="checkbox"
-                        onChange={(e) => onChangeCheck(e, row)}
-                        className="checkboxInner"
-                        name="check"
-                        checked={chechListOrders(
-                          listSendOrders,
-                          row?.product_guid
-                        )}
-                      /> */}
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {/* {footer && (
-                  <TableRow>
-                    <TableCell colSpan={2} align="left" className="footerTable">
-                      Итого
-                    </TableCell>
-                    <TableCell align="left" className="footerTable">
-                      {totalSum(list, "count", "workshop_price")} сом
-                    </TableCell>
-                    <TableCell
-                      colSpan={2}
-                      align="left"
-                      style={{ fontWeight: "bold" }}
-                    >
-                      {sumCountsFN(list, "count")} шт
-                    </TableCell>
-                  </TableRow>
-                )} */}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <section>
+            <div className="action">
+              <button onClick={sendProduction}>
+                <AddBusinessIcon sx={{ width: 16 }} />
+                <p>В производство</p>
+              </button>
+            </div>
+          </section>
+          <div className="listsInvoice">
+            {obj?.[active]?.comp}
+            <AddProdInDay />
+          </div>
         </div>
       </div>
     </Dialog>

@@ -33,34 +33,27 @@
   }
 }
 
-//    overflow-y: scroll;
-
 // &::-webkit-scrollbar {
-//     min-width: 6px;
-//     max-width: 6px;
-//   }
+//   min-width: 7px;
+//   max-width: 7px;
+// }
 
-//   &::-webkit-scrollbar-track {
-//     background-color: transparent;
-//     min-width: 6px;
-//     max-width: 6px;
-//     &:hover {
-//       background-color: #050505;
-//     }
-//   }
+// &::-webkit-scrollbar-track {
+//   background-color: transparent;
+//   min-width: 8px;
+//   max-width: 8px;
+// }
 
-//   &::-webkit-scrollbar-thumb {
-//     background-color: transparent;
-//     cursor: pointer;
-//     max-height: 35px;
-//     min-height: 35px;
-//   }
+// &::-webkit-scrollbar-thumb {
+//   background-color: transparent;
+//   cursor: pointer;
+//   max-height: 135px;
+//   min-height: 135px;
+// }
 
-//   &:hover {
-//     &::-webkit-scrollbar-track {
-//       background-color: #fffefe;
-//     }
-//     &::-webkit-scrollbar-thumb {
-//       background-color: #483f3f4e;
-//     }
-//   }
+// &::-webkit-scrollbar-track {
+//   background-color: #fffefe;
+// }
+// &::-webkit-scrollbar-thumb {
+//   background-color: #23a5d9;
+// }
