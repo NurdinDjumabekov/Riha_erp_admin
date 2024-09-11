@@ -49,6 +49,7 @@ const AddProdInDay = () => {
   const { activeWorkShop } = useSelector((state) => state.selectsSlice);
   const { activeCategs } = useSelector((state) => state.selectsSlice);
   const { activeTA } = useSelector((state) => state.selectsSlice);
+  const { checkInvoice } = useSelector((state) => state.requestSlice);
 
   const workShop = transformLists(listWorkshop, "guid", "name");
   const categs = transformLists(listCategs, "category_guid", "category_name");
@@ -207,8 +208,12 @@ const AddProdInDay = () => {
                       value={row?.count}
                       maxLength={10}
                       className="counts"
+                      readOnly={!checkInvoice}
                     />
-                    <button onClick={() => addProdInvoice(row)}>
+                    <button
+                      onClick={() => addProdInvoice(row)}
+                      disabled={!checkInvoice}
+                    >
                       <AddBoxIcon sx={{ color: "#299b31" }} />
                     </button>
                   </div>

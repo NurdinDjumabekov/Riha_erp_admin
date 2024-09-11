@@ -46,6 +46,7 @@ const ModaIngridients = () => {
   const { listsForProduction } = useSelector((state) => state.requestSlice);
   const { list_ingredient, list_products } = listsForProduction;
   const { listTA, activeDate } = useSelector((state) => state.requestSlice);
+  const { checkInvoice } = useSelector((state) => state.requestSlice);
 
   const handleClose = () => dispatch(setInvoiceInfo({ guid: "", action: 0 }));
 
@@ -127,7 +128,7 @@ const ModaIngridients = () => {
         <div className="mainBlockIngrid__table">
           <section>
             <div className="action">
-              <button onClick={sendProduction}>
+              <button onClick={sendProduction} disabled={!checkInvoice}>
                 <AddBusinessIcon sx={{ width: 16 }} />
                 <p>В производство</p>
               </button>

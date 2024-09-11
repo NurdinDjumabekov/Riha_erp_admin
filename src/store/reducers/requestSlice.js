@@ -6,8 +6,12 @@ import axiosInstance from "../../axiosInstance";
 import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
 import { createEventId } from "../../helpers/LocalData";
 import { setActiveCategs, setActiveWorkShop } from "./selectsSlice";
-import { transformListsProds } from "../../helpers/transformLists";
+import {
+  transformListsProds,
+  transformListsProdsEdit,
+} from "../../helpers/transformLists";
 import { generateNowWeek } from "../../helpers/transformDate";
+import { objStatusText } from "../../helpers/objs";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -25,6 +29,7 @@ const initialState = {
   /// guid заявки и действие 1 - создание, 2 - редактирование, 3 - простое чтение
   activeDate: { date_from: "", date_to: "" },
   // Состояние для диапазона активной недели
+  checkInvoice: true, //// можно ли редактировать накладную
 };
 
 ////// logInAccount - логинизация
@@ -331,7 +336,7 @@ export const createEditProdInInvoice = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const { forGetInvoice, forCreate, invoiceInfo } = props;
 
-    const { listSendOrders, comment } = forCreate;
+    const { listProds, comment } = forCreate;
     const { activeDate, listTA } = forGetInvoice;
     const { action, guid } = invoiceInfo;
 
@@ -340,17 +345,46 @@ export const createEditProdInInvoice = createAsyncThunk(
 
     const objUrl = { 1: urlCreate, 2: urlEdit }; /// 1 - создание, 2 - редактирование
 
+    const fnType = {
+      1: transformListsProds(listProds),
+      2: transformListsProdsEdit(listProds),
+    };
+
     const obj = { invoice_guid: guid, comment };
-    const data = { ...obj, products: transformListsProds(listSendOrders) };
+    const data = { ...obj, products: fnType?.[action] };
 
     try {
       const response = await axiosInstance.post(objUrl?.[action], data);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(setInvoiceInfo({ guid: "", action: 0 })); //// для закрытия модалки добавления
-        myAlert("Заявка успешно создана!");
+        // dispatch(setInvoiceInfo({ guid: "", action: 0 })); //// для закрытия модалки добавления
+        myAlert(objStatusText?.[action]);
         ///// для get обновленных данных с добавленной заявкой
         const agents_guid = searchActiveOrdersTA(listTA);
         dispatch(getListOrders({ ...activeDate, agents_guid }));
+        dispatch(getListProdsInInvoice(guid));
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// delProdInInvoice - удаление товаров с заявок
+export const delProdInInvoice = createAsyncThunk(
+  "delProdInInvoice",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { data, action, listTA, activeDate, guid } = props;
+    const url = `${REACT_APP_API_URL}/ta/del_application_product`;
+    try {
+      const response = await axiosInstance.post(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        myAlert(objStatusText?.[action]);
+        ///// для get обновленных данных с добавленной заявкой
+        const agents_guid = searchActiveOrdersTA(listTA);
+        dispatch(getListOrders({ ...activeDate, agents_guid }));
+        dispatch(getListProdsInInvoice(guid));
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -413,34 +447,13 @@ const requestSlice = createSlice({
       );
     },
 
-    ///// добавление во временный список для отправки создания заказа от ТА
-    addDataOrders: (state, action) => {
-      const newOrder = action.payload;
-
-      const orderExists = state.listSendOrders?.some(
-        (order) => order?.product_guid === newOrder?.product_guid
-      );
-
-      if (orderExists) {
-        state.listSendOrders = state.listSendOrders.map((order) =>
-          order?.product_guid === newOrder?.product_guid ? newOrder : order
-        );
-      } else {
-        state.listSendOrders = [...state.listSendOrders, newOrder];
-      }
-    },
-
-    ///// удаление с временного списока для отправки создания заказа от ТА
-    delDataOrders: (state, action) => {
-      const { product_guid } = action.payload;
-      state.listSendOrders = state.listSendOrders?.filter(
-        (i) => i?.product_guid !== product_guid
-      );
-    },
-
     ///// очищаю временный список для отправки создания заказа от ТА
     clearListOrders: (state, action) => {
       state.listSendOrders = [];
+    },
+
+    setListProds: (state, action) => {
+      state.listProds = action.payload;
     },
 
     /////изменение ключа count в списке товаров
@@ -455,7 +468,7 @@ const requestSlice = createSlice({
     changeCountOrders: (state, action) => {
       const { product_guid, count } = action.payload;
       state.listSendOrders = state.listSendOrders?.map((i) =>
-        i?.product_guid === product_guid ? { ...i, count } : i
+        i?.product_guid === product_guid ? { ...i, count, my_status: true } : i
       );
     },
 
@@ -470,6 +483,11 @@ const requestSlice = createSlice({
     //// меняется активная дата для отображения и сортировки данных
     setActiveDate: (state, action) => {
       state.activeDate = action.payload;
+    },
+
+    //// меняется возможность редактирования данных
+    setCheckInvoice: (state, action) => {
+      state.checkInvoice = action.payload;
     },
   },
 
@@ -516,7 +534,11 @@ const requestSlice = createSlice({
     ////////////// getListProds
     builder.addCase(getListProds.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listProds = action.payload?.map((i) => ({ ...i, count: 1 }));
+      state.listProds = action.payload?.map((i) => ({
+        ...i,
+        count: 1,
+        is_checked: false,
+      }));
     });
     builder.addCase(getListProds.rejected, (state, action) => {
       state.error = action.payload;
@@ -613,7 +635,10 @@ const requestSlice = createSlice({
     ///////////// getListProdsInInvoice
     builder.addCase(getListProdsInInvoice.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listSendOrders = action.payload;
+      state.listSendOrders = action.payload?.map((i) => ({
+        ...i,
+        my_status: false,
+      }));
     });
     builder.addCase(getListProdsInInvoice.rejected, (state, action) => {
       state.error = action.payload;
@@ -626,14 +651,14 @@ const requestSlice = createSlice({
 });
 export const {
   editListAgents,
-  addDataOrders,
-  delDataOrders,
   clearListOrders,
   changeCountListProds,
+  setListProds,
   changeCountOrders,
   setInvoiceInfo,
   setInvoiceInfoReturn,
   setActiveDate,
+  setCheckInvoice,
 } = requestSlice.actions;
 
 export default requestSlice.reducer;

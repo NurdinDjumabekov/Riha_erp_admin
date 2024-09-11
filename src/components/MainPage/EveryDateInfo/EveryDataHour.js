@@ -16,7 +16,10 @@ import { objStatusOrders } from "../../../helpers/objs";
 import { texts } from "../../../helpers/LocalData";
 
 /////// fns
-import { setInvoiceInfo } from "../../../store/reducers/requestSlice";
+import {
+  setCheckInvoice,
+  setInvoiceInfo,
+} from "../../../store/reducers/requestSlice";
 import { getListProdsInInvoice } from "../../../store/reducers/requestSlice";
 
 const CustomWidthTooltip = styled(({ className, ...props }) => (
@@ -46,12 +49,18 @@ const EveryDataHour = ({ content }) => {
     ///// редактирвоание заявки ( action: 2)
     dispatch(setInvoiceInfo({ guid: invoice_guid, action: 2 }));
     dispatch(getListProdsInInvoice(invoice_guid));
+
+    ///// можно ли редактировать данные
+
+    if (status == 0) {
+      dispatch(setCheckInvoice(true));
+    } else {
+      dispatch(setCheckInvoice(false));
+    }
   };
 
-  const objAction = { 0: editEveryInvoice, 1: editEveryInvoice };
-
   return (
-    <div className="everyOrder" onClick={objAction?.[status]}>
+    <div className="everyOrder" onClick={editEveryInvoice}>
       {/* <CustomWidthTooltip
         disableInteractive
         title={
@@ -68,7 +77,9 @@ const EveryDataHour = ({ content }) => {
         <div className="status">
           <Tooltip
             title={objStatusOrders?.[status]?.text}
-            placement="right-start"
+            placement="top"
+            arrow
+            disableInteractive
             slotProps={{
               popper: {
                 modifiers: [{ name: "offset", options: { offset: [0, -1] } }],

@@ -19,15 +19,11 @@ export const objStatusOrders = {
     img: <CreateOutlinedIcon sx={{ color: "#3788d8" }} />,
   },
   1: {
-    text: "Редактировать",
-    img: <CreateOutlinedIcon sx={{ color: "#3788d8" }} />,
-  },
-  2: {
     text: "Заказ уже в разработке",
     img: <PendingActionsIcon sx={{ color: "#222" }} />,
   },
-  3: {
-    text: "Редактировать",
+  2: {
+    text: "Готово",
     img: <DoneOutlinedIcon sx={{ color: "#1b5f20" }} />,
   },
 };
@@ -65,3 +61,8 @@ export const listActionsTitle = [
     imgActive: <EventRepeatIcon sx={{ color: "#1976d2", width: 16 }} />,
   },
 ];
+
+export const objStatusText = {
+  1: "Товар добавлен!",
+  2: "Товар обновлён!",
+};

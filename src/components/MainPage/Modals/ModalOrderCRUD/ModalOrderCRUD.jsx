@@ -32,16 +32,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ModalOrderCRUD = () => {
   const dispatch = useDispatch();
 
-  const [active, setActive] = useState(1); // 1,2
-
   const { invoiceInfo } = useSelector((state) => state.requestSlice);
   const { listSendOrders } = useSelector((state) => state.requestSlice);
 
   const handleClose = () => dispatch(setInvoiceInfo({ guid: "", action: 0 }));
-
-  const objType = { 1: <ListInvoice />, 2: <ListAcceptInvoice /> };
-  //ListInvoice - список всех товаров,
-  //ListAcceptInvoice - список выбранных т0варов
 
   useEffect(() => {
     if (!!invoiceInfo?.guid) {
@@ -49,15 +43,14 @@ const ModalOrderCRUD = () => {
       //// срабатывает только тогда, когда модалка открывается
       dispatch(clearListOrders());
       ///// очищаю временный список для отправки создания заказа от ТА
-      setActive(invoiceInfo?.action); //// для показа галвного списка
     }
   }, [!!invoiceInfo?.guid]);
-
-  const clickSort = (type) => setActive(type);
 
   const { guid, action } = invoiceInfo;
 
   const check = !!guid && (action == 1 || action == 2);
+
+  const lengthList = listSendOrders?.length == 0;
 
   return (
     <Dialog
@@ -72,7 +65,7 @@ const ModalOrderCRUD = () => {
             <Toolbar>
               <Typography sx={{ flex: 1 }} variant="h6" component="div">
                 <div className="actionsBtns">
-                  <button onClick={() => clickSort(1)} className={"activeBtn"}>
+                  <button className={"activeBtn"}>
                     <ContentPasteSearchOutlinedIcon
                       sx={{ color: "#1976d2", width: 16 }}
                     />
@@ -91,7 +84,7 @@ const ModalOrderCRUD = () => {
             </Toolbar>
           </AppBar>
         </div>
-        <div className="listsCRUD">
+        <div className={`listsCRUD ${lengthList ? "viewFirstList" : ""}`}>
           <ListAcceptInvoice />
           <ListInvoice />
         </div>

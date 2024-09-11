@@ -3,15 +3,16 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
-import { Table, TableBody, TableCell } from "@mui/material";
+import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 /////// fns
-import { addDataOrders } from "../../../store/reducers/requestSlice";
-import { changeCountListProds } from "../../../store/reducers/requestSlice";
+import {
+  changeCountListProds,
+  delProdInInvoice,
+} from "../../../store/reducers/requestSlice"; /// delete
 import { changeCountOrders } from "../../../store/reducers/requestSlice";
-import { delDataOrders } from "../../../store/reducers/requestSlice";
 
 ////// style
 import "./style.scss";
@@ -21,22 +22,16 @@ import { chechListOrders } from "../../../helpers/searchActiveOrdersTA";
 import { validNums } from "../../../helpers/validations";
 import { sumCountsFN, totalSum } from "../../../helpers/totals";
 
-const ListAcceptProd = ({ list }) => {
+////// icons
+import DeleteIcon from "@mui/icons-material/Delete";
+
+const ListAcceptProd = () => {
   const dispatch = useDispatch();
 
   const { listSendOrders } = useSelector((state) => state.requestSlice);
-
-  const onChangeCheck = (e, item) => {
-    const checked = e?.target?.checked;
-
-    if (checked) {
-      dispatch(addDataOrders(item));
-      //// добавление во времннуб корзину
-    } else {
-      //// удаление с временной корзины
-      dispatch(delDataOrders(item));
-    }
-  };
+  const { guid } = useSelector((state) => state.requestSlice?.invoiceInfo);
+  const { activeDate } = useSelector((state) => state.requestSlice);
+  const { listTA, checkInvoice } = useSelector((state) => state.requestSlice);
 
   const onChangeCount = (e, item) => {
     const count = e?.target?.value?.replace(",", ".");
@@ -45,17 +40,16 @@ const ListAcceptProd = ({ list }) => {
       //// валидцаия на числа
       return;
     }
-
-    const check = chechListOrders(listSendOrders, item?.product_guid);
-    dispatch(changeCountListProds({ ...item, count }));
-    /////изменение ключа count в списке товаров
-    if (check) {
-      dispatch(changeCountOrders({ ...item, count }));
-      /////изменение ключа count в списке товаров временной корзины
-    }
+    dispatch(changeCountOrders({ ...item, count }));
+    /////изменение ключа count в списке товаров временной корзины
   };
 
-  console.log(list, "list");
+  const delProd = (product_guid, invoice_guid) => {
+    const data = { product_guid, invoice_guid };
+    const obj = { listTA, activeDate, action: 3 };
+    dispatch(delProdInInvoice({ data, ...obj, guid }));
+    ///// удаление твоара с накладной через запрос
+  };
 
   return (
     <div className="listProdCRUD">
@@ -65,23 +59,23 @@ const ListAcceptProd = ({ list }) => {
             <TableRow>
               <TableCell style={{ width: "5%" }}>№</TableCell>
               <TableCell style={{ width: "60%" }}>Продукт</TableCell>
-              <TableCell align="left" style={{ width: "10%" }}>
+              <TableCell align="left" style={{ width: "15%" }}>
                 Цена
               </TableCell>
-              <TableCell align="left" style={{ width: "15%" }}>
+              <TableCell align="left" style={{ width: "10%" }}>
                 Кол-во
               </TableCell>
               <TableCell
                 align="left"
                 style={{ width: "10%" }}
-                className="titleCheckbox"
+                className="titleCheckbox "
               >
                 *
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {list?.map((row, index) => (
+            {listSendOrders?.map((row, index) => (
               <TableRow key={row?.product_guid}>
                 <TableCell component="th" scope="row" style={{ width: "5%" }}>
                   {index + 1}
@@ -89,10 +83,10 @@ const ListAcceptProd = ({ list }) => {
                 <TableCell component="th" scope="row" style={{ width: "60%" }}>
                   {row?.product_name}
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
+                <TableCell align="left" style={{ width: "15%" }}>
                   {row?.price} сом
                 </TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
+                <TableCell align="left" style={{ width: "10%" }}>
                   <input
                     type="text"
                     onChange={(e) => onChangeCount(e, row)}
@@ -100,16 +94,27 @@ const ListAcceptProd = ({ list }) => {
                     value={row?.count}
                     maxLength={10}
                     className="counts"
+                    readOnly={!checkInvoice}
                   />
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
-                  <input
-                    type="checkbox"
-                    onChange={(e) => onChangeCheck(e, row)}
-                    className="checkboxInner"
-                    name="check"
-                    checked={chechListOrders(listSendOrders, row?.product_guid)}
-                  />
+                <TableCell align="center" style={{ width: "10%" }}>
+                  <Tooltip title={"Удалить"} placement="top" disableInteractive>
+                    <button
+                      className="actionsDel"
+                      disabled={!checkInvoice}
+                      onClick={() =>
+                        delProd(row?.product_guid, row?.invoice_guid)
+                      }
+                    >
+                      <DeleteIcon
+                        sx={{
+                          color: "rgba(213, 42, 42, 0.848)",
+                          width: 20,
+                          height: 20,
+                        }}
+                      />
+                    </button>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
@@ -118,14 +123,14 @@ const ListAcceptProd = ({ list }) => {
                 Итого
               </TableCell>
               <TableCell align="left" className="footerTable">
-                {totalSum(list, "count", "price")} сом
+                {totalSum(listSendOrders, "count", "price")} сом
               </TableCell>
               <TableCell
                 colSpan={2}
                 align="left"
                 style={{ fontWeight: "bold" }}
               >
-                {sumCountsFN(list, "count")} шт
+                {sumCountsFN(listSendOrders, "count")} шт
               </TableCell>
             </TableRow>
           </TableBody>

@@ -74,4 +74,14 @@
       height: 99%;
     }
   }
+
+  .viewFirstList {
+    > div {
+      width: 100% !important;
+    }
+
+    > div:nth-child(1) {
+      display: none !important;
+    }
+  }
 }

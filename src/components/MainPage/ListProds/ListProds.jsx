@@ -8,33 +8,32 @@ import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 /////// fns
-import { addDataOrders } from "../../../store/reducers/requestSlice";
 import { changeCountListProds } from "../../../store/reducers/requestSlice";
-import { changeCountOrders } from "../../../store/reducers/requestSlice";
-import { delDataOrders } from "../../../store/reducers/requestSlice";
+import { setListProds } from "../../../store/reducers/requestSlice";
+
+////// helpers
+import { validNums } from "../../../helpers/validations";
 
 ////// style
 import "./style.scss";
 
-////// helpers
-import { chechListOrders } from "../../../helpers/searchActiveOrdersTA";
-import { validNums } from "../../../helpers/validations";
-
-const ListProds = ({ list }) => {
+const ListProds = () => {
   const dispatch = useDispatch();
 
-  const { listSendOrders } = useSelector((state) => state.requestSlice);
+  const { listProds } = useSelector((state) => state.requestSlice);
+  const { checkInvoice } = useSelector((state) => state.requestSlice);
 
-  const onChangeCheck = (e, item) => {
-    const checked = e?.target?.checked;
+  const onChangeCheck = (e, { product_guid }) => {
+    const newList = listProds?.map((i) => {
+      if (i?.product_guid === product_guid) {
+        return { ...i, is_checked: !i?.is_checked }; // Используем текущее значение из массива
+      } else {
+        return i;
+      }
+    });
 
-    if (checked) {
-      dispatch(addDataOrders(item));
-      //// добавление во времннуб корзину
-    } else {
-      //// удаление с временной корзины
-      dispatch(delDataOrders(item));
-    }
+    // Обновляем состояние с новым списком
+    dispatch(setListProds(newList));
   };
 
   const onChangeCount = (e, item) => {
@@ -45,13 +44,8 @@ const ListProds = ({ list }) => {
       return;
     }
 
-    const check = chechListOrders(listSendOrders, item?.product_guid);
     dispatch(changeCountListProds({ ...item, count }));
     /////изменение ключа count в списке товаров
-    if (check) {
-      dispatch(changeCountOrders({ ...item, count }));
-      /////изменение ключа count в списке товаров временной корзины
-    }
   };
 
   return (
@@ -62,10 +56,10 @@ const ListProds = ({ list }) => {
             <TableRow>
               <TableCell style={{ width: "5%" }}>№</TableCell>
               <TableCell style={{ width: "60%" }}>Продукт</TableCell>
-              <TableCell align="left" style={{ width: "10%" }}>
+              <TableCell align="left" style={{ width: "15%" }}>
                 Цена
               </TableCell>
-              <TableCell align="left" style={{ width: "15%" }}>
+              <TableCell align="left" style={{ width: "10%" }}>
                 Кол-во
               </TableCell>
               <TableCell
@@ -78,7 +72,7 @@ const ListProds = ({ list }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {list?.map((row, index) => (
+            {listProds?.map((row, index) => (
               <TableRow key={row?.product_guid}>
                 <TableCell component="th" scope="row" style={{ width: "5%" }}>
                   {index + 1}
@@ -86,10 +80,10 @@ const ListProds = ({ list }) => {
                 <TableCell component="th" scope="row" style={{ width: "60%" }}>
                   {row?.product_name}
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
+                <TableCell align="left" style={{ width: "15%" }}>
                   {row?.workshop_price} сом
                 </TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
+                <TableCell align="left" style={{ width: "10%" }}>
                   <input
                     type="text"
                     onChange={(e) => onChangeCount(e, row)}
@@ -97,6 +91,7 @@ const ListProds = ({ list }) => {
                     value={row?.count}
                     maxLength={10}
                     className="counts"
+                    readOnly={!checkInvoice}
                   />
                 </TableCell>
                 <TableCell align="left" style={{ width: "10%" }}>
@@ -105,7 +100,8 @@ const ListProds = ({ list }) => {
                     onChange={(e) => onChangeCheck(e, row)}
                     className="checkboxInner"
                     name="check"
-                    checked={chechListOrders(listSendOrders, row?.product_guid)}
+                    checked={row?.is_checked}
+                    disabled={!checkInvoice}
                   />
                 </TableCell>
               </TableRow>

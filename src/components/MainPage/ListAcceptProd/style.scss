@@ -33,7 +33,7 @@
 
           input {
             background: red;
-            width: 100px;
+            width: 60px;
             background: #fff;
             border-radius: 3px;
             border: 1px solid #e1dede !important;
@@ -59,6 +59,13 @@
           .counts {
             height: 23px;
           }
+        }
+
+        .actionsDel {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
         }
 
         .footerTable {
