@@ -95,12 +95,6 @@ const MainPage = () => {
     const oldStart = content?.oldEvent?.start; // Начальная дата до перемещения
     const newStart = content?.event?.start; // Новая начальная дата
 
-    if (status !== 0) {
-      myAlert("Заявка уже в производстве!", "error");
-      content.revert();
-      return;
-    }
-
     // Если событие перетаскивается в заголовок дня (весь день) или изначально было в заголовке дня
     if (
       content?.event?.allDay ||
@@ -109,6 +103,12 @@ const MainPage = () => {
     ) {
       myAlert("Перетаскивание событий в заголовок дня или из него запрещено!");
       content.revert(); // Отменяем перемещение
+      return;
+    }
+
+    if (status !== 0) {
+      myAlert("Заявка уже в производстве!", "error");
+      content.revert();
       return;
     }
 

@@ -8,10 +8,7 @@ import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 /////// fns
-import {
-  changeCountListProds,
-  delProdInInvoice,
-} from "../../../store/reducers/requestSlice"; /// delete
+import { delProdInInvoice } from "../../../store/reducers/requestSlice"; /// delete
 import { changeCountOrders } from "../../../store/reducers/requestSlice";
 
 ////// style
@@ -44,12 +41,16 @@ const ListAcceptProd = () => {
     /////изменение ключа count в списке товаров временной корзины
   };
 
-  const delProd = (product_guid, invoice_guid) => {
-    const data = { product_guid, invoice_guid };
+  const delProd = ({ product_guid, invoice_guid, price, count }) => {
+    console.log(product_guid, invoice_guid, price, count);
+    const products = [{ product_guid, count, workshop_price: price }];
+    const data = { invoice_guid, comment: "", status: -1, products };
     const obj = { listTA, activeDate, action: 3 };
     dispatch(delProdInInvoice({ data, ...obj, guid }));
     ///// удаление твоара с накладной через запрос
   };
+
+  console.log(listSendOrders);
 
   return (
     <div className="listProdCRUD">
@@ -102,9 +103,7 @@ const ListAcceptProd = () => {
                     <button
                       className="actionsDel"
                       disabled={!checkInvoice}
-                      onClick={() =>
-                        delProd(row?.product_guid, row?.invoice_guid)
-                      }
+                      onClick={() => delProd(row)}
                     >
                       <DeleteIcon
                         sx={{

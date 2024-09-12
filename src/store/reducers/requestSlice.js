@@ -344,6 +344,7 @@ export const createEditProdInInvoice = createAsyncThunk(
     const urlEdit = `${REACT_APP_API_URL}/ta/update_application_product`;
 
     const objUrl = { 1: urlCreate, 2: urlEdit }; /// 1 - создание, 2 - редактирование
+    const typeReq = { 1: "post", 2: "put" };
 
     const fnType = {
       1: transformListsProds(listProds),
@@ -351,10 +352,13 @@ export const createEditProdInInvoice = createAsyncThunk(
     };
 
     const obj = { invoice_guid: guid, comment };
-    const data = { ...obj, products: fnType?.[action] };
+    const data = { ...obj, products: fnType?.[action], status: 0 };
 
     try {
-      const response = await axiosInstance.post(objUrl?.[action], data);
+      const response = await axiosInstance?.[typeReq?.[action]](
+        objUrl?.[action],
+        data
+      );
       if (response.status >= 200 && response.status < 300) {
         // dispatch(setInvoiceInfo({ guid: "", action: 0 })); //// для закрытия модалки добавления
         myAlert(objStatusText?.[action]);
@@ -376,9 +380,9 @@ export const delProdInInvoice = createAsyncThunk(
   "delProdInInvoice",
   async function (props, { dispatch, rejectWithValue }) {
     const { data, action, listTA, activeDate, guid } = props;
-    const url = `${REACT_APP_API_URL}/ta/del_application_product`;
+    const url = `${REACT_APP_API_URL}/ta/update_application_product`;
     try {
-      const response = await axiosInstance.post(url, data);
+      const response = await axiosInstance.put(url, data);
       if (response.status >= 200 && response.status < 300) {
         myAlert(objStatusText?.[action]);
         ///// для get обновленных данных с добавленной заявкой

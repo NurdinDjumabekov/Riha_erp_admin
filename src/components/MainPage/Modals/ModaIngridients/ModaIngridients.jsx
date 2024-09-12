@@ -19,11 +19,9 @@ import ListZames from "../../ActionsAllDay/ListZames/ListZames";
 import "./style.scss";
 
 ////// fns
-import {
-  actionsInvoiceAllDay,
-  getListTA,
-  getListWorkShop,
-} from "../../../../store/reducers/requestSlice";
+import { actionsInvoiceAllDay } from "../../../../store/reducers/requestSlice";
+import { getListTA } from "../../../../store/reducers/requestSlice";
+import { getListWorkShop } from "../../../../store/reducers/requestSlice";
 import { setInvoiceInfo } from "../../../../store/reducers/requestSlice";
 
 ////// helpers
@@ -75,6 +73,8 @@ const ModaIngridients = () => {
       length: 5,
     },
   };
+
+  console.log(list_products, "list_products");
 
   useEffect(() => {
     if (invoiceInfo?.action == 0) {

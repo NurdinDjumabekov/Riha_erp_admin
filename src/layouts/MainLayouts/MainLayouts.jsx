@@ -22,8 +22,6 @@ const MainLayouts = () => {
 
   const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
 
-  
-
   useEffect(() => {
     dispatch(getListWorkShop());
     dispatch(getListTA({ first: true }));

@@ -17,6 +17,7 @@ import { getEveryDataDay } from "../../../store/reducers/requestSlice";
 import { setInvoiceInfo } from "../../../store/reducers/requestSlice";
 import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 import { roundingNum } from "../../../helpers/totals";
+import { setActiveTA } from "../../../store/reducers/selectsSlice";
 
 const CustomWidthTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -44,6 +45,7 @@ const EveryDataDay = ({ content }) => {
   const dispatch = useDispatch();
 
   const readAllInvoiceEveryDay = () => {
+    dispatch(setActiveTA({})); //// очищаю данные ТА для выбора нового ТА
     const agents_guid = searchActiveOrdersTA(listTA);
     const data = { agents_guid, date_from, date_to: date_from };
     dispatch(getEveryDataDay(data));

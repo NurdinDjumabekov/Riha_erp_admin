@@ -19,7 +19,7 @@ export const objStatusOrders = {
     img: <CreateOutlinedIcon sx={{ color: "#3788d8" }} />,
   },
   1: {
-    text: "Заказ уже в разработке",
+    text: "Заявка уже в разработке",
     img: <PendingActionsIcon sx={{ color: "#222" }} />,
   },
   2: {
