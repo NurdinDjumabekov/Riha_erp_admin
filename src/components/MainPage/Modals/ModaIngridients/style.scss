@@ -121,15 +121,13 @@
       display: flex;
       margin: 5px 0 10px 0;
       position: absolute;
-      left: 0px;
-      width: 100%;
       right: 0px;
+      width: 60%;
       top: 85px;
       padding: 0 25px;
+      justify-content: flex-end;
 
       .action {
-        width: 60%;
-
         button {
           height: 30px;
           background: #299b31;

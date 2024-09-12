@@ -12,8 +12,7 @@ import { useEffect } from "react";
 
 ////img
 import logo from "../../assets/images/rihaLogo.png";
-import { logInAccount } from "../../store/reducers/requestSlice";
-import { myAlert } from "../../helpers/MyAlert";
+import { logInAccount } from "../../store/reducers/mainSlice";
 
 ////fns
 // import { authLogin } from "../../store/reducers/authSlice";
@@ -23,8 +22,6 @@ const LoginPage = () => {
   const dispatch = useDispatch();
 
   const [login, setLogin] = useState({ login: "", password: "" });
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
   const sendLogIn = (e) => {
     e.preventDefault();

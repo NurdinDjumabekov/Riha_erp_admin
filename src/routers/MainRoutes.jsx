@@ -15,6 +15,7 @@ import MainLayouts from "../layouts/MainLayouts/MainLayouts";
 /////// pages
 import MainPage from "../pages/MainPage/MainPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
+import WareHousePage from "../pages/WareHousePage/WareHousePage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -22,11 +23,9 @@ const MainRoutes = () => {
   const location = useLocation();
 
   const { dataSave } = useSelector((state) => state.saveDataSlice);
-  const { listProds, listTA } = useSelector((state) => state.requestSlice);
-  const { listTitleOrders } = useSelector((state) => state.requestSlice);
-  const { listOrders, invoiceInfo } = useSelector(
-    (state) => state.requestSlice
-  );
+  const { listProds, listTA } = useSelector((state) => state.mainSlice);
+  const { listTitleOrders } = useSelector((state) => state.mainSlice);
+  const { listOrders, invoiceInfo } = useSelector((state) => state.mainSlice);
 
   // console.log(listTitleOrders, "listTitleOrders");
   // console.log(dataSave, "dataSave");
@@ -40,6 +39,7 @@ const MainRoutes = () => {
         ) : (
           <Route element={<MainLayouts />}>
             <Route path="/" element={<MainPage />} />
+            {/* <Route path="/ware_house" element={<WareHousePage />} /> */}
           </Route>
         )}
         {/* <Route path="*" element={<NotFoundPage />} /> */}

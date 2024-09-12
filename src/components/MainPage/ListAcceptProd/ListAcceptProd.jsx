@@ -8,8 +8,8 @@ import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 /////// fns
-import { delProdInInvoice } from "../../../store/reducers/requestSlice"; /// delete
-import { changeCountOrders } from "../../../store/reducers/requestSlice";
+import { delProdInInvoice } from "../../../store/reducers/mainSlice"; /// delete
+import { changeCountOrders } from "../../../store/reducers/mainSlice";
 
 ////// style
 import "./style.scss";
@@ -25,10 +25,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const ListAcceptProd = () => {
   const dispatch = useDispatch();
 
-  const { listSendOrders } = useSelector((state) => state.requestSlice);
-  const { guid } = useSelector((state) => state.requestSlice?.invoiceInfo);
-  const { activeDate } = useSelector((state) => state.requestSlice);
-  const { listTA, checkInvoice } = useSelector((state) => state.requestSlice);
+  const { listSendOrders } = useSelector((state) => state.mainSlice);
+  const { guid } = useSelector((state) => state.mainSlice?.invoiceInfo);
+  const { activeDate } = useSelector((state) => state.mainSlice);
+  const { listTA, checkInvoice } = useSelector((state) => state.mainSlice);
 
   const onChangeCount = (e, item) => {
     const count = e?.target?.value?.replace(",", ".");
@@ -42,15 +42,12 @@ const ListAcceptProd = () => {
   };
 
   const delProd = ({ product_guid, invoice_guid, price, count }) => {
-    console.log(product_guid, invoice_guid, price, count);
     const products = [{ product_guid, count, workshop_price: price }];
     const data = { invoice_guid, comment: "", status: -1, products };
     const obj = { listTA, activeDate, action: 3 };
     dispatch(delProdInInvoice({ data, ...obj, guid }));
     ///// удаление твоара с накладной через запрос
   };
-
-  console.log(listSendOrders);
 
   return (
     <div className="listProdCRUD">

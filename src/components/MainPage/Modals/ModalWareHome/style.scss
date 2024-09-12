@@ -1,22 +1,53 @@
-.selectsAll {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-  margin: 20px 0 10px 0;
-  position: absolute;
-  top: 58px;
-  left: 0px;
-  width: 100%;
-  padding: 0 5px 0 25px;
-  z-index: 10;
-  width: 50%;
+.modalwareHome {
+  height: 100vh;
+  padding: 10px;
+  position: relative;
+  padding: 135px 20px 10px;
 
   &__inner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  &__sortDate {
+    position: absolute;
+    padding: 0px 20px;
+    top: 75px;
+    left: 0;
+    z-index: 10;
+    width: 100%;
     display: flex;
     align-items: flex-end;
-    gap: 10px;
-    width: 100%;
+    z-index: 10;
+
+    .sortActions {
+      width: 50%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0 5px 0 0;
+
+      &__inner {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        width: 50%;
+
+        .myInputs {
+          width: 50% !important;
+        }
+      }
+    }
+
+    .sendActions {
+      width: 50%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0 5px 0 5px;
+    }
 
     .myInputs {
       width: 25%;
@@ -73,48 +104,31 @@
         }
       }
     }
-  }
-  .saveAction {
-    height: 27px;
-    background: #299b31;
-    padding: 1px 7px 3px;
-    border-radius: 5px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
 
-    p {
-      font-size: 12px;
+    .saveAction {
+      height: 28px;
+      background: #299b31;
+      padding: 1px 7px 3px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+
+      p {
+        font-size: 12px;
+      }
     }
   }
-}
 
-.css-t3ipsp-control,
-.css-13cymwt-control {
-  min-height: 10px !important;
-}
+  &__invoice {
+    height: 100%;
+    display: flex;
+    gap: 10px;
 
-.css-hlgwow {
-  padding: 0px 5px !important;
-}
-
-.css-1xc3v61-indicatorContainer,
-.css-15lsz6c-indicatorContainer {
-  padding: 0 3px !important;
-}
-
-.css-1dimb5e-singleValue {
-  font-size: 12px;
-}
-
-.css-1xc3v61-indicatorContainer {
-  width: 22px !important;
-  height: 22px !important;
-
-  svg {
-    width: 18px !important;
-    height: 18px !important;
+    > div {
+      width: 50%;
+    }
   }
 }

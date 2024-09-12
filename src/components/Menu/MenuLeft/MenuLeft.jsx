@@ -14,8 +14,8 @@ import plus from "../../../assets/icons/plus-square.svg";
 import minus from "../../../assets/icons/minus-square.svg";
 
 ////// fns
-import { getListOrders } from "../../../store/reducers/requestSlice";
-import { editListAgents } from "../../../store/reducers/requestSlice";
+import { getListOrders } from "../../../store/reducers/mainSlice";
+import { editListAgents } from "../../../store/reducers/mainSlice";
 import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 
 const Android12Switch = styled(Switch)(() => ({
@@ -36,7 +36,7 @@ const Android12Switch = styled(Switch)(() => ({
 const MenuLeft = () => {
   const dispatch = useDispatch();
 
-  const { listTA, activeDate } = useSelector((state) => state.requestSlice);
+  const { listTA, activeDate } = useSelector((state) => state.mainSlice);
 
   const [look, setLook] = useState(true);
   const [checked, setChecked] = useState(true);

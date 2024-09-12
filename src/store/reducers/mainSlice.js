@@ -4,12 +4,9 @@ import axios from "axios";
 import { myAlert } from "../../helpers/MyAlert";
 import axiosInstance from "../../axiosInstance";
 import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
-import { createEventId } from "../../helpers/LocalData";
 import { setActiveCategs, setActiveWorkShop } from "./selectsSlice";
-import {
-  transformListsProds,
-  transformListsProdsEdit,
-} from "../../helpers/transformLists";
+import { transformListsProdsEdit } from "../../helpers/transformLists";
+import { transformListsProds } from "../../helpers/transformLists";
 import { generateNowWeek } from "../../helpers/transformDate";
 import { objStatusText } from "../../helpers/objs";
 
@@ -439,8 +436,8 @@ export const actionsInvoiceAllDay = createAsyncThunk(
   }
 );
 
-const requestSlice = createSlice({
-  name: "requestSlice",
+const mainSlice = createSlice({
+  name: "mainSlice",
   initialState,
   reducers: {
     editListAgents: (state, action) => {
@@ -663,6 +660,6 @@ export const {
   setInvoiceInfoReturn,
   setActiveDate,
   setCheckInvoice,
-} = requestSlice.actions;
+} = mainSlice.actions;
 
-export default requestSlice.reducer;
+export default mainSlice.reducer;

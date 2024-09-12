@@ -11,13 +11,13 @@ import Select from "react-select";
 import debounce from "debounce";
 
 /////// fns
-import { createInvoiceAdmin } from "../../../../store/reducers/requestSlice";
-import { addEveryProd } from "../../../../store/reducers/requestSlice";
-import { getListCategs } from "../../../../store/reducers/requestSlice";
-import { getListProds } from "../../../../store/reducers/requestSlice";
-import { getListWorkShop } from "../../../../store/reducers/requestSlice";
-import { searchListProds } from "../../../../store/reducers/requestSlice";
-import { changeCountListProds } from "../../../../store/reducers/requestSlice";
+import { createInvoiceAdmin } from "../../../../store/reducers/mainSlice";
+import { addEveryProd } from "../../../../store/reducers/mainSlice";
+import { getListCategs } from "../../../../store/reducers/mainSlice";
+import { getListProds } from "../../../../store/reducers/mainSlice";
+import { getListWorkShop } from "../../../../store/reducers/mainSlice";
+import { searchListProds } from "../../../../store/reducers/mainSlice";
+import { changeCountListProds } from "../../../../store/reducers/mainSlice";
 import { setActiveWorkShop } from "../../../../store/reducers/selectsSlice";
 import { setActiveTA } from "../../../../store/reducers/selectsSlice";
 import { setActiveCategs } from "../../../../store/reducers/selectsSlice";
@@ -40,16 +40,16 @@ const AddProdInDay = () => {
 
   const [search, setSearch] = useState("");
 
-  const { listWorkshop } = useSelector((state) => state.requestSlice);
-  const { listCategs } = useSelector((state) => state.requestSlice);
-  const { listProds } = useSelector((state) => state.requestSlice);
-  const { listTA } = useSelector((state) => state.requestSlice);
-  const { invoiceInfo } = useSelector((state) => state.requestSlice);
+  const { listWorkshop } = useSelector((state) => state.mainSlice);
+  const { listCategs } = useSelector((state) => state.mainSlice);
+  const { listProds } = useSelector((state) => state.mainSlice);
+  const { listTA } = useSelector((state) => state.mainSlice);
+  const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
   const { activeWorkShop } = useSelector((state) => state.selectsSlice);
   const { activeCategs } = useSelector((state) => state.selectsSlice);
   const { activeTA } = useSelector((state) => state.selectsSlice);
-  const { checkInvoice } = useSelector((state) => state.requestSlice);
+  const { checkInvoice } = useSelector((state) => state.mainSlice);
 
   const workShop = transformLists(listWorkshop, "guid", "name");
   const categs = transformLists(listCategs, "category_guid", "category_name");
@@ -88,7 +88,6 @@ const AddProdInDay = () => {
   };
 
   const onChangeAgents = (item) => {
-    console.log(item, "item");
     dispatch(setActiveTA(item));
     ///// выбор селекта ТА
 

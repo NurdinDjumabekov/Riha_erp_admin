@@ -85,9 +85,40 @@ export const addDateFN = (date) => {
   return { date_from, date_to };
 };
 
-// export const editDateFN = (dateTime) => {
-//   //// 2024-09-11 11:00 ====> 2024-09-11
-//   const dateOnly = dateTime?.split(" ")?.[0];
+export const formatDateMonth = (dateString) => {
+  ///// 2024-09-13 => "13 сентября 2024 года"
+  const months = [
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря",
+  ];
 
-//   return dateOnly;
-// };
+  const date = new Date(dateString);
+  const day = date?.getDate();
+  const month = months?.[date?.getMonth()];
+  const year = date?.getFullYear();
+
+  return `${day} ${month} ${year} года`;
+};
+
+export const formatDateOnly = (dateTimeString) => {
+  return dateTimeString?.split(" ")[0]; // Разделяем строку по пробелу и возвращаем только первую часть (дату)
+};
+
+export const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0"); // Месяц от 0 до 11, поэтому добавляем 1
+  const day = String(today.getDate()).padStart(2, "0"); // Добавляем ведущий 0 для дней от 1 до 9
+
+  return `${year}-${month}-${day}`;
+};

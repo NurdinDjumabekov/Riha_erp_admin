@@ -8,13 +8,13 @@
 .acceptActions {
   display: flex;
   align-items: end;
-  justify-content: flex-start;
-  padding: 2px 5px 0px 25px;
+  justify-content: flex-end;
+  padding: 2px 25px 0px 5px;
   position: absolute;
   top: 94px;
   width: 50%;
   gap: 10px;
-  left: 0px;
+  right: 0px;
 
   h5 {
     font-size: 16px;

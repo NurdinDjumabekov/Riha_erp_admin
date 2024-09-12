@@ -12,12 +12,12 @@ import "./style.scss";
 import debounce from "debounce";
 
 ////// fns
-import { getListTA, searchTA } from "../../../../store/reducers/requestSlice";
+import { getListTA, searchTA } from "../../../../store/reducers/mainSlice";
 
 const SearchShop = () => {
   const dispatch = useDispatch();
 
-  const { activeDate } = useSelector((state) => state.requestSlice);
+  const { activeDate } = useSelector((state) => state.mainSlice);
 
   const [search, setSearch] = useState("");
 

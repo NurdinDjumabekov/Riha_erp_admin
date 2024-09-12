@@ -27,12 +27,16 @@ import { transformDateTime } from "../../helpers/transformDate";
 import { myAlert } from "../../helpers/MyAlert";
 
 ////// fns
-import { editInvoice, setActiveDate } from "../../store/reducers/requestSlice";
-import { getListOrders } from "../../store/reducers/requestSlice";
-import { createInvoice } from "../../store/reducers/requestSlice";
+import { editInvoice, setActiveDate } from "../../store/reducers/mainSlice";
+import { getListOrders } from "../../store/reducers/mainSlice";
+import { createInvoice } from "../../store/reducers/mainSlice";
 import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
 import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
 import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/ModaIngridients";
+import { getMonthRange, getMyWeek } from "../../helpers/weeks";
+import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
+import ModalProduction from "../../components/MainPage/Modals/ModalProduction/ModalProduction";
+import ModalWareHome from "../../components/MainPage/Modals/ModalWareHome/ModalWareHome";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -40,9 +44,9 @@ const MainPage = () => {
   const calendarRef = useRef(null);
 
   const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
-  const { listOrders, activeDate } = useSelector((state) => state.requestSlice);
-  const { listTitleOrders } = useSelector((state) => state.requestSlice);
-  const { listTA } = useSelector((state) => state.requestSlice);
+  const { listOrders, activeDate } = useSelector((state) => state.mainSlice);
+  const { listTitleOrders } = useSelector((state) => state.mainSlice);
+  const { listTA } = useSelector((state) => state.mainSlice);
 
   const addTodo = (selectInfo) => {
     const date_from = transformDateTime(selectInfo?.start);
@@ -75,7 +79,7 @@ const MainPage = () => {
         dispatch(setActiveDate(getMonthRange(currentDate)));
       } else {
         // Иначе - неделя
-        dispatch(setActiveDate(getWeek(currentDate)));
+        dispatch(setActiveDate(getMyWeek(currentDate)));
       }
     }
   };
@@ -106,8 +110,14 @@ const MainPage = () => {
       return;
     }
 
-    if (status !== 0) {
+    if (status == 1 || status == 2) {
       myAlert("Заявка уже в производстве!", "error");
+      content.revert();
+      return;
+    }
+
+    if (status == -2) {
+      myAlert("Идёт подготовка к производству!", "error");
       content.revert();
       return;
     }
@@ -122,71 +132,56 @@ const MainPage = () => {
     dispatch(editInvoice({ data, agents_guid, activeDate })); // Редактирование заявок
   };
 
+  const objType = { 2: <MenuLeft /> }; //// только для админа
+
   return (
     <>
       <div className="mainPage">
-        <FullCalendar
-          ref={calendarRef}
-          height="100%"
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          headerToolbar={{
-            left: "dayGridMonth,timeGridWeek,timeGridDay",
-            center: "title",
-            right: "prev,next today",
-          }}
-          initialView="timeGridWeek"
-          editable={true}
-          selectable={true}
-          selectMirror={true}
-          dayMaxEvents={true}
-          select={addTodo}
-          weekends={true}
-          initialEvents={[...listOrders, ...listTitleOrders]}
-          events={[...listOrders, ...listTitleOrders]}
-          eventContent={(e) => <EveryDateInfo content={e} />}
-          eventClick={handleEventClick}
-          eventDrop={handleEventDrop}
-          eventsSet={updateDateRange}
-          slotMinTime="05:00:00"
-          slotMaxTime="22:00:00"
-          slotLabelInterval="01:00"
-          slotDuration="01:00"
-          slotLabelFormat={{
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          }}
-          locale={ruLocale}
-          expandRows={true}
-          allDaySlot={user_type == 2} /// отображать только у админа
-        />
+        {objType?.[user_type]}
+        <div className="mainPage__inner">
+          <FullCalendar
+            ref={calendarRef}
+            height="100%"
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            headerToolbar={{
+              left: "dayGridMonth,timeGridWeek,timeGridDay",
+              center: "title",
+              right: "prev,next today",
+            }}
+            initialView="timeGridWeek"
+            editable={true}
+            selectable={true}
+            selectMirror={true}
+            dayMaxEvents={true}
+            select={addTodo}
+            weekends={true}
+            initialEvents={[...listOrders, ...listTitleOrders]}
+            events={[...listOrders, ...listTitleOrders]}
+            eventContent={(e) => <EveryDateInfo content={e} />}
+            eventClick={handleEventClick}
+            eventDrop={handleEventDrop}
+            eventsSet={updateDateRange}
+            slotMinTime="05:00:00"
+            slotMaxTime="22:00:00"
+            slotLabelInterval="01:00"
+            slotDuration="01:00"
+            slotLabelFormat={{
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            }}
+            locale={ruLocale}
+            expandRows={true}
+            allDaySlot={user_type == 2} /// отображать только у админа
+          />
+        </div>
       </div>
       <ModalOrderCRUD />
       <ModaIngridients />
+      <ModalProduction />
+      <ModalWareHome />
     </>
   );
 };
 
 export default MainPage;
-
-const getWeek = (date) => {
-  const start = startOfWeek(date, { weekStartsOn: 1 }); // Начало недели (понедельник)
-  const end = endOfWeek(date, { weekStartsOn: 1 }); // Конец недели (воскресенье)
-  return {
-    date_from: format(start, "yyyy-MM-dd", { locale: ru }),
-    // Форматируем дату начала недели
-    date_to: format(end, "yyyy-MM-dd", { locale: ru }),
-    // Форматируем дату конца недели
-  };
-};
-
-const getMonthRange = (date) => {
-  const start = startOfMonth(date); // Начало месяца
-  const end = endOfMonth(date); // Конец месяца
-  return {
-    date_from: format(start, "yyyy-MM-dd", { locale: ru }),
-    // Форматируем дату начала месяца
-    date_to: format(end, "yyyy-MM-dd", { locale: ru }),
-    // Форматируем дату конца месяца
-  };
-};

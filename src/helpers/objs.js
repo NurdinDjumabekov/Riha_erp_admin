@@ -2,6 +2,8 @@
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
+import HourglassEmptyIcon from "@mui/icons-material/Cached";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 ///////
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
@@ -13,17 +15,29 @@ import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSear
 import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
 
+/////// icons
+import HomeOutlinedIcon from "@mui/icons-material/FormatListNumbered";
+import SettingsSuggestOutlinedIcon from "@mui/icons-material/SettingsSuggestOutlined";
+import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
+import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
+import HomeWorkIcon from "@mui/icons-material/HomeWork";
+import AvTimerOutlinedIcon from "@mui/icons-material/AvTimerOutlined";
+
 export const objStatusOrders = {
   0: {
     text: "Редактировать",
     img: <CreateOutlinedIcon sx={{ color: "#3788d8" }} />,
   },
+  "-2": {
+    text: "Идёт подготовка к производству, редактирование невозможно!",
+    img: <HourglassEmptyIcon sx={{ color: "#222" }} />,
+  },
   1: {
-    text: "Заявка уже в разработке",
+    text: "Заявка уже в производстве",
     img: <PendingActionsIcon sx={{ color: "#222" }} />,
   },
   2: {
-    text: "Готово",
+    text: "Товары на складе",
     img: <DoneOutlinedIcon sx={{ color: "#1b5f20" }} />,
   },
 };
@@ -66,3 +80,44 @@ export const objStatusText = {
   1: "Товар добавлен!",
   2: "Товар обновлён!",
 };
+
+export const listMenu = [
+  // {
+  //   id: 1,
+  //   title: "Заявки",
+  //   icon: <HomeOutlinedIcon sx={{ color: "#fff" }} />,
+  //   iconActive: <HomeOutlinedIcon sx={{ color: "#988c7d" }} />,
+  //   link: "/",
+  // },
+  {
+    id: 4,
+    title: "Производство",
+    icon: <AvTimerOutlinedIcon sx={{ color: "#fff" }} />,
+    iconActive: <AvTimerOutlinedIcon sx={{ color: "#988c7d" }} />,
+    link: "/ware_house",
+  },
+  {
+    id: 5,
+    title: "Склад готовой продукции",
+    icon: <HomeWorkIcon sx={{ color: "#fff" }} />,
+    link: "/asd",
+  },
+  {
+    id: 10,
+    title: "Настройки",
+    icon: <SettingsSuggestOutlinedIcon sx={{ color: "#fff" }} />,
+    link: "/asd",
+  },
+  {
+    id: 15,
+    title: "Отчеты",
+    icon: <SummarizeOutlinedIcon sx={{ color: "#fff" }} />,
+    link: "/asd",
+  },
+  {
+    id: 26,
+    title: "Справочники",
+    icon: <AccountTreeOutlinedIcon sx={{ color: "#fff" }} />,
+    link: "/as",
+  },
+];

@@ -14,6 +14,11 @@ export const chechEmptyCount = (list) => {
   );
 };
 
+export const emptyCountCheck = (list) => {
+  // Проверка, является ли count пустым или равным нулю
+  return list?.some((item) => item?.count == "" || item?.count == 0) || false;
+};
+
 export const checkBoolFN = (list) => {
   // есть ли в массиве хотя бы один объект с ключом is_checked = true
   const hasCheckedItem = list?.some((item) => item?.is_checked === true);

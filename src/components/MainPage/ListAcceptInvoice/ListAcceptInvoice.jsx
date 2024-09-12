@@ -11,8 +11,8 @@ import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 import { checkEditInputs } from "../../../helpers/validations";
 
 ////// fns
-import { editInvoice } from "../../../store/reducers/requestSlice";
-import { createEditProdInInvoice } from "../../../store/reducers/requestSlice";
+import { editInvoice } from "../../../store/reducers/mainSlice";
+import { createEditProdInInvoice } from "../../../store/reducers/mainSlice";
 
 ////// icons
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -28,10 +28,10 @@ const ListAcceptInvoice = () => {
 
   const [delInvoice, setDelInvoice] = useState(false);
 
-  const { listTA, checkInvoice } = useSelector((state) => state.requestSlice);
-  const { guid } = useSelector((state) => state.requestSlice?.invoiceInfo);
-  const { listSendOrders } = useSelector((state) => state.requestSlice);
-  const { activeDate } = useSelector((state) => state.requestSlice);
+  const { listTA, checkInvoice } = useSelector((state) => state.mainSlice);
+  const { guid } = useSelector((state) => state.mainSlice?.invoiceInfo);
+  const { listSendOrders } = useSelector((state) => state.mainSlice);
+  const { activeDate } = useSelector((state) => state.mainSlice);
 
   const delIInvoice = () => {
     const agents_guid = searchActiveOrdersTA(listTA);
@@ -57,17 +57,6 @@ const ListAcceptInvoice = () => {
     <div className="listInvoice">
       <div className="acceptActions">
         <div className="acceptActions__inner">
-          {checkInvoice ? (
-            <button
-              className="saveAction del"
-              onClick={() => setDelInvoice(true)}
-            >
-              <DeleteOutlineIcon sx={{ width: 18, height: 18 }} />
-              <p>Удалить запись</p>
-            </button>
-          ) : (
-            <h4>Список принятых товаров</h4>
-          )}
           <ConfirmModal
             state={delInvoice}
             yesFN={delIInvoice}
@@ -80,6 +69,15 @@ const ListAcceptInvoice = () => {
               <p>Сохранить изменения</p>
             </button>
           )}
+
+          <button
+            className="saveAction del"
+            onClick={() => setDelInvoice(true)}
+            disabled={!checkInvoice}
+          >
+            <DeleteOutlineIcon sx={{ width: 18, height: 18 }} />
+            <p>Удалить запись</p>
+          </button>
         </div>
       </div>
       <ListAcceptProd />

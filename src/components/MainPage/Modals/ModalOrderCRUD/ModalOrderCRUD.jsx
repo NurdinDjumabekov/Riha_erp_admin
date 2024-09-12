@@ -18,9 +18,9 @@ import ListAcceptInvoice from "../../ListAcceptInvoice/ListAcceptInvoice";
 import "./style.scss";
 
 ////// fns
-import { clearListOrders } from "../../../../store/reducers/requestSlice";
-import { getListWorkShop } from "../../../../store/reducers/requestSlice";
-import { setInvoiceInfo } from "../../../../store/reducers/requestSlice";
+import { clearListOrders } from "../../../../store/reducers/mainSlice";
+import { getListWorkShop } from "../../../../store/reducers/mainSlice";
+import { setInvoiceInfo } from "../../../../store/reducers/mainSlice";
 
 ////// icons
 import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
@@ -32,8 +32,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ModalOrderCRUD = () => {
   const dispatch = useDispatch();
 
-  const { invoiceInfo } = useSelector((state) => state.requestSlice);
-  const { listSendOrders } = useSelector((state) => state.requestSlice);
+  const { invoiceInfo } = useSelector((state) => state.mainSlice);
+  const { listSendOrders } = useSelector((state) => state.mainSlice);
 
   const handleClose = () => dispatch(setInvoiceInfo({ guid: "", action: 0 }));
 
@@ -85,8 +85,8 @@ const ModalOrderCRUD = () => {
           </AppBar>
         </div>
         <div className={`listsCRUD ${lengthList ? "viewFirstList" : ""}`}>
-          <ListAcceptInvoice />
           <ListInvoice />
+          <ListAcceptInvoice />
         </div>
       </div>
     </Dialog>

@@ -2,48 +2,56 @@
   width: 100%;
   margin: 0 auto;
   height: 100%;
+  display: flex;
+  align-items: flex-end;
 
-  .custom-calendar {
-    height: 100vh;
+  &__inner {
     width: 100%;
-    background-color: #f0f0f0;
-  }
-
-  .custom-header {
-    background-color: #333;
-    color: #fff;
-  }
-
-  .fc {
+    margin: 0 auto;
     height: 100%;
 
-    .fc-scrollgrid-sync-inner {
-      a {
-        font-size: 14px !important;
-        font-weight: 500 !important;
+    .custom-calendar {
+      height: 100vh;
+      width: 100%;
+      background-color: #f0f0f0;
+    }
+
+    .custom-header {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .fc {
+      height: 100%;
+
+      .fc-scrollgrid-sync-inner {
+        a {
+          font-size: 14px !important;
+          font-weight: 500 !important;
+        }
       }
-    }
 
-    .fc-scrollgrid-shrink-cushion {
-      font-size: 14px !important;
-      font-weight: 400 !important;
-      text-align: center !important;
-    }
+      .fc-scrollgrid-shrink-cushion {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        text-align: center !important;
+      }
 
-    > div {
-      margin-bottom: 10px !important;
-    }
+      > div {
+        margin-bottom: 10px !important;
+      }
 
-    .fc-timegrid-event-harness .fc-timegrid-event-harness-inset {
-      inset: 0;
-    }
+      .fc-timegrid-event-harness .fc-timegrid-event-harness-inset {
+        inset: 0;
+      }
 
-    .fc-timegrid-slot-label-frame {
-      text-align: center !important;
-    }
+      .fc-timegrid-slot-label-frame {
+        text-align: center !important;
+      }
 
-    .fc-daygrid-body-natural .fc-daygrid-day-events {
-      margin: 0 !important;
+      .fc-daygrid-body-natural .fc-daygrid-day-events {
+        margin: 0 !important;
+      }
     }
   }
 }

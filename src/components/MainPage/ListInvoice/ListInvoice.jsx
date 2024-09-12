@@ -20,11 +20,11 @@ import { objActionInvoice } from "../../../helpers/objs";
 ////// fns
 import { setActiveWorkShop } from "../../../store/reducers/selectsSlice";
 import { setActiveCategs } from "../../../store/reducers/selectsSlice";
-import { getListCategs } from "../../../store/reducers/requestSlice";
-import { getListProds } from "../../../store/reducers/requestSlice";
-import { getListWorkShop } from "../../../store/reducers/requestSlice";
-import { searchListProds } from "../../../store/reducers/requestSlice";
-import { createEditProdInInvoice } from "../../../store/reducers/requestSlice";
+import { getListCategs } from "../../../store/reducers/mainSlice";
+import { getListProds } from "../../../store/reducers/mainSlice";
+import { getListWorkShop } from "../../../store/reducers/mainSlice";
+import { searchListProds } from "../../../store/reducers/mainSlice";
+import { createEditProdInInvoice } from "../../../store/reducers/mainSlice";
 
 ////// icons
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
@@ -35,15 +35,15 @@ const ListInvoice = () => {
   const [search, setSearch] = useState("");
   const [comment, setComment] = useState("");
 
-  const { listWorkshop } = useSelector((state) => state.requestSlice);
-  const { listCategs } = useSelector((state) => state.requestSlice);
-  const { listProds, listTA } = useSelector((state) => state.requestSlice);
-  const { listSendOrders } = useSelector((state) => state.requestSlice);
-  const { activeDate } = useSelector((state) => state.requestSlice);
-  const { guid } = useSelector((state) => state.requestSlice.invoiceInfo);
+  const { listWorkshop } = useSelector((state) => state.mainSlice);
+  const { listCategs } = useSelector((state) => state.mainSlice);
+  const { listProds, listTA } = useSelector((state) => state.mainSlice);
+  const { listSendOrders } = useSelector((state) => state.mainSlice);
+  const { activeDate } = useSelector((state) => state.mainSlice);
+  const { guid } = useSelector((state) => state.mainSlice.invoiceInfo);
   const { activeWorkShop } = useSelector((state) => state.selectsSlice);
   const { activeCategs } = useSelector((state) => state.selectsSlice);
-  const { checkInvoice } = useSelector((state) => state.requestSlice);
+  const { checkInvoice } = useSelector((state) => state.mainSlice);
 
   const workShop = transformLists(listWorkshop, "guid", "name");
   const categs = transformLists(listCategs, "category_guid", "category_name");

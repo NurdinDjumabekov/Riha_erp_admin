@@ -8,8 +8,8 @@ import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 /////// fns
-import { changeCountListProds } from "../../../store/reducers/requestSlice";
-import { setListProds } from "../../../store/reducers/requestSlice";
+import { changeCountListProds } from "../../../store/reducers/mainSlice";
+import { setListProds } from "../../../store/reducers/mainSlice";
 
 ////// helpers
 import { validNums } from "../../../helpers/validations";
@@ -20,8 +20,8 @@ import "./style.scss";
 const ListProds = () => {
   const dispatch = useDispatch();
 
-  const { listProds } = useSelector((state) => state.requestSlice);
-  const { checkInvoice } = useSelector((state) => state.requestSlice);
+  const { listProds } = useSelector((state) => state.mainSlice);
+  const { checkInvoice } = useSelector((state) => state.mainSlice);
 
   const onChangeCheck = (e, { product_guid }) => {
     const newList = listProds?.map((i) => {

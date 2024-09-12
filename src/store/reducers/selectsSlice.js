@@ -19,9 +19,14 @@ const selectsSlice = createSlice({
     setActiveTA: (state, action) => {
       state.activeTA = action.payload;
     },
+    clearSelects: (state, action) => {
+      state.activeWorkShop = {};
+      state.activeCategs = {};
+      state.activeTA = {};
+    },
   },
 });
-export const { setActiveWorkShop, setActiveCategs, setActiveTA } =
+export const { setActiveWorkShop, setActiveCategs, setActiveTA, clearSelects } =
   selectsSlice.actions;
 
 export default selectsSlice.reducer;

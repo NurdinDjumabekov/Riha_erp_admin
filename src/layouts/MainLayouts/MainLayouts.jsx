@@ -5,53 +5,66 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 ////// style
 import "./style.scss";
+import { moreInfo } from "./style";
 
+////// components
 import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
-import { getListTA, getListWorkShop } from "../../store/reducers/requestSlice";
 import LogOut from "../../components/ActionSettings/LogOut/LogOut";
-
-import SettingsSuggestOutlinedIcon from "@mui/icons-material/SettingsSuggestOutlined";
-import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
-import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import { Tooltip } from "@mui/material";
 
+/////// fns
+import {
+  getListTA,
+  getListWorkShop,
+  setInvoiceInfo,
+} from "../../store/reducers/mainSlice";
+
+////// helpers
+import { listMenu } from "../../helpers/objs";
+import { useState } from "react";
+
 const MainLayouts = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
-
+  const [active, setActive] = useState("/");
   const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
+  const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
   useEffect(() => {
     dispatch(getListWorkShop());
     dispatch(getListTA({ first: true }));
-  }, []);
+  }, [dispatch]);
 
-  const objType = { 2: <MenuLeft /> };
+  const handleChange = (link, id) => {
+    setActive(link);
+    dispatch(setInvoiceInfo({ ...invoiceInfo, action: id }));
+  };
+
+  useNavigate(() => {
+    setActive(location?.pathname);
+  }, [location?.pathname]);
 
   return (
     <div className="layouts">
-      {objType?.[user_type]}
       <div className="pages">
         <Outlet />
       </div>
       <div className="actionSettings">
         <div className="actionSettings__inner">
-          <Tooltip title={"Настройки"} placement="left">
-            <button>
-              <SettingsSuggestOutlinedIcon sx={{ color: "#fff" }} />
-            </button>
-          </Tooltip>
-          <Tooltip title={"Отчеты"} placement="left">
-            <button>
-              <SummarizeOutlinedIcon sx={{ color: "#fff" }} />
-            </button>
-          </Tooltip>
-          <Tooltip title={"Справочники"} placement="left">
-            <button>
-              <AccountTreeOutlinedIcon sx={{ color: "#fff" }} />
-            </button>
-          </Tooltip>
+          {listMenu?.map(({ title, icon, id, link }) => (
+            <Tooltip
+              key={id}
+              title={<p style={moreInfo}>{title}</p>}
+              placement="left"
+              arrow
+              onClick={() => handleChange(link, id)}
+            >
+              <div className={active == link ? "activeMenu111" : ""}>
+                <button>{icon}</button>
+              </div>
+            </Tooltip>
+          ))}
         </div>
         <LogOut />
       </div>

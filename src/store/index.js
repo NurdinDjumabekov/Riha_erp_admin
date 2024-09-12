@@ -14,14 +14,18 @@ import storage from "redux-persist/lib/storage";
 //// slice
 import stateSlice from "./reducers/stateSlice";
 import saveDataSlice from "./reducers/saveDataSlice";
-import requestSlice from "./reducers/requestSlice";
+import mainSlice from "./reducers/mainSlice";
 import selectsSlice from "./reducers/selectsSlice";
+import wareHouseSlice from "./reducers/wareHouseSlice";
+import productionSlice from "./reducers/productionSlice";
 
 const reducer = combineReducers({
-  requestSlice,
+  mainSlice,
   stateSlice,
   saveDataSlice,
   selectsSlice,
+  wareHouseSlice,
+  productionSlice,
 });
 
 const persistConfig = {

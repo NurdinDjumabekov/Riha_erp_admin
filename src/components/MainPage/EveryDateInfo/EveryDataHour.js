@@ -16,11 +16,13 @@ import { objStatusOrders } from "../../../helpers/objs";
 import { texts } from "../../../helpers/LocalData";
 
 /////// fns
-import {
-  setCheckInvoice,
-  setInvoiceInfo,
-} from "../../../store/reducers/requestSlice";
-import { getListProdsInInvoice } from "../../../store/reducers/requestSlice";
+import { setInvoiceInfo } from "../../../store/reducers/mainSlice";
+import { setCheckInvoice } from "../../../store/reducers/mainSlice";
+import { getListProdsInInvoice } from "../../../store/reducers/mainSlice";
+
+////// icons
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const CustomWidthTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -76,7 +78,7 @@ const EveryDataHour = ({ content }) => {
         <p className="name">{total_price} сом</p>
         <div className="status">
           <Tooltip
-            title={objStatusOrders?.[status]?.text}
+            title={objStatusOrders?.[status]?.text || "Заявка будет обработана"}
             placement="top"
             arrow
             disableInteractive
@@ -87,7 +89,9 @@ const EveryDataHour = ({ content }) => {
             }}
           >
             <div className="status__inner">
-              {objStatusOrders?.[status]?.img}
+              {objStatusOrders?.[+status]?.img || (
+                <HelpOutlineIcon sx={{ color: "#222" }} />
+              )}
             </div>
           </Tooltip>
         </div>

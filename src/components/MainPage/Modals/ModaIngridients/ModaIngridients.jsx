@@ -19,10 +19,10 @@ import ListZames from "../../ActionsAllDay/ListZames/ListZames";
 import "./style.scss";
 
 ////// fns
-import { actionsInvoiceAllDay } from "../../../../store/reducers/requestSlice";
-import { getListTA } from "../../../../store/reducers/requestSlice";
-import { getListWorkShop } from "../../../../store/reducers/requestSlice";
-import { setInvoiceInfo } from "../../../../store/reducers/requestSlice";
+import { actionsInvoiceAllDay } from "../../../../store/reducers/mainSlice";
+import { getListTA } from "../../../../store/reducers/mainSlice";
+import { getListWorkShop } from "../../../../store/reducers/mainSlice";
+import { setInvoiceInfo } from "../../../../store/reducers/mainSlice";
 
 ////// helpers
 import { listActionsTitle } from "../../../../helpers/objs";
@@ -40,11 +40,11 @@ const ModaIngridients = () => {
   const dispatch = useDispatch();
   const [active, setActive] = useState(1); // 1,2,3
 
-  const { invoiceInfo } = useSelector((state) => state.requestSlice);
-  const { listsForProduction } = useSelector((state) => state.requestSlice);
+  const { invoiceInfo } = useSelector((state) => state.mainSlice);
+  const { listsForProduction } = useSelector((state) => state.mainSlice);
   const { list_ingredient, list_products } = listsForProduction;
-  const { listTA, activeDate } = useSelector((state) => state.requestSlice);
-  const { checkInvoice } = useSelector((state) => state.requestSlice);
+  const { listTA, activeDate } = useSelector((state) => state.mainSlice);
+  const { checkInvoice } = useSelector((state) => state.mainSlice);
 
   const handleClose = () => dispatch(setInvoiceInfo({ guid: "", action: 0 }));
 
@@ -73,8 +73,6 @@ const ModaIngridients = () => {
       length: 5,
     },
   };
-
-  console.log(list_products, "list_products");
 
   useEffect(() => {
     if (invoiceInfo?.action == 0) {
@@ -135,8 +133,8 @@ const ModaIngridients = () => {
             </div>
           </section>
           <div className="listsInvoice">
-            {obj?.[active]?.comp}
             <AddProdInDay />
+            {obj?.[active]?.comp}
           </div>
         </div>
       </div>
