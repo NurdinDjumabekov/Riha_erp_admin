@@ -8,72 +8,80 @@
   top: 58px;
   left: 0px;
   width: 100%;
-  padding: 0 5px 0 25px;
+  padding: 0 25px;
   z-index: 10;
-  width: 50%;
 
   &__inner {
     display: flex;
     align-items: flex-end;
+    justify-content: space-between;
     gap: 10px;
-    width: 100%;
+    width: 50%;
 
-    .myInputs {
-      width: 25%;
-      max-width: 250px;
-      cursor: pointer;
-      position: relative;
-      z-index: 10;
+    .choiceSel {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      width: 100%;
 
-      h6 {
-        font-size: 13px;
-        font-weight: 500;
-        margin: 0 0 3px 0;
-      }
+      .myInputs {
+        width: 25%;
+        max-width: 250px;
+        cursor: pointer;
+        position: relative;
+        z-index: 10;
 
-      .select {
-        .css-qbdosj-Input {
-          height: 30px;
-          cursor: pointer;
+        h6 {
+          font-size: 13px;
+          font-weight: 500;
+          margin: 0 0 3px 0;
         }
 
-        .css-13cymwt-control {
-          border: 1px solid #e1dede !important;
-          box-shadow: none !important;
-          cursor: pointer;
+        .select {
+          .css-qbdosj-Input {
+            height: 30px;
+            cursor: pointer;
+          }
 
-          &:hover {
+          .css-13cymwt-control {
+            border: 1px solid #e1dede !important;
+            box-shadow: none !important;
+            cursor: pointer;
+
+            &:hover {
+              border: 1px solid #6361615b !important;
+              cursor: pointer;
+            }
+          }
+
+          .css-t3ipsp-control {
             border: 1px solid #6361615b !important;
+            box-shadow: none !important;
             cursor: pointer;
           }
         }
 
-        .css-t3ipsp-control {
-          border: 1px solid #6361615b !important;
-          box-shadow: none !important;
-          cursor: pointer;
-        }
-      }
+        .input {
+          height: 27px;
+          border-radius: 3px;
+          border: 1px solid #e1dede !important;
+          padding: 2px 10px;
+          width: 100%;
+          font-size: 13px;
 
-      .input {
-        height: 27px;
-        border-radius: 3px;
-        border: 1px solid #e1dede !important;
-        padding: 2px 10px;
-        width: 100%;
-        font-size: 13px;
+          &::placeholder {
+            color: #a9afb8;
+          }
 
-        &::placeholder {
-          color: #a9afb8;
-        }
-
-        &:focus {
-          border: 1px solid #6a696987;
-          outline: none;
+          &:focus {
+            border: 1px solid #6a696987;
+            outline: none;
+          }
         }
       }
     }
   }
+
   .saveAction {
     height: 27px;
     background: #299b31;
@@ -88,33 +96,5 @@
     p {
       font-size: 12px;
     }
-  }
-}
-
-.css-t3ipsp-control,
-.css-13cymwt-control {
-  min-height: 10px !important;
-}
-
-.css-hlgwow {
-  padding: 0px 5px !important;
-}
-
-.css-1xc3v61-indicatorContainer,
-.css-15lsz6c-indicatorContainer {
-  padding: 0 3px !important;
-}
-
-.css-1dimb5e-singleValue {
-  font-size: 12px;
-}
-
-.css-1xc3v61-indicatorContainer {
-  width: 22px !important;
-  height: 22px !important;
-
-  svg {
-    width: 18px !important;
-    height: 18px !important;
   }
 }

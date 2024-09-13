@@ -8,7 +8,11 @@ import { sumCountsFN, totalSum } from "../../../../helpers/totals";
 
 const ListIngredients = ({ list }) => {
   return (
-    <TableContainer component={Paper} sx={{ height: "99%", width: "60%" }}>
+    <TableContainer
+      component={Paper}
+      sx={{ height: "99%", width: "60%" }}
+      className="scroll_table"
+    >
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
@@ -18,7 +22,7 @@ const ListIngredients = ({ list }) => {
               Кол-во/вес
             </TableCell>
             <TableCell align="left" style={{ width: "15%" }}>
-              ед.изм
+              ед. изм
             </TableCell>
           </TableRow>
         </TableHead>

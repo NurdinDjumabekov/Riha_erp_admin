@@ -8,7 +8,11 @@ import { sumCountsFN, totalSum } from "../../../../helpers/totals";
 
 const ListProds = ({ list }) => {
   return (
-    <TableContainer component={Paper} sx={{ height: "99%", width: "60%" }}>
+    <TableContainer
+      component={Paper}
+      sx={{ height: "99%", width: "60%" }}
+      className="scroll_table"
+    >
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>

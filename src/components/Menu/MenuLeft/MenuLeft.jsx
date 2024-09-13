@@ -12,6 +12,7 @@ import { FormControlLabel, Switch, styled } from "@mui/material";
 ////// imgs
 import plus from "../../../assets/icons/plus-square.svg";
 import minus from "../../../assets/icons/minus-square.svg";
+import user from "../../../assets/icons/user.svg";
 
 ////// fns
 import { getListOrders } from "../../../store/reducers/mainSlice";
@@ -62,9 +63,10 @@ const MenuLeft = () => {
             <img src={look ? minus : plus} alt="-" />
           </button>
         </div>
-        <ul className={`content ${look ? "show" : ""}`}>
+        <ul className={`content scroll_table ${look ? "show" : ""}`}>
           {listTA?.map((item) => (
             <li key={item?.guid}>
+              <img src={user} alt="[]" />
               <FormControlLabel
                 control={<Android12Switch />}
                 label={item?.fio}

@@ -63,3 +63,58 @@ button {
     }
   }
 }
+
+.scroll_table {
+  &::-webkit-scrollbar {
+    min-width: 7px;
+    max-width: 7px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    min-width: 8px;
+    max-width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    cursor: pointer;
+    max-height: 135px;
+    min-height: 135px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #fffefe;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #23a5d9;
+  }
+}
+
+.css-t3ipsp-control,
+.css-13cymwt-control {
+  min-height: 10px !important;
+}
+
+.css-hlgwow {
+  padding: 0px 5px !important;
+}
+
+.css-1xc3v61-indicatorContainer,
+.css-15lsz6c-indicatorContainer {
+  padding: 0 3px !important;
+}
+
+.css-1dimb5e-singleValue {
+  font-size: 12px;
+}
+
+.css-1xc3v61-indicatorContainer {
+  width: 22px !important;
+  height: 22px !important;
+
+  svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}

@@ -48,7 +48,11 @@ const ListsSendTA = () => {
   return (
     <div className="listsWareHome">
       <div className="listsWareHome__inner">
-        <TableContainer component={Paper} sx={{ maxHeight: "100%" }}>
+        <TableContainer
+          component={Paper}
+          sx={{ maxHeight: "100%" }}
+          className="scroll_table"
+        >
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>

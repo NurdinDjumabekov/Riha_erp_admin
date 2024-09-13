@@ -111,7 +111,6 @@ export const getListProds = createAsyncThunk(
   "getListProds",
   async function ({ guid, guidCateg }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_product?category_guid=${guidCateg}&workshop_guid=${guid}`;
-
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
@@ -363,6 +362,7 @@ export const createEditProdInInvoice = createAsyncThunk(
         const agents_guid = searchActiveOrdersTA(listTA);
         dispatch(getListOrders({ ...activeDate, agents_guid }));
         dispatch(getListProdsInInvoice(guid));
+        dispatch(getDefaultList()); //// очищаю counts всего списка
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -405,6 +405,7 @@ export const addEveryProd = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         myAlert("Товар успешно добавлен!");
         dispatch(getEveryDataDay(updateData)); //// get данные всего дня
+        dispatch(getDefaultList()); //// очищаю counts всего списка
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -465,6 +466,18 @@ const mainSlice = createSlice({
       );
     },
 
+    /////изменение ключа count и checkbox в списке товаров
+    changeCountCheckedListProds: (state, action) => {
+      const { product_guid, count } = action.payload;
+      state.listProds = state.listProds?.map((i) => {
+        if (i?.product_guid === product_guid) {
+          return { ...i, count, is_checked: count == "" ? false : true };
+        } else {
+          return i;
+        }
+      });
+    },
+
     /////изменение ключа count в списке товаров временной корзины
     changeCountOrders: (state, action) => {
       const { product_guid, count } = action.payload;
@@ -489,6 +502,15 @@ const mainSlice = createSlice({
     //// меняется возможность редактирования данных
     setCheckInvoice: (state, action) => {
       state.checkInvoice = action.payload;
+    },
+
+    //// сброс cgeckbox и count в списке
+    getDefaultList: (state, action) => {
+      state.listProds = state.listProds?.map((i) => ({
+        ...i,
+        count: "",
+        is_checked: false,
+      }));
     },
   },
 
@@ -537,7 +559,7 @@ const mainSlice = createSlice({
       state.preloader = false;
       state.listProds = action.payload?.map((i) => ({
         ...i,
-        count: 1,
+        count: "",
         is_checked: false,
       }));
     });
@@ -654,12 +676,14 @@ export const {
   editListAgents,
   clearListOrders,
   changeCountListProds,
+  changeCountCheckedListProds,
   setListProds,
   changeCountOrders,
   setInvoiceInfo,
   setInvoiceInfoReturn,
   setActiveDate,
   setCheckInvoice,
+  getDefaultList,
 } = mainSlice.actions;
 
 export default mainSlice.reducer;

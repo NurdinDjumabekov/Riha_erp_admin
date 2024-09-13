@@ -22,6 +22,7 @@ import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import AvTimerOutlinedIcon from "@mui/icons-material/AvTimerOutlined";
+import ChecklistIcon from "@mui/icons-material/Checklist";
 
 export const objStatusOrders = {
   0: {
@@ -37,7 +38,7 @@ export const objStatusOrders = {
     img: <PendingActionsIcon sx={{ color: "#222" }} />,
   },
   2: {
-    text: "Товары на складе",
+    text: "Товары на складе и готовы к отгрузке",
     img: <DoneOutlinedIcon sx={{ color: "#1b5f20" }} />,
   },
 };
@@ -82,13 +83,6 @@ export const objStatusText = {
 };
 
 export const listMenu = [
-  // {
-  //   id: 1,
-  //   title: "Заявки",
-  //   icon: <HomeOutlinedIcon sx={{ color: "#fff" }} />,
-  //   iconActive: <HomeOutlinedIcon sx={{ color: "#988c7d" }} />,
-  //   link: "/",
-  // },
   {
     id: 4,
     title: "Производство",
@@ -100,6 +94,12 @@ export const listMenu = [
     id: 5,
     title: "Склад готовой продукции",
     icon: <HomeWorkIcon sx={{ color: "#fff" }} />,
+    link: "/asd",
+  },
+  {
+    id: 6,
+    title: "Список торговых агентов",
+    icon: <ChecklistIcon sx={{ color: "#fff" }} />,
     link: "/asd",
   },
   {

@@ -64,6 +64,11 @@ const ModalProduction = () => {
       //// валидцаия на числа
       return;
     }
+
+    // if (count > item?.countOld) {
+    //   return;
+    // }
+
     dispatch(changeCountProduction({ ...item, count }));
     /////изменение ключа count в списке товаров производства
   };
@@ -162,7 +167,11 @@ const ModalProduction = () => {
         </div>
 
         <div className="modalProduction__invoice">
-          <TableContainer component={Paper} sx={{ maxHeight: "100%" }}>
+          <TableContainer
+            component={Paper}
+            sx={{ maxHeight: "100%" }}
+            className="scroll_table"
+          >
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>

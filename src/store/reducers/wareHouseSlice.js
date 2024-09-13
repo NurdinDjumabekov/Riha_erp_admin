@@ -45,9 +45,9 @@ export const getListWorkShopWH = createAsyncThunk(
 export const getListCategsWH = createAsyncThunk(
   "getListCategsWH",
   async function ({ guid }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_category?workshop_guid=${guid}?all=1`;
+    const url = `${REACT_APP_API_URL}/ta/get_category?workshop_guid=${guid}&all=1`;
     try {
-      const response = await axiosInstance(url);
+      const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
         const obj = response?.data?.[0];
         dispatch(getListProdsWH({ guid, guidCateg: obj?.category_guid }));

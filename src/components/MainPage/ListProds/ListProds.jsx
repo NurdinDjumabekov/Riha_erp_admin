@@ -8,7 +8,7 @@ import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 /////// fns
-import { changeCountListProds } from "../../../store/reducers/mainSlice";
+import { changeCountCheckedListProds } from "../../../store/reducers/mainSlice";
 import { setListProds } from "../../../store/reducers/mainSlice";
 
 ////// helpers
@@ -44,13 +44,17 @@ const ListProds = () => {
       return;
     }
 
-    dispatch(changeCountListProds({ ...item, count }));
+    dispatch(changeCountCheckedListProds({ ...item, count }));
     /////изменение ключа count в списке товаров
   };
 
   return (
     <div className="listProdCRUD">
-      <TableContainer component={Paper} sx={{ maxHeight: "100%" }}>
+      <TableContainer
+        component={Paper}
+        sx={{ maxHeight: "100%" }}
+        className="scroll_table"
+      >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>

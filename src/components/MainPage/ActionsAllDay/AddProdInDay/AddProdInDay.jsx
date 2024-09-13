@@ -104,6 +104,11 @@ const AddProdInDay = () => {
       return;
     }
 
+    if (obj?.count == "" || obj?.count == 0) {
+      myAlert("Введите количество товара", "error");
+      return;
+    }
+
     const data = {
       invoice_guid: invoiceInfo?.guid,
       comment: "",
@@ -112,7 +117,7 @@ const AddProdInDay = () => {
 
     const agents_guid = searchActiveOrdersTA(listTA);
     const updateData = {
-      agents_guid,
+      agents_guid: [...agents_guid, activeTA?.guid],
       date_from: invoiceInfo?.date_from,
       date_to: invoiceInfo?.date_from,
       //// для отпраки данных на обнолвение (после успешного добаление вызывается другой запрос)
@@ -176,7 +181,11 @@ const AddProdInDay = () => {
           />
         </div>
       </div>
-      <TableContainer component={Paper} sx={{ height: "99%" }}>
+      <TableContainer
+        component={Paper}
+        sx={{ height: "99%" }}
+        className="scroll_table"
+      >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>

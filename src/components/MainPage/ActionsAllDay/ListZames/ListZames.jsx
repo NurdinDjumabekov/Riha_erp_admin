@@ -72,29 +72,31 @@ const ListZames = () => {
 
   return (
     <div className="zames" style={{ height: "99%", width: "60%" }}>
-      {mixes?.map((mix, index) => (
-        <div key={index} className="mix">
-          <h3>{mix.name}</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Ингредиент</th>
-                <th>Количество</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mix.ingredients.map((ingredient, i) => (
-                <tr key={i}>
-                  <td>{ingredient.name}</td>
-                  <td>{ingredient.quantity}</td>
+      <div className="zames__inner">
+        {mixes?.map((mix, index) => (
+          <div key={index} className="mix">
+            <h3>{mix.name}</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Ингредиент</th>
+                  <th>Количество</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <p>Время смешивания: {mix.mixTime}</p>
-          <p>Время маринования/отдыха: {mix.restTime}</p>
-        </div>
-      ))}
+              </thead>
+              <tbody>
+                {mix.ingredients.map((ingredient, i) => (
+                  <tr key={i}>
+                    <td>{ingredient.name}</td>
+                    <td>{ingredient.quantity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p>Время смешивания: {mix.mixTime}</p>
+            <p>Время маринования/отдыха: {mix.restTime}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

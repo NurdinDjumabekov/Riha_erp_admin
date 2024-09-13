@@ -4,7 +4,12 @@
   padding: 1px 10px 0 0;
 
   &__inner {
-    height: 98vh;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px 0 10px 0;
+    // align-items: flex-start;
 
     .title {
       display: flex;
@@ -45,7 +50,7 @@
     }
 
     .content.show {
-      max-height: 90%;
+      max-height: 100%;
       opacity: 1;
       padding: 0 10px 0 0px;
       overflow-y: scroll;
@@ -54,22 +59,47 @@
     ul {
       li {
         margin: 0 0 0 2px;
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        > img {
+          width: 16px;
+          min-width: 16px;
+          height: 16px;
+          position: absolute;
+          left: 33px;
+          top: 5px;
+        }
 
         label {
-          width: 260px;
+          width: 100%;
 
           > span:nth-child(1) {
-            margin: 0 0 0 3px !important;
-            height: 28px !important;
+            margin: 0 0 0 5px !important;
+            height: 26px !important;
             padding: 6px !important;
-            width: 48px !important;
+            width: 40px !important;
 
             > span:nth-child(1) {
-              padding: 8px !important;
+              margin: 8px 0 0 0px;
+              padding: 0px !important;
+              width: 12px !important;
+              // left: 8px;
 
               > span:nth-child(2) {
                 margin: 0 !important;
+                width: 10px !important;
+                height: 10px !important;
               }
+            }
+
+            .css-byenzh-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked {
+              left: 0px !important;
+            }
+
+            .css-byenzh-MuiButtonBase-root-MuiSwitch-switchBase {
+              left: 8px !important;
             }
           }
 
@@ -81,33 +111,9 @@
             overflow: hidden !important;
             text-overflow: ellipsis !important;
             white-space: nowrap !important;
+            padding: 0 0 0 20px;
           }
         }
-      }
-
-      &::-webkit-scrollbar {
-        min-width: 7px;
-        max-width: 7px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background-color: transparent;
-        min-width: 8px;
-        max-width: 8px;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background-color: transparent;
-        cursor: pointer;
-        max-height: 135px;
-        min-height: 135px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background-color: #fffefe;
-      }
-      &::-webkit-scrollbar-thumb {
-        background-color: #23a5d9;
       }
     }
   }
