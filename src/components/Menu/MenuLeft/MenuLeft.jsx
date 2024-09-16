@@ -7,7 +7,6 @@ import "./style.scss";
 
 ////// components
 import SearchShop from "./SearchShop/SearchShop";
-import { FormControlLabel, Switch, styled } from "@mui/material";
 
 ////// imgs
 import plus from "../../../assets/icons/plus-square.svg";
@@ -19,21 +18,6 @@ import { getListOrders } from "../../../store/reducers/mainSlice";
 import { editListAgents } from "../../../store/reducers/mainSlice";
 import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 
-const Android12Switch = styled(Switch)(() => ({
-  "& .MuiSwitch-track": {
-    borderRadius: 22 / 2,
-  },
-
-  "& .MuiSwitch-thumb": {
-    boxShadow: "none",
-    width: 12,
-    height: 12,
-    margin: 5,
-    marginTop: 4,
-    background: "#fff",
-  },
-}));
-
 const MenuLeft = () => {
   const dispatch = useDispatch();
 
@@ -42,7 +26,7 @@ const MenuLeft = () => {
   const [look, setLook] = useState(true);
   const [checked, setChecked] = useState(true);
 
-  const onChange = (e, guid) => {
+  const onChange = (guid) => {
     dispatch(editListAgents(guid));
     setChecked(!checked);
   };
@@ -65,14 +49,17 @@ const MenuLeft = () => {
         </div>
         <ul className={`content scroll_table ${look ? "show" : ""}`}>
           {listTA?.map((item) => (
-            <li key={item?.guid}>
-              <img src={user} alt="[]" />
-              <FormControlLabel
-                control={<Android12Switch />}
-                label={item?.fio}
-                checked={!!item?.is_checked}
-                onChange={(e) => onChange(e, item?.guid)}
-              />
+            <li key={item?.guid} onClick={() => onChange(item?.guid)}>
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={!!item?.is_checked}
+                  onChange={(e) => onChange(item?.guid, e)}
+                />
+                <span className="slider"></span>
+              </label>
+              <img src={user} alt="user icon" />
+              <p>{item?.fio}</p>
             </li>
           ))}
         </ul>
