@@ -85,6 +85,23 @@ export const addDateFN = (date) => {
   return { date_from, date_to };
 };
 
+export const addToDateFN = (dateTime) => {
+  //// 2024-09-11 10:00 ====> 2024-09-11 11:00
+  if (!dateTime) return "";
+
+  const [date, time] = dateTime?.split(" ");
+  const [hours, minutes] = time?.split(":").map(Number);
+
+  // Увеличиваем время на один час
+  const newHours = hours + 1;
+
+  const date_to = `${date} ${newHours?.toString()?.padStart(2, "0")}:${minutes
+    ?.toString()
+    ?.padStart(2, "0")}`;
+
+  return date_to;
+};
+
 export const formatDateMonth = (dateString) => {
   ///// 2024-09-13 => "13 сентября 2024 года"
   const months = [

@@ -1,73 +1,38 @@
 ///// hooks
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 ////// style
 import "./style.scss";
-import { moreInfo } from "./style";
 
 ////// components
-import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
-import LogOut from "../../components/ActionSettings/LogOut/LogOut";
-import { Tooltip } from "@mui/material";
+import MenuAgents from "../../common/MenuAgents/MenuAgents";
+import MenuAdmin from "../../common/MenuAdmin/MenuAdmin";
 
 /////// fns
-import {
-  getListTA,
-  getListWorkShop,
-  setInvoiceInfo,
-} from "../../store/reducers/mainSlice";
-
-////// helpers
-import { listMenu } from "../../helpers/objs";
-import { useState } from "react";
+import { getListTA } from "../../store/reducers/mainSlice";
+import { getListWorkShop } from "../../store/reducers/mainSlice";
 
 const MainLayouts = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [active, setActive] = useState("/");
+
   const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
-  const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
   useEffect(() => {
     dispatch(getListWorkShop());
     dispatch(getListTA({ first: true }));
-  }, [dispatch]);
+  }, []);
 
-  const handleChange = (link, id) => {
-    setActive(link);
-    dispatch(setInvoiceInfo({ ...invoiceInfo, action: id }));
-  };
-
-  useNavigate(() => {
-    setActive(location?.pathname);
-  }, [location?.pathname]);
+  const objMenu = { 1: <MenuAgents />, 2: <MenuAdmin /> };
+  /// user_type - 1 agent 2 admin
 
   return (
     <div className="layouts">
       <div className="pages">
         <Outlet />
       </div>
-      <div className="actionSettings">
-        <div className="actionSettings__inner">
-          {listMenu?.map(({ title, icon, id, link }) => (
-            <Tooltip
-              key={id}
-              title={<p style={moreInfo}>{title}</p>}
-              placement="left"
-              arrow
-              onClick={() => handleChange(link, id)}
-            >
-              <div className={active == link ? "activeMenu111" : ""}>
-                <button>{icon}</button>
-              </div>
-            </Tooltip>
-          ))}
-        </div>
-        <LogOut />
-      </div>
+      {objMenu?.[user_type]}
     </div>
   );
 };

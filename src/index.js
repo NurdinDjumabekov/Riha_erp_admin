@@ -11,6 +11,14 @@ import { ToastContainer } from "react-toastify";
 
 propsStoreFN(store);
 
+document.addEventListener(
+  "touchmove",
+  function (e) {
+    // Ваш код для обработки touchmove
+  },
+  { passive: true }
+);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>

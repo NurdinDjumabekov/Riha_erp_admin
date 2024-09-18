@@ -30,9 +30,6 @@ const CustomWidthTooltip = styled(({ className, ...props }) => (
   [`& .${tooltipClasses.tooltip}`]: {
     maxWidth: 300,
     maxHeight: 500,
-    // overflow: "scroll",
-    // backgroundColor: "#fff", // Задаем цвет фона
-    // color: "#222",
     padding: 10,
   },
   "& p": {
@@ -63,16 +60,6 @@ const EveryDataHour = ({ content }) => {
 
   return (
     <div className="everyOrder" onClick={editEveryInvoice}>
-      {/* <CustomWidthTooltip
-        disableInteractive
-        title={
-          <div className="moreInfoOrders">
-            <p>{texts}</p>
-          </div>
-        }
-        placement="top"
-        arrow
-      > */}
       <div className="everyOrder__inner">
         <h6>{agent}</h6>
         <p className="name">{total_price} сом</p>
@@ -88,15 +75,14 @@ const EveryDataHour = ({ content }) => {
               },
             }}
           >
-            <div className="status__inner">
+            {/* <div className="status__inner">
               {objStatusOrders?.[+status]?.img || (
                 <HelpOutlineIcon sx={{ color: "#222" }} />
               )}
-            </div>
+            </div> */}
           </Tooltip>
         </div>
       </div>
-      {/* </CustomWidthTooltip> */}
     </div>
   );
 };

@@ -1,0 +1,46 @@
+.actionSettings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 50px 0 0 0;
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    > div {
+      padding: 10px;
+      // margin: 3px 0px;
+      cursor: pointer;
+
+      &:hover {
+        background: #f4e0bd;
+      }
+
+      button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #988c7d;
+        // background: #fff;
+        /// #f4e0bd
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          width: 65%;
+          height: 65%;
+        }
+      }
+    }
+
+    .activeMenu {
+      background: #f4e0bd;
+    }
+  }
+}

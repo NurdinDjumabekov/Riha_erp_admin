@@ -96,8 +96,6 @@ const ModalProduction = () => {
     ///  отправка товаров на склад через функцию
   };
 
-  console.log(activeTA, "activeTA");
-
   const onChangeAgents = (item) => {
     dispatch(setActiveTA(item));
     ///// выбор селекта ТА

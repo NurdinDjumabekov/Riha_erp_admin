@@ -1,6 +1,6 @@
 /////// hooks
 import { useDispatch, useSelector } from "react-redux";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 
 ////// components
 import FullCalendar from "@fullcalendar/react";
@@ -9,34 +9,28 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import ruLocale from "@fullcalendar/core/locales/ru";
 import ModalOrderCRUD from "../../components/MainPage/Modals/ModalOrderCRUD/ModalOrderCRUD";
-import {
-  startOfWeek,
-  endOfWeek,
-  format,
-  startOfMonth,
-  endOfMonth,
-} from "date-fns";
-import { ru } from "date-fns/locale";
+import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
+import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/ModaIngridients";
+import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
+import ModalProduction from "../../components/MainPage/Modals/ModalProduction/ModalProduction";
+import ModalWareHome from "../../components/MainPage/Modals/ModalWareHome/ModalWareHome";
 
 /////// style
 import "./style.scss";
 
 ////// helpers
 import { confirmAllDay } from "../../helpers/LocalData";
-import { transformDateTime } from "../../helpers/transformDate";
+import { addToDateFN, transformDateTime } from "../../helpers/transformDate";
 import { myAlert } from "../../helpers/MyAlert";
+import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
+import { getMonthRange, getMyWeek } from "../../helpers/weeks";
 
 ////// fns
 import { editInvoice, setActiveDate } from "../../store/reducers/mainSlice";
 import { getListOrders } from "../../store/reducers/mainSlice";
 import { createInvoice } from "../../store/reducers/mainSlice";
-import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
-import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
-import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/ModaIngridients";
-import { getMonthRange, getMyWeek } from "../../helpers/weeks";
-import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
-import ModalProduction from "../../components/MainPage/Modals/ModalProduction/ModalProduction";
-import ModalWareHome from "../../components/MainPage/Modals/ModalWareHome/ModalWareHome";
+
+////// imgs
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -49,8 +43,17 @@ const MainPage = () => {
   const { listTA } = useSelector((state) => state.mainSlice);
 
   const addTodo = (selectInfo) => {
-    const date_from = transformDateTime(selectInfo?.start);
-    const date_to = transformDateTime(selectInfo?.end);
+    ////// from date
+    const date_from_mob = transformDateTime(selectInfo?.date);
+    const date_from_desc = transformDateTime(selectInfo?.start);
+
+    const date_from = !!selectInfo?.start ? date_from_desc : date_from_mob;
+
+    ////// to date
+    const date_to_mob = addToDateFN(transformDateTime(selectInfo?.date));
+    const date_to_desc = transformDateTime(selectInfo?.end);
+
+    const date_to = !!selectInfo?.end ? date_to_desc : date_to_mob;
 
     // Проверяем, что это не выбор на весь день (т.е. выбранные часы должны отличаться)
     const isAllDaySelection =
@@ -64,8 +67,6 @@ const MainPage = () => {
 
     dispatch(createInvoice({ date_from, date_to }));
   };
-
-  function handleEventClick(clickInfo) {}
 
   // для диапазон для месяца или недели
   const updateDateRange = () => {
@@ -136,6 +137,7 @@ const MainPage = () => {
 
   return (
     <>
+      {/* <NavMenu>asdasdas</NavMenu> */}
       <div className="mainPage">
         {objType?.[user_type]}
         <div className="mainPage__inner">
@@ -154,11 +156,11 @@ const MainPage = () => {
             selectMirror={true}
             dayMaxEvents={true}
             select={addTodo}
+            dateClick={addTodo}
             weekends={true}
             initialEvents={[...listOrders, ...listTitleOrders]}
             events={[...listOrders, ...listTitleOrders]}
             eventContent={(e) => <EveryDateInfo content={e} />}
-            eventClick={handleEventClick}
             eventDrop={handleEventDrop}
             eventsSet={updateDateRange}
             slotMinTime="05:00:00"
@@ -173,6 +175,9 @@ const MainPage = () => {
             locale={ruLocale}
             expandRows={true}
             allDaySlot={user_type == 2} /// отображать только у админа
+            titleFormat={{ month: "long" }}
+            eventResizableFromStart={false} // Отключаю возможность изменения размера с начала
+            eventDurationEditable={false}
           />
         </div>
       </div>
