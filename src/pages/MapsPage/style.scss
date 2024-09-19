@@ -1,0 +1,35 @@
+.map2Gis {
+  width: 100%;
+  height: 100%;
+
+  .btnNavMap {
+    padding: 0;
+    outline: 0;
+    border: none;
+    cursor: pointer;
+    background: #fff;
+    width: 45px;
+    height: 45px;
+    color: #262626;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px 0 rgba(38, 38, 38, 0.5);
+    border-radius: 4px;
+    position: absolute;
+    z-index: 100;
+    right: 15px;
+    bottom: 80px;
+  }
+  .mapgl_RyvsmCnoVe7ui2MClLMS {
+    width: 40px !important;
+
+    button {
+      width: 40px !important;
+      height: 40px !important;
+
+      svg {
+        width: 40px !important;
+        height: 40px !important;
+      }
+    }
+  }
+}

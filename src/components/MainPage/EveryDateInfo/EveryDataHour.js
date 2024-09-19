@@ -24,19 +24,19 @@ import { getListProdsInInvoice } from "../../../store/reducers/mainSlice";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
-const CustomWidthTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))({
-  [`& .${tooltipClasses.tooltip}`]: {
-    maxWidth: 300,
-    maxHeight: 500,
-    padding: 10,
-  },
-  "& p": {
-    fontSize: "12px",
-    margin: "5px 0",
-  },
-});
+// const CustomWidthTooltip = styled(({ className, ...props }) => (
+//   <Tooltip {...props} classes={{ popper: className }} />
+// ))({
+//   [`& .${tooltipClasses.tooltip}`]: {
+//     maxWidth: 300,
+//     maxHeight: 500,
+//     padding: 10,
+//   },
+//   "& p": {
+//     fontSize: "12px",
+//     margin: "5px 0",
+//   },
+// });
 
 const EveryDataHour = ({ content }) => {
   const { status, agent, invoice_guid } = content?.event?._def?.extendedProps;
@@ -80,6 +80,7 @@ const EveryDataHour = ({ content }) => {
                 <HelpOutlineIcon sx={{ color: "#222" }} />
               )}
             </div> */}
+            <p></p>
           </Tooltip>
         </div>
       </div>

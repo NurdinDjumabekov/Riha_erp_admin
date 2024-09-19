@@ -15,7 +15,10 @@ import MainLayouts from "../layouts/MainLayouts/MainLayouts";
 /////// pages
 import MainPage from "../pages/MainPage/MainPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
-import WareHousePage from "../pages/WareHousePage/WareHousePage";
+import SettingsPage from "../pages/SettingsPage/SettingsPage";
+import PayPage from "../pages/PayPage/PayPage";
+import MapsPage from "../pages/MapsPage/MapsPage";
+import CameraPage from "../pages/CameraPage/CameraPage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -39,12 +42,15 @@ const MainRoutes = () => {
         ) : (
           <Route element={<MainLayouts />}>
             <Route path="/" element={<MainPage />} />
-            {/* <Route path="/ware_house" element={<WareHousePage />} /> */}
+            <Route path="/camera" element={<CameraPage />} />
+            <Route path="/maps" element={<MapsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/pay" element={<PayPage />} />
           </Route>
         )}
         {/* <Route path="*" element={<NotFoundPage />} /> */}
       </Routes>
-      {/*<Preloader /> */}
+      {/*<Preloader  /> */}
     </>
   );
 };

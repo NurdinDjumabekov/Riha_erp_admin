@@ -14,9 +14,23 @@
     gap: 15px;
     height: 100%;
 
-    button {
+    a {
       background: transparent;
+      text-align: center;
 
+      > svg {
+        width: 25px;
+        height: 25px;
+        color: grey;
+      }
+
+      p {
+        font-size: 13px;
+        color: grey;
+      }
+    }
+
+    .activeIconMenu {
       > svg {
         width: 25px;
         height: 25px;

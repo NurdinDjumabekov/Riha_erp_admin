@@ -1,5 +1,6 @@
 ///// hooks
 import React, { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// style
@@ -13,29 +14,33 @@ import MapIcon from "@mui/icons-material/AddLocationAlt";
 import PayIcon from "@mui/icons-material/Paid";
 
 const MenuAgents = () => {
+  const location = useLocation();
+  const [active, setActive] = useState("/");
+
+  const listMenuAgents = [
+    { id: 1, text: "Календарь", icons: <Calendare />, link: "/" },
+    { id: 2, text: "Камера", icons: <CameraIcon />, link: "/camera" },
+    { id: 3, text: "Карта", icons: <MapIcon />, link: "/maps" },
+    { id: 5, text: "Оплаты", icons: <PayIcon />, link: "/pay" },
+    { id: 4, text: "Настройки", icons: <SettingsIcon />, link: "/settings" },
+  ];
+
+  useEffect(() => {
+    setActive(location?.pathname);
+  }, [location?.pathname]);
+
   return (
     <div className="actionSettingsAgents">
       <div className="actionSettingsAgents__inner">
-        <button>
-          <CameraIcon />
-          <p>Камера</p>
-        </button>
-        <button>
-          <Calendare />
-          <p>Календарь</p>
-        </button>
-        <button>
-          <MapIcon />
-          <p>Карта</p>
-        </button>
-        <button>
-          <PayIcon />
-          <p>Оплаты</p>
-        </button>
-        <button>
-          <SettingsIcon />
-          <p>Настройки</p>
-        </button>
+        {listMenuAgents?.map((item) => (
+          <NavLink
+            to={item?.link}
+            className={active == item.link ? "activeIconMenu" : ""}
+          >
+            {item.icons}
+            <p>{item?.text}</p>
+          </NavLink>
+        ))}
       </div>
     </div>
   );

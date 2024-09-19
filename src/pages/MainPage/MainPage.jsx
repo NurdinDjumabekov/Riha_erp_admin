@@ -1,6 +1,6 @@
 /////// hooks
 import { useDispatch, useSelector } from "react-redux";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 ////// components
 import FullCalendar from "@fullcalendar/react";
@@ -137,7 +137,6 @@ const MainPage = () => {
 
   return (
     <>
-      {/* <NavMenu>asdasdas</NavMenu> */}
       <div className="mainPage">
         {objType?.[user_type]}
         <div className="mainPage__inner">

@@ -3,7 +3,6 @@ import axios from "axios";
 import { myAlert } from "../../helpers/MyAlert";
 import axiosInstance from "../../axiosInstance";
 import { setActiveCategs, setActiveWorkShop } from "./selectsSlice";
-import { listTemp } from "../../helpers/LocalData";
 import { setInvoiceInfo } from "./mainSlice";
 
 const { REACT_APP_API_URL } = process.env;
@@ -332,7 +331,6 @@ const wareHouseSlice = createSlice({
     builder.addCase(getPastProdsTa.fulfilled, (state, action) => {
       state.preloader = false;
       state.listWHProdTA = action.payload;
-      // state.listWHProdTA = listTemp; // check
     });
     builder.addCase(getPastProdsTa.rejected, (state, action) => {
       state.error = action.payload;
