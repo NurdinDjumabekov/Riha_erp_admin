@@ -3,12 +3,15 @@ import { setDataSave } from "./saveDataSlice";
 import axios from "axios";
 import { myAlert } from "../../helpers/MyAlert";
 import axiosInstance from "../../axiosInstance";
+import { transformActionDate } from "../../helpers/transformDate";
 
 const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   mapGeo: { latitude: "", longitude: "" },
   key: "4b360754-94b6-4399-9a7b-35811336eb5f",
+  dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)
+  listPointsEveryTA: [], /// сипсок точек каждого агента
 };
 
 ////// sendGeoUser - отправка геолокации пользователя(агента)
@@ -31,6 +34,42 @@ export const sendGeoUser = createAsyncThunk(
   }
 );
 
+////// getPointsRouteAgent - get данных координат точек для каждого ТА
+export const getPointsRouteAgent = createAsyncThunk(
+  "getPointsRouteAgent",
+  async function ({ guid }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}ta/get_points?agent_guid=${guid}`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getDateRouteAgent - get данных координат каждого ТА
+export const getDateRouteAgent = createAsyncThunk(
+  "getDateRouteAgent",
+  async function ({ guid }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}ta/get_points?agent_guid=${guid}`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const mapSlice = createSlice({
   name: "mapSlice",
   initialState,
@@ -38,10 +77,31 @@ const mapSlice = createSlice({
     setMapGeo: (state, action) => {
       state.mapGeo = action?.payload;
     },
+    setDateRoute: (state, action) => {
+      state.dateRoute = action?.payload;
+    },
+    setListPointsEveryTA: (state, action) => {
+      state.listPointsEveryTA = action?.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    ////////////// getPointsRouteAgent
+    builder.addCase(getPointsRouteAgent.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listPointsEveryTA = action.payload;
+    });
+    builder.addCase(getPointsRouteAgent.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getDateRouteAgent.pending, (state, action) => {
+      state.preloader = true;
+    });
   },
 });
 
-export const { setMapGeo } = mapSlice.actions;
+export const { setMapGeo, setDateRoute, setListPointsEveryTA } =
+  mapSlice.actions;
 
 export default mapSlice.reducer;
 

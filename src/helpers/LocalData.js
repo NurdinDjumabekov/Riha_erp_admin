@@ -25,3 +25,26 @@ export const texts =
 
 export const confirmAllDay =
   "Нельзя добавить событие на весь день. Пожалуйста, выберите временной интервал.";
+
+export const pointsTT = [
+  {
+    coordinates: [74.5573735, 42.8508586],
+    text: "Marker 1",
+  },
+  {
+    coordinates: [74.5593735, 42.8508586],
+    text: "Marker 2",
+  },
+  {
+    coordinates: [74.5173735, 42.8508586],
+    text: "Marker 3",
+  },
+  {
+    coordinates: [74.5373735, 42.8578586],
+    text: "Marker 4",
+  },
+  {
+    coordinates: [74.5573735, 42.8298586],
+    text: "Marker 5",
+  },
+];

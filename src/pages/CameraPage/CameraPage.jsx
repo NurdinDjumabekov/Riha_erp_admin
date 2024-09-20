@@ -81,7 +81,6 @@ const CameraPage = () => {
       />
       <div className="photoSettings">
         <button onClick={capturePhoto}>Capture Photo</button>
-
         {capturing ? (
           <button onClick={handleStopCaptureClick}>Stop Recording</button>
         ) : (

@@ -13,15 +13,24 @@ import MenuAdmin from "../../common/MenuAdmin/MenuAdmin";
 /////// fns
 import { getListTA } from "../../store/reducers/mainSlice";
 import { getListWorkShop } from "../../store/reducers/mainSlice";
+import { getDateRouteAgent } from "../../store/reducers/mapSlice";
+import { setListPointsEveryTA } from "../../store/reducers/mapSlice";
+
+/////// helpers
+import { pointsTT } from "../../helpers/LocalData";
 
 const MainLayouts = () => {
   const dispatch = useDispatch();
 
-  const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
+  const { user_type, guid } = useSelector(
+    (state) => state.saveDataSlice?.dataSave
+  );
 
   useEffect(() => {
     dispatch(getListWorkShop());
     dispatch(getListTA({ first: true }));
+    dispatch(getDateRouteAgent({ guid })); //// отправляю запрос для получения точек каждого агента
+    dispatch(setListPointsEveryTA(pointsTT)); /// check
   }, []);
 
   const objMenu = { 1: <MenuAgents />, 2: <MenuAdmin /> };

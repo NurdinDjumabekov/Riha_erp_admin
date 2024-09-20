@@ -24,6 +24,30 @@ export const transformDateTime = (dateString) => {
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
 
+export const transformActionDate = (dateString) => {
+  ///  Wed Aug 07 2024 17:12:26 GMT+0600 (Киргизия)  ===>  2024-08-07
+  const date = new Date(dateString);
+
+  const year = date?.getFullYear();
+  const month = String(date?.getMonth() + 1)?.padStart(2, "0");
+  const day = String(date?.getDate())?.padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
+export const reverseTransformActionDate = (dateString) => {
+  ///  2024-08-07 ==> Wed Aug 07 2024 17:12:26 GMT+0600 (Киргизия)
+  if (!dateString || typeof dateString !== "string") return null;
+
+  const [year, month, day] = dateString.split("-");
+  if (!year || !month || !day) return null;
+  const date = new Date(year, month - 1, day);
+  if (isNaN(date)) {
+    return null;
+  }
+  return date;
+};
+
 export const transformDates = (dateString) => {
   ///  Mon Apr 01 2019 20:29:00 GMT+0600  ===>  01.04.2019
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
