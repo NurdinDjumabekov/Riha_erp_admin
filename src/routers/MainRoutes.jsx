@@ -31,7 +31,7 @@ const MainRoutes = () => {
   const { listOrders, invoiceInfo } = useSelector((state) => state.mainSlice);
 
   // console.log(listTitleOrders, "listTitleOrders");
-  // console.log(dataSave, "dataSave");
+  console.log(dataSave, "dataSave");
 
   return (
     <>

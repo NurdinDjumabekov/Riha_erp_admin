@@ -26,18 +26,28 @@ import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
 import { getMonthRange, getMyWeek } from "../../helpers/weeks";
 
 ////// fns
-import { editInvoice, setActiveDate } from "../../store/reducers/mainSlice";
+import {
+  editInvoice,
+  getWorkPlanEveryTA,
+  setActiveDate,
+  setListWorkPlan,
+} from "../../store/reducers/mainSlice";
 import { getListOrders } from "../../store/reducers/mainSlice";
 import { createInvoice } from "../../store/reducers/mainSlice";
 
-////// imgs
+////// icons
+import ChecklistIcon from "@mui/icons-material/BarChart";
+import UserIcon from "@mui/icons-material/AccountCircle";
+import GraphicsEveryTA from "../../components/MainPage/Modals/GraphicsEveryTA/GraphicsEveryTA";
 
 const MainPage = () => {
   const dispatch = useDispatch();
 
   const calendarRef = useRef(null);
 
-  const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
+  const { user_type, fio, guid } = useSelector(
+    (state) => state.saveDataSlice?.dataSave
+  );
   const { listOrders, activeDate } = useSelector((state) => state.mainSlice);
   const { listTitleOrders } = useSelector((state) => state.mainSlice);
   const { listTA } = useSelector((state) => state.mainSlice);
@@ -133,10 +143,32 @@ const MainPage = () => {
     dispatch(editInvoice({ data, agents_guid, activeDate })); // Редактирование заявок
   };
 
+  const openGraphicsWorkPlan = () => {
+    dispatch(getWorkPlanEveryTA({ guid }));
+    dispatch(
+      setListWorkPlan([
+        { name: "Осталось выполнить", value: 80 },
+        { name: "Выполнено", value: 20 },
+      ])
+    ); //// check
+    ///// для отправки запроса и получения графика плана работы каждого ТА
+    ///// так же открываю модалку
+  };
+
   const objType = { 2: <MenuLeft /> }; //// только для админа
 
   return (
     <>
+      <div className="plan">
+        <div className="userInfo">
+          <UserIcon sx={{ color: "#2c3e50" }} />
+          <h1>{fio}</h1>
+        </div>
+        <button onClick={openGraphicsWorkPlan}>
+          <ChecklistIcon sx={{ color: "#2c3e50" }} />
+          <p>План</p>
+        </button>
+      </div>
       <div className="mainPage">
         {objType?.[user_type]}
         <div className="mainPage__inner">
@@ -180,6 +212,7 @@ const MainPage = () => {
           />
         </div>
       </div>
+      <GraphicsEveryTA />
       <ModalOrderCRUD />
       <ModaIngridients />
       <ModalProduction />

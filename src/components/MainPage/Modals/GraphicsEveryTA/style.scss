@@ -1,0 +1,30 @@
+.graphicsEveryTA {
+  height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 0px;
+  }
+
+  &__info {
+    position: absolute;
+    left: 10px;
+    bottom: 150px;
+
+    > div {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 5px 0 0 0;
+
+      > div {
+        width: 20px;
+        height: 15px;
+      }
+    }
+  }
+}

@@ -11,16 +11,13 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import "./style.scss";
 
 ////// fns
-import {
-  getDateRouteAgent,
-  setListPointsEveryTA,
-} from "../../../store/reducers/mapSlice";
+import { setListPointsEveryTA } from "../../../store/reducers/mapSlice";
+import { getDateRouteAgent } from "../../../store/reducers/mapSlice";
 import { setDateRoute } from "../../../store/reducers/mapSlice";
-import {
-  reverseTransformActionDate,
-  transformActionDate,
-} from "../../../helpers/transformDate";
-import { pointsTT } from "../../../helpers/LocalData";
+
+////// helpers
+import { reverseTransformActionDate } from "../../../helpers/transformDate";
+import { transformActionDate } from "../../../helpers/transformDate";
 
 const ChoiceDateForMap = ({ openCateg, setOpenCateg }) => {
   const dispatch = useDispatch();
@@ -31,6 +28,9 @@ const ChoiceDateForMap = ({ openCateg, setOpenCateg }) => {
   const onChange = (date) => {
     dispatch(setDateRoute(transformActionDate(date))); /// подствляю дату в активгый state
     setOpenCateg(false);
+    dispatch(setListPointsEveryTA([]));
+    //// очищаю список чтобы его не отображать на карте
+    dispatch(getDateRouteAgent({ guid, date }));
   };
 
   return (
@@ -49,6 +49,7 @@ const ChoiceDateForMap = ({ openCateg, setOpenCateg }) => {
             dateFormat="dd.MM.yyyy"
             locale={ru}
             yearDropdownItemNumber={100}
+            maxDate={new Date()}
             inline
           />
         </div>

@@ -11,6 +11,9 @@ import "./style.scss";
 
 const MapWrapper = ({ statusRef, buttonRef }) => {
   const { mapGeo, listPointsEveryTA } = useSelector((state) => state.mapSlice);
+  const { listRouteEveryTA } = useSelector((state) => state.mapSlice);
+
+  console.log(listRouteEveryTA, "listRouteEveryTA");
 
   useEffect(() => {
     let map;
@@ -89,8 +92,12 @@ const MapWrapper = ({ statusRef, buttonRef }) => {
           const marker = new mapgl.Marker(map, {
             coordinates: markerData.coordinates,
             label: {
-              text: markerData.text,
+              text: markerData?.text,
+              fontSize: 10,
               offset: [0, 25],
+              relativeAnchor: [0.5, 0],
+              zIndex: 5,
+              offset: [0, 15],
               relativeAnchor: [0.5, 0],
               image: {
                 url: "https://docs.2gis.com/img/mapgl/tooltip-top.svg",
@@ -99,84 +106,58 @@ const MapWrapper = ({ statusRef, buttonRef }) => {
                   [10, 40],
                   [60, 90],
                 ],
-                stretchY: [[20, 40]],
-                padding: [20, 10, 10, 10],
+                // stretchY: [[20, 400]],
+                padding: [10, 5, 5, 5],
               },
             },
           });
         });
       }
 
-      geoFindMe();
+      // geoFindMe();
 
-      // const segments = [
-      //   {
-      //     color: "#e84646",
-      //     label: "A",
-      //     coords: [
-      //       [74.5907, 42.8765], // Пункт А (начало маршрута)
-      //       [74.5922, 42.8751], // Дорога 1
-      //       [74.5944, 42.874], // Дорога 2
-      //     ],
-      //   },
-      //   {
-      //     color: "#e3e340",
-      //     coords: [
-      //       [74.5944, 42.874], // Переход на другой сегмент
-      //       [74.5966, 42.8725], // Дорога 3
-      //       [74.5988, 42.871], // Дорога 4
-      //     ],
-      //   },
-      //   {
-      //     color: "#43e843",
-      //     label: "B",
-      //     coords: [
-      //       [74.5988, 42.871], // Пункт B (конец маршрута)
-      //       [74.6009, 42.8695], // Дорога 5
-      //     ],
-      //   },
-      // ];
+      if (listRouteEveryTA?.length !== 0) {
+        listRouteEveryTA?.forEach((segment, i) => {
+          const zIndex = listRouteEveryTA?.length - 1 - i;
 
-      // segments.forEach((segment, i) => {
-      //   const zIndex = segments.length - 1 - i;
+          // Добавляем полилинии для маршрута
+          new mapgl.Polyline(map, {
+            coordinates: segment.coords,
+            width: 10,
+            color: segment.color,
+            width2: 14,
+            color2: "#ffffff",
+            zIndex,
+          });
 
-      //   // Добавляем полилинии для маршрута
-      //   new mapgl.Polyline(map, {
-      //     coordinates: segment.coords,
-      //     width: 10,
-      //     color: segment.color,
-      //     width2: 14,
-      //     color2: "#ffffff",
-      //     zIndex,
-      //   });
+          if (segment.label) {
+            const isFirstPoint = i === 0;
+            const lastPointIndex = segment.coords.length - 1;
+            const coords = isFirstPoint
+              ? segment.coords[0]
+              : segment.coords[lastPointIndex];
 
-      //   if (segment.label) {
-      //     const isFirstPoint = i === 0;
-      //     const lastPointIndex = segment.coords.length - 1;
-      //     const coords = isFirstPoint
-      //       ? segment.coords[0]
-      //       : segment.coords[lastPointIndex];
+            // Добавляем круглый маркер
+            new mapgl.CircleMarker(map, {
+              coordinates: coords,
+              radius: 16,
+              color: "#0088ff",
+              strokeWidth: 2,
+              strokeColor: "#ffffff",
+              zIndex: isFirstPoint ? 5 : 3,
+            });
 
-      //     // Добавляем круглый маркер
-      //     new mapgl.CircleMarker(map, {
-      //       coordinates: coords,
-      //       radius: 16,
-      //       color: "#0088ff",
-      //       strokeWidth: 2,
-      //       strokeColor: "#ffffff",
-      //       zIndex: isFirstPoint ? 5 : 3,
-      //     });
-
-      //     // Добавляем текстовую метку (label)
-      //     new mapgl.Label(map, {
-      //       coordinates: coords,
-      //       text: segment.label,
-      //       fontSize: 14,
-      //       color: "#ffffff",
-      //       zIndex: isFirstPoint ? 6 : 4,
-      //     });
-      //   }
-      // });
+            // Добавляем текстовую метку (label)
+            new mapgl.Label(map, {
+              coordinates: coords,
+              text: segment.label,
+              fontSize: 14,
+              color: "#ffffff",
+              zIndex: isFirstPoint ? 6 : 4,
+            });
+          }
+        });
+      }
     });
 
     return () => {
@@ -185,8 +166,6 @@ const MapWrapper = ({ statusRef, buttonRef }) => {
       }
     };
   }, [listPointsEveryTA]);
-
-  console.log(listPointsEveryTA, "listPointsEveryTA");
 
   return (
     <div className="mapBlock">

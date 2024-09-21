@@ -27,6 +27,7 @@ const initialState = {
   activeDate: { date_from: "", date_to: "" },
   // Состояние для диапазона активной недели
   checkInvoice: true, //// можно ли редактировать накладную
+  listWorkPlan: [], //// данные для графиков плана работы
 };
 
 ////// logInAccount - логинизация
@@ -437,6 +438,24 @@ export const actionsInvoiceAllDay = createAsyncThunk(
   }
 );
 
+////// getWorkPlanEveryTA - get рабочий план каждого ТА
+export const getWorkPlanEveryTA = createAsyncThunk(
+  "getWorkPlanEveryTA",
+  async function ({ guid }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_work_plan?agent_guid=${guid}`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const mainSlice = createSlice({
   name: "mainSlice",
   initialState,
@@ -511,6 +530,10 @@ const mainSlice = createSlice({
         count: "",
         is_checked: false,
       }));
+    },
+
+    setListWorkPlan: (state, action) => {
+      state.listWorkPlan = action.payload;
     },
   },
 
@@ -670,8 +693,22 @@ const mainSlice = createSlice({
     builder.addCase(getListProdsInInvoice.pending, (state, action) => {
       state.preloader = true;
     });
+
+    //////////// getWorkPlanEveryTA
+    builder.addCase(getWorkPlanEveryTA.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listWorkPlan = action.payload;
+    });
+    builder.addCase(getWorkPlanEveryTA.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getWorkPlanEveryTA.pending, (state, action) => {
+      state.preloader = true;
+    });
   },
 });
+
 export const {
   editListAgents,
   clearListOrders,
@@ -684,6 +721,7 @@ export const {
   setActiveDate,
   setCheckInvoice,
   getDefaultList,
+  setListWorkPlan,
 } = mainSlice.actions;
 
 export default mainSlice.reducer;

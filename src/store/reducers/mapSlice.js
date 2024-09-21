@@ -12,6 +12,7 @@ const initialState = {
   key: "4b360754-94b6-4399-9a7b-35811336eb5f",
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)
   listPointsEveryTA: [], /// сипсок точек каждого агента
+  listRouteEveryTA: [], /// сипсок координат каждого агента
 };
 
 ////// sendGeoUser - отправка геолокации пользователя(агента)
@@ -38,7 +39,7 @@ export const sendGeoUser = createAsyncThunk(
 export const getPointsRouteAgent = createAsyncThunk(
   "getPointsRouteAgent",
   async function ({ guid }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}ta/get_points?agent_guid=${guid}`;
+    const url = `${REACT_APP_API_URL}/ta/get_points?agent_guid=${guid}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
@@ -55,8 +56,9 @@ export const getPointsRouteAgent = createAsyncThunk(
 ////// getDateRouteAgent - get данных координат каждого ТА
 export const getDateRouteAgent = createAsyncThunk(
   "getDateRouteAgent",
-  async function ({ guid }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}ta/get_points?agent_guid=${guid}`;
+  async function ({ guid, date }, { dispatch, rejectWithValue }) {
+    const dateNew = transformActionDate(date);
+    const url = `${REACT_APP_API_URL}/ta/get_all_gps?agent_guid=${guid}&date_from=${dateNew}&date_to=${dateNew}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
@@ -83,14 +85,59 @@ const mapSlice = createSlice({
     setListPointsEveryTA: (state, action) => {
       state.listPointsEveryTA = action?.payload;
     },
+    setListRouteEveryTA: (state, action) => {
+      state.listRouteEveryTA = action?.payload;
+    },
   },
+
   extraReducers: (builder) => {
     ////////////// getPointsRouteAgent
     builder.addCase(getPointsRouteAgent.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listPointsEveryTA = action.payload;
+      state.listPointsEveryTA = action.payload?.map((i) => ({
+        ...i,
+        coordinates: [i?.coordinates[1], i?.coordinates[0]],
+      }));
     });
     builder.addCase(getPointsRouteAgent.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getPointsRouteAgent.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ////////////// getDateRouteAgent
+    builder.addCase(getDateRouteAgent.fulfilled, (state, action) => {
+      state.preloader = false;
+      const start =
+        action.payload?.length > 0 ? action.payload?.[0] : undefined;
+      const end =
+        action.payload?.length > 0
+          ? action.payload?.[action.payload.length - 1]
+          : undefined;
+
+      const listCords = action.payload?.map((i) => [i?.lon, i?.lat]);
+
+      state.listRouteEveryTA = [
+        {
+          color: "#43e843",
+          label: "A",
+          coords: [[start?.lon, start?.lat]], // Пункт А (начало маршрута)
+        },
+        {
+          color: "#43e843",
+          label: "",
+          coords: listCords,
+        },
+        {
+          color: "#43e843",
+          label: "B",
+          coords: [[end?.lon, end?.lat]], // Пункт А (начало маршрута)
+        },
+      ];
+    });
+    builder.addCase(getDateRouteAgent.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
     });
@@ -100,19 +147,12 @@ const mapSlice = createSlice({
   },
 });
 
-export const { setMapGeo, setDateRoute, setListPointsEveryTA } =
-  mapSlice.actions;
+export const {
+  setMapGeo,
+  setDateRoute,
+  setListPointsEveryTA,
+  setListRouteEveryTA,
+} = mapSlice.actions;
 
 export default mapSlice.reducer;
 
-// load().then((mapgl) => {
-//   map = new mapgl.Map("map-container", {
-//     center: [42.8508686, 74.5975735],
-//     zoom: 13,
-//     key: "4b360754-94b6-4399-9a7b-35811336eb5f",
-//   });
-
-//   const marker = new mapgl.Marker(map, {
-//     coordinates: [42.8508686, 74.5975735],
-//   });
-// });
