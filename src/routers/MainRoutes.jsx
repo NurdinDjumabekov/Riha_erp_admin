@@ -31,7 +31,7 @@ const MainRoutes = () => {
   const { listOrders, invoiceInfo } = useSelector((state) => state.mainSlice);
 
   // console.log(listTitleOrders, "listTitleOrders");
-  console.log(dataSave, "dataSave");
+  // console.log(dataSave, "dataSave");
 
   return (
     <>
@@ -57,3 +57,7 @@ const MainRoutes = () => {
 
 export default MainRoutes;
 /// user_type 2 - админ, 1 - агент
+
+// @media (max-width: 700px) {
+//   background: red;
+// }

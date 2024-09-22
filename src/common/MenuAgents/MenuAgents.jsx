@@ -11,7 +11,7 @@ import CameraIcon from "@mui/icons-material/CameraAlt";
 import SettingsIcon from "@mui/icons-material/ManageAccounts";
 import Calendare from "@mui/icons-material/EventNote";
 import MapIcon from "@mui/icons-material/AddLocationAlt";
-import PayIcon from "@mui/icons-material/Paid";
+import PayIcon from "@mui/icons-material/PlaylistAddCheckCircle";
 
 const MenuAgents = () => {
   const location = useLocation();
@@ -21,7 +21,7 @@ const MenuAgents = () => {
     { id: 1, text: "Календарь", icons: <Calendare />, link: "/" },
     { id: 2, text: "Камера", icons: <CameraIcon />, link: "/camera" },
     { id: 3, text: "Карта", icons: <MapIcon />, link: "/maps" },
-    { id: 5, text: "Оплаты", icons: <PayIcon />, link: "/pay" },
+    { id: 5, text: "Отпуск ТТ", icons: <PayIcon />, link: "/pay" },
     { id: 4, text: "Настройки", icons: <SettingsIcon />, link: "/settings" },
   ];
 

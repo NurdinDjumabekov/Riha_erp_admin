@@ -14,6 +14,7 @@ import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/Mo
 import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
 import ModalProduction from "../../components/MainPage/Modals/ModalProduction/ModalProduction";
 import ModalWareHome from "../../components/MainPage/Modals/ModalWareHome/ModalWareHome";
+import GraphicsEveryTA from "../../components/MainPage/Modals/GraphicsEveryTA/GraphicsEveryTA";
 
 /////// style
 import "./style.scss";
@@ -38,7 +39,6 @@ import { createInvoice } from "../../store/reducers/mainSlice";
 ////// icons
 import ChecklistIcon from "@mui/icons-material/BarChart";
 import UserIcon from "@mui/icons-material/AccountCircle";
-import GraphicsEveryTA from "../../components/MainPage/Modals/GraphicsEveryTA/GraphicsEveryTA";
 
 const MainPage = () => {
   const dispatch = useDispatch();

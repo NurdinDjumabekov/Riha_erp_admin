@@ -1,6 +1,6 @@
 ////// hooks
 import React from "react";
-import { useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 ///// map
@@ -9,11 +9,11 @@ import { load } from "@2gis/mapgl";
 ////// style
 import "./style.scss";
 
-const MapWrapper = ({ statusRef, buttonRef }) => {
+const MapWrapper = ({ buttonRef }) => {
+  const statusRef = useRef(null); // Для статуса
+
   const { mapGeo, listPointsEveryTA } = useSelector((state) => state.mapSlice);
   const { listRouteEveryTA } = useSelector((state) => state.mapSlice);
-
-  console.log(listRouteEveryTA, "listRouteEveryTA");
 
   useEffect(() => {
     let map;
@@ -113,8 +113,6 @@ const MapWrapper = ({ statusRef, buttonRef }) => {
           });
         });
       }
-
-      // geoFindMe();
 
       if (listRouteEveryTA?.length !== 0) {
         listRouteEveryTA?.forEach((segment, i) => {

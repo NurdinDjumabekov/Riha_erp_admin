@@ -4,6 +4,7 @@ import axios from "axios";
 import { myAlert } from "../../helpers/MyAlert";
 import axiosInstance from "../../axiosInstance";
 import { transformActionDate } from "../../helpers/transformDate";
+import { setActiveTTForPhoto } from "./photoSlice";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -38,11 +39,20 @@ export const sendGeoUser = createAsyncThunk(
 ////// getPointsRouteAgent - get данных координат точек для каждого ТА
 export const getPointsRouteAgent = createAsyncThunk(
   "getPointsRouteAgent",
-  async function ({ guid }, { dispatch, rejectWithValue }) {
+  async function ({ guid, first }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_points?agent_guid=${guid}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
+        if (first) {
+          const obj = {
+            guid: response.data?.[0]?.guid,
+            label: response.data?.[0]?.text,
+            text: response.data?.[0]?.text,
+            value: response.data?.[0]?.guid,
+          };
+          dispatch(setActiveTTForPhoto(obj));
+        }
         return response.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -155,4 +165,3 @@ export const {
 } = mapSlice.actions;
 
 export default mapSlice.reducer;
-

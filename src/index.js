@@ -8,6 +8,8 @@ import { persistor, store } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
 import { propsStoreFN } from "./axiosInstance";
 import { ToastContainer } from "react-toastify";
+
+////// datepicker
 import "react-datepicker/dist/react-datepicker.css";
 
 propsStoreFN(store);

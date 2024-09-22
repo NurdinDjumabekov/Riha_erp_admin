@@ -11,7 +11,6 @@ import { sendGeoUser, setMapGeo } from "./store/reducers/mapSlice";
 const App = () => {
   const dispatch = useDispatch();
 
-  const { mapGeo } = useSelector((state) => state.mapSlice);
   const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
 
   const isWithinAllowedTime = () => {
@@ -41,8 +40,8 @@ const App = () => {
       }
     };
 
-    // Получаем геолокацию и отправляем данные каждую 1 минуту
-    const intervalId = setInterval(getLocationAndSend, 30000);
+    // Получаем геолокацию и отправляем данные каждую 10 сек
+    const intervalId = setInterval(getLocationAndSend, 10000);
 
     // Очищаем таймер при размонтировании компонента
     return () => clearInterval(intervalId);

@@ -113,16 +113,7 @@ const ListInvoice = () => {
       <div className="selectsAll selectsAllActive">
         <div className="selectsAll__inner">
           <div className="choiceSel">
-            <div className="myInputs">
-              <h6>Поиск товаров </h6>
-              <input
-                type="text"
-                className="input"
-                onChange={onChangeSearch}
-                value={search}
-              />
-            </div>
-            <div className="myInputs">
+            <div className="myInputs selectPosition">
               <h6>Цех</h6>
               <Select
                 options={workShop}
@@ -138,6 +129,15 @@ const ListInvoice = () => {
                 className="select"
                 onChange={onChangeCateg}
                 value={activeCategs}
+              />
+            </div>
+            <div className="myInputs">
+              <h6>Поиск товаров </h6>
+              <input
+                type="text"
+                className="input"
+                onChange={onChangeSearch}
+                value={search}
               />
             </div>
             <div className="myInputs">

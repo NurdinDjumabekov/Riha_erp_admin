@@ -1,5 +1,3 @@
-
-
 * {
   margin: 0;
   padding: 0;
@@ -51,16 +49,23 @@ button {
   }
 }
 
+.selectPosition {
+  z-index: 11 !important;
+  position: relative !important;
+}
+
 .select {
   .css-1nmdiq5-menu {
     > div {
       // overflow: hidden;
       > div {
-        // height: 20px !important;
-        padding: 4px 5px !important;
-        font-size: 13px;
-        overflow: hidden;
-        // max-width: 95% !important;
+        @media (min-width: 920px) {
+          // height: 20px !important;
+          padding: 4px 5px !important;
+          font-size: 13px;
+          overflow: hidden;
+          // max-width: 95% !important;
+        }
       }
     }
   }
@@ -93,30 +98,32 @@ button {
   }
 }
 
-.css-t3ipsp-control,
-.css-13cymwt-control {
-  min-height: 10px !important;
-}
+@media (min-width: 920px) {
+  .css-t3ipsp-control,
+  .css-13cymwt-control {
+    min-height: 10px !important;
+  }
 
-.css-hlgwow {
-  padding: 0px 5px !important;
-}
+  .css-hlgwow {
+    padding: 0px 5px !important;
+  }
 
-.css-1xc3v61-indicatorContainer,
-.css-15lsz6c-indicatorContainer {
-  padding: 0 3px !important;
-}
+  .css-1xc3v61-indicatorContainer,
+  .css-15lsz6c-indicatorContainer {
+    padding: 0 3px !important;
+  }
 
-.css-1dimb5e-singleValue {
-  font-size: 12px;
-}
+  .css-1dimb5e-singleValue {
+    font-size: 12px;
+  }
 
-.css-1xc3v61-indicatorContainer {
-  width: 22px !important;
-  height: 22px !important;
+  .css-1xc3v61-indicatorContainer {
+    width: 22px !important;
+    height: 22px !important;
 
-  svg {
-    width: 18px !important;
-    height: 18px !important;
+    svg {
+      width: 18px !important;
+      height: 18px !important;
+    }
   }
 }
