@@ -1,12 +1,8 @@
-.mainOrders {
+.mainInvoices {
   width: 100%;
-  padding: 140px 25px 2px;
   height: 100%;
   position: relative;
-
-  @media (max-width: 1025px) {
-    padding: 140px 5px 2px;
-  }
+  padding: 140px 5px 2px;
 
   @media (max-width: 920px) {
     padding: 140px 5px 2px;
@@ -46,11 +42,7 @@
       }
 
       button:nth-child(2) {
-        display: none;
-
-        @media (max-width: 1025px) {
-          display: flex;
-        }
+        display: flex;
       }
 
       .activeBtn {
@@ -95,68 +87,24 @@
     }
   }
 
-  .viewFirstList {
-    > div {
-      width: 100% !important;
-    }
-
-    > div:nth-child(2) {
-      display: none !important;
-    }
+  .mobile {
+    display: flex !important;
 
     .selectsAllActive {
-      padding: 0 25px;
-
-      @media (max-width: 920px) {
-        padding: 0 5px;
-      }
-
-      .selectsAll__inner {
-        justify-content: space-between;
-        width: 100%;
-
-        .choiceSel {
-          width: 60%;
-
-          @media (max-width: 1025px) {
-            width: 85%;
-          }
-        }
-      }
+      padding: 0 5px;
     }
-  }
 
-  .desctop {
     .selectsAll__inner {
+      width: 100%;
     }
 
-    @media (max-width: 1025px) {
-      display: none !important;
-    }
-  }
-
-  .mobile {
-    display: none !important;
-
-    @media (max-width: 1025px) {
-      display: flex !important;
-
-      .selectsAllActive {
-        padding: 0 5px;
-      }
-
-      .selectsAll__inner {
-        width: 100%;
-      }
-
-      .listInvoice {
-        width: 100%;
-      }
+    .listInvoice {
+      width: 100%;
     }
   }
 }
 
-.mainOrdersDesctop {
+.mainInvoicesDesctopSI {
   @media (max-width: 1025px) {
     padding: 115px 5px 2px;
 
@@ -170,18 +118,17 @@
 
       &__inner {
         @media (max-width: 500px) {
-          justify-content: space-between;
+          justify-content: flex-end;
           width: 100%;
           .confirmModal {
             display: none;
           }
         }
-
-        // @media (max-width: 500px) {
-        //   // justify-content: space-between;
-        //   width: 100%;
-        // }
       }
+    }
+
+    @media (max-width: 500px) {
+      padding: 65px 5px 2px;
     }
   }
 }

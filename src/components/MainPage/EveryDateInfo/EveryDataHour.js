@@ -51,11 +51,11 @@ const EveryDataHour = ({ content }) => {
 
     ///// можно ли редактировать данные
 
-    if (status == 0) {
-      dispatch(setCheckInvoice(true));
-    } else {
-      dispatch(setCheckInvoice(false));
-    }
+    // if (status == 0) {
+    //   dispatch(setCheckInvoice(true));
+    // } else {
+    //   dispatch(setCheckInvoice(false));
+    // }
   };
 
   return (

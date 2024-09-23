@@ -7,11 +7,12 @@ import "./style.scss";
 
 ////// components
 import SearchShop from "./SearchShop/SearchShop";
+import { Tooltip } from "@mui/material";
 
 ////// imgs
 import plus from "../../../assets/icons/plus-square.svg";
 import minus from "../../../assets/icons/minus-square.svg";
-import user from "../../../assets/icons/user.svg";
+import user from "../../../assets/images/iAm.jpg";
 
 ////// fns
 import { getListOrders } from "../../../store/reducers/mainSlice";
@@ -37,6 +38,8 @@ const MenuLeft = () => {
     /// get обновленный список каждой заявки по часам
   }, [checked]);
 
+  // console.log(listTA, "listTA");
+
   return (
     <div className="menuLeft">
       <div className="menuLeft__inner">
@@ -58,7 +61,23 @@ const MenuLeft = () => {
                 />
                 <span className="slider"></span>
               </label>
-              <img src={user} alt="user icon" />
+              <div className="logo">
+                <Tooltip
+                  title={
+                    <div style={{ borderRadius: "50%" }}>
+                      <img
+                        src={user}
+                        alt="user"
+                        style={{ width: 140, height: 140, borderRadius: "50%" }}
+                      />
+                    </div>
+                  }
+                  placement="right"
+                  disableInteractive
+                >
+                  <img src={user} alt="user icon" />
+                </Tooltip>
+              </div>
               <p>{item?.fio}</p>
             </li>
           ))}

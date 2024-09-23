@@ -274,7 +274,8 @@ export const createInvoice = createAsyncThunk(
       const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         const guid = response?.data?.invoice_guid;
-        dispatch(setInvoiceInfo({ guid, action: 1 })); //// 1 - создание
+        const obj = { ...data, guid, action: 1 };
+        dispatch(setInvoiceInfo(obj)); // 1 - создание
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -465,6 +466,12 @@ const mainSlice = createSlice({
         item?.guid === action.payload
           ? { ...item, is_checked: item?.is_checked === 1 ? 0 : 1 }
           : item
+      );
+    },
+
+    setListTA: (state, action) => {
+      state.listTA = state.listTA?.map((item) =>
+        item?.guid === action.payload ? { ...item, is_checked: 1 } : item
       );
     },
 
@@ -711,6 +718,7 @@ const mainSlice = createSlice({
 
 export const {
   editListAgents,
+  setListTA,
   clearListOrders,
   changeCountListProds,
   changeCountCheckedListProds,

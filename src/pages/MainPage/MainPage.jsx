@@ -1,6 +1,6 @@
 /////// hooks
 import { useDispatch, useSelector } from "react-redux";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 
 ////// components
 import FullCalendar from "@fullcalendar/react";
@@ -16,9 +16,6 @@ import ModalProduction from "../../components/MainPage/Modals/ModalProduction/Mo
 import ModalWareHome from "../../components/MainPage/Modals/ModalWareHome/ModalWareHome";
 import GraphicsEveryTA from "../../components/MainPage/Modals/GraphicsEveryTA/GraphicsEveryTA";
 
-/////// style
-import "./style.scss";
-
 ////// helpers
 import { confirmAllDay } from "../../helpers/LocalData";
 import { addToDateFN, transformDateTime } from "../../helpers/transformDate";
@@ -27,18 +24,19 @@ import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
 import { getMonthRange, getMyWeek } from "../../helpers/weeks";
 
 ////// fns
-import {
-  editInvoice,
-  getWorkPlanEveryTA,
-  setActiveDate,
-  setListWorkPlan,
-} from "../../store/reducers/mainSlice";
+import { editInvoice, setInvoiceInfo } from "../../store/reducers/mainSlice";
+import { getWorkPlanEveryTA } from "../../store/reducers/mainSlice";
+import { setActiveDate } from "../../store/reducers/mainSlice";
+import { setListWorkPlan } from "../../store/reducers/mainSlice";
 import { getListOrders } from "../../store/reducers/mainSlice";
 import { createInvoice } from "../../store/reducers/mainSlice";
 
 ////// icons
 import ChecklistIcon from "@mui/icons-material/BarChart";
 import UserIcon from "@mui/icons-material/AccountCircle";
+
+/////// style
+import "./style.scss";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -75,7 +73,17 @@ const MainPage = () => {
       return;
     }
 
-    dispatch(createInvoice({ date_from, date_to }));
+    if (user_type == 1) {
+      /// создаю заявку для цеха от имени ТА
+      dispatch(createInvoice({ date_from, date_to }));
+    }
+    if (user_type == 2) {
+      /// создаю заявку для цеха от имени ТА выбрав через админку
+      /// временно создам для открытия модалки
+      const obj = { date_from, date_to, guid: "временно создан", action: 1 };
+      dispatch(setInvoiceInfo(obj)); //// 1 - создание
+      //// guidShadow - только для админа
+    }
   };
 
   // для диапазон для месяца или недели

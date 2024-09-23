@@ -21,7 +21,6 @@ import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 
 ////// style
 import "./style.scss";
-import { transformListsProdsEdit } from "../../../helpers/transformLists";
 
 const ListAcceptInvoice = () => {
   const dispatch = useDispatch();
@@ -66,7 +65,7 @@ const ListAcceptInvoice = () => {
           {check && (
             <button className="saveAction" onClick={editProdInInvoice}>
               <LibraryAddIcon sx={{ width: 16, height: 16 }} />
-              <p>Сохранить изменения</p>
+              <p>Сохранить</p>
             </button>
           )}
 

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 ////// components
 import debounce from "debounce";
 import Select from "react-select";
-import ListProds from "../ListProds/ListProds";
+import ListProdsSI from "../ListProdsSI/ListProdsSI";
 
 ////// style
 import "./style.scss";
@@ -17,48 +17,35 @@ import { myAlert } from "../../../helpers/MyAlert";
 import { chechEmptyCount, checkBoolFN } from "../../../helpers/validations";
 
 ////// fns
-import {
-  setActiveTA,
-  setActiveWorkShop,
-} from "../../../store/reducers/selectsSlice";
+import { setActiveWorkShop } from "../../../store/reducers/selectsSlice";
 import { setActiveCategs } from "../../../store/reducers/selectsSlice";
-import {
-  createInvoice,
-  getListCategs,
-  getListOrders,
-  setListTA,
-} from "../../../store/reducers/mainSlice";
-import { getListProds } from "../../../store/reducers/mainSlice";
-import { getListWorkShop } from "../../../store/reducers/mainSlice";
-import { searchListProds } from "../../../store/reducers/mainSlice";
-import { createEditProdInInvoice } from "../../../store/reducers/mainSlice";
+import { createEditProdInInvoiceSI } from "../../../store/reducers/invoiceSlice";
+import { getListCategs } from "../../../store/reducers/invoiceSlice";
+import { getListProds } from "../../../store/reducers/invoiceSlice";
+import { getListWorkShop } from "../../../store/reducers/invoiceSlice";
+import { searchListProds } from "../../../store/reducers/invoiceSlice";
 
 ////// icons
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
-import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 
-const ListInvoice = () => {
+const ListInvoiceSI = () => {
   const dispatch = useDispatch();
 
   const [search, setSearch] = useState("");
   const [comment, setComment] = useState("");
 
-  const { listWorkshop } = useSelector((state) => state.mainSlice);
-  const { listCategs } = useSelector((state) => state.mainSlice);
-  const { listProds, listTA } = useSelector((state) => state.mainSlice);
-  const { activeDate, invoiceInfo } = useSelector((state) => state.mainSlice);
-  const { guid, action } = useSelector((state) => state.mainSlice.invoiceInfo);
-  const { activeTA } = useSelector((state) => state.selectsSlice);
-  const { activeWorkShop } = useSelector((state) => state.selectsSlice);
-  const { activeCategs } = useSelector((state) => state.selectsSlice);
-  const { checkInvoice } = useSelector((state) => state.mainSlice);
-  const { dataSave } = useSelector((state) => state.saveDataSlice);
+  const { listWorkshopSI, listCategsSI } = useSelector(
+    (state) => state.invoiceSlice
+  );
+  const { activeCategs, activeWorkShop } = useSelector(
+    (state) => state.selectsSlice
+  );
+  const { listProdsSI } = useSelector((state) => state.invoiceSlice);
+  const { checkInvoice } = useSelector((state) => state.invoiceSlice);
+  const { invoiceSendInfo } = useSelector((state) => state.invoiceSlice);
 
-  const workShop = transformLists(listWorkshop, "guid", "name");
-  const categs = transformLists(listCategs, "category_guid", "category_name");
-  const TAListCateg = transformLists(listTA, "guid", "fio");
-
-  const adminCheck = dataSave?.user_type == 2;
+  const workShop = transformLists(listWorkshopSI, "guid", "name");
+  const categs = transformLists(listCategsSI, "category_guid", "category_name");
 
   const onChangeWS = (item) => {
     dispatch(setActiveWorkShop(item)); ///// выбор селекта цехов
@@ -104,68 +91,27 @@ const ListInvoice = () => {
 
   const actionsProdInInvoice = () => {
     ///// создание и редактирование твоаров в заявке
-    if (checkBoolFN(listProds)) {
+    if (checkBoolFN(listProdsSI)) {
       myAlert("Выберите товар", "error");
       return;
     }
 
-    if (chechEmptyCount(listProds)) {
+    if (chechEmptyCount(listProdsSI)) {
       myAlert("Поля не должны быть пустыми или равны 0", "error");
       return;
     }
 
-    //// если это админ и он не выбрал никакого ТА
-    if (adminCheck && guid == "временно создан") {
-      myAlert("Выберите торгового агента", "error");
-      return;
-    }
-
-    const forCreate = { listProds, comment };
-
-    const newListTA = adminCheck
-      ? [...listTA, { is_checked: 1, guid: activeTA?.guid }]
-      : listTA;
-
-    const forGetInvoice = { activeDate, listTA: newListTA };
-    const obj = { forGetInvoice, forCreate };
-    const invoiceInfo = { guid, action: 1 }; //// добавление товара(action: 1)
-    dispatch(createEditProdInInvoice({ ...obj, invoiceInfo }));
-    ///// добавление и редактирование товаров в заявке
-
-    if (adminCheck) {
-      // у админа checkbox в true и отправляю запроca
-      dispatch(setListTA(activeTA?.guid));
-    }
-  };
-
-  // console.log(listTA, "listTA"); /// is_checked
-
-  //// только для админа
-  const onChangeTA = (item) => {
-    dispatch(setActiveTA(item)); /// для активного ТА
-    const { date_from, date_to } = invoiceInfo;
-    const { guid } = item;
-    const data = { date_from, date_to, agent_guid: guid, user_guid: guid };
-    dispatch(createInvoice({ ...data, user_type: 1 }));
-    //// создаю накладную от имени ТА (создает админ)
+    const forCreate = { listProdsSI, comment };
+    const invoiceInfo = { ...invoiceSendInfo, action: 1 }; //// добавление товара (action: 1)
+    dispatch(createEditProdInInvoiceSI({ forCreate, invoiceInfo }));
+    ///// добавление и редактирование товаров в накладной
   };
 
   return (
-    <div className="listInvoice">
+    <div className="listInvoiceSI">
       <div className="selectsAll selectsAllActive">
         <div className="selectsAll__inner">
           <div className="choiceSel">
-            {adminCheck && action == 1 && (
-              <div className="myInputs selectPosition noMobile">
-                <h6>Торговые агенты</h6>
-                <Select
-                  options={TAListCateg}
-                  className="select"
-                  onChange={onChangeTA}
-                  value={activeTA}
-                />
-              </div>
-            )}
             <div className="myInputs selectPosition">
               <h6>Цех</h6>
               <Select
@@ -215,9 +161,9 @@ const ListInvoice = () => {
         </div>
       </div>
 
-      <ListProds list={listProds} />
+      <ListProdsSI list={listProdsSI} />
     </div>
   );
 };
 
-export default ListInvoice;
+export default ListInvoiceSI;

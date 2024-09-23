@@ -15,9 +15,6 @@ import { getListTA } from "../../store/reducers/mainSlice";
 import { getListWorkShop } from "../../store/reducers/mainSlice";
 import { getPointsRouteAgent } from "../../store/reducers/mapSlice";
 
-/////// helpers
-import { pointsTT } from "../../helpers/LocalData";
-
 const MainLayouts = () => {
   const dispatch = useDispatch();
 
@@ -37,7 +34,7 @@ const MainLayouts = () => {
 
   return (
     <div className="layouts">
-      <div className="pages">
+      <div className={`pages ${user_type == 2 ? "adminInfo" : ""}`}>
         <Outlet />
       </div>
       {objMenu?.[user_type]}

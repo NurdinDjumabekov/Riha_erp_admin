@@ -21,7 +21,7 @@ const MenuAgents = () => {
     { id: 1, text: "Календарь", icons: <Calendare />, link: "/" },
     { id: 2, text: "Камера", icons: <CameraIcon />, link: "/camera" },
     { id: 3, text: "Карта", icons: <MapIcon />, link: "/maps" },
-    { id: 5, text: "Отпуск ТТ", icons: <PayIcon />, link: "/pay" },
+    { id: 5, text: "Отпуск ТТ", icons: <PayIcon />, link: "/send_app" },
     { id: 4, text: "Настройки", icons: <SettingsIcon />, link: "/settings" },
   ];
 

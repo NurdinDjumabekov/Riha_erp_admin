@@ -12,6 +12,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
+  const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
 
   const isWithinAllowedTime = () => {
     const now = new Date();
@@ -40,11 +41,12 @@ const App = () => {
       }
     };
 
-    // Получаем геолокацию и отправляем данные каждую 10 сек
-    const intervalId = setInterval(getLocationAndSend, 10000);
+    if (user_type == 1) {
+      const intervalId = setInterval(getLocationAndSend, 10000);
 
-    // Очищаем таймер при размонтировании компонента
-    return () => clearInterval(intervalId);
+      // Очищаем таймер при размонтировании компонента
+      return () => clearInterval(intervalId);
+    }
   }, []);
 
   return <MainRoutes />;
