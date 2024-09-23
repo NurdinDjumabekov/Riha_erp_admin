@@ -122,7 +122,7 @@ const ListInvoice = () => {
                 value={activeWorkShop}
               />
             </div>
-            <div className="myInputs">
+            <div className="myInputs selectPosition">
               <h6>Категории</h6>
               <Select
                 options={categs}

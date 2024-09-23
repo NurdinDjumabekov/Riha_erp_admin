@@ -11,7 +11,7 @@
     margin: 0 auto;
     height: 100%;
 
-    @media (max-width: 1000px) {
+    @media (max-width: 1025px) {
       padding: 95px 0 0 0;
     }
 
@@ -59,7 +59,7 @@
       }
 
       .fc-toolbar-chunk {
-        @media (max-width: 1000px) {
+        @media (max-width: 1025px) {
           > button {
             position: fixed;
             top: 5px;
@@ -70,7 +70,7 @@
       }
 
       .fc-toolbar-ltr {
-        @media (max-width: 1000px) {
+        @media (max-width: 1025px) {
           position: fixed;
           left: 0px;
           top: 0px;

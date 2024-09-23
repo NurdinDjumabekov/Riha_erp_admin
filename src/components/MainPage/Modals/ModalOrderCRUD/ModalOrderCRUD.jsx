@@ -32,6 +32,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ModalOrderCRUD = () => {
   const dispatch = useDispatch();
 
+  const [viewApp, setViewApp] = useState(true);
+
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
   const { listSendOrders } = useSelector((state) => state.mainSlice);
 
@@ -59,17 +61,30 @@ const ModalOrderCRUD = () => {
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <div className="mainOrders">
+      <div className={`mainOrders ${viewApp ? "" : "mainOrdersDesctop"}`}>
         <div className="mainOrders__inner">
           <AppBar sx={{ position: "relative" }}>
             <Toolbar>
+              {/* ///  sx={{ background: "#2c3e50" }} */}
               <Typography sx={{ flex: 1 }} variant="h6" component="div">
                 <div className="actionsBtns">
-                  <button className={"activeBtn"}>
+                  <button
+                    className={viewApp ? "activeBtn" : ""}
+                    onClick={() => setViewApp(true)}
+                  >
                     <ContentPasteSearchOutlinedIcon
-                      sx={{ color: "#1976d2", width: 16 }}
+                      sx={{ color: viewApp ? "#1976d2" : "#fff", width: 16 }}
                     />
                     <p>Заявка</p>
+                  </button>
+                  <button
+                    className={viewApp ? "" : "activeBtn"}
+                    onClick={() => setViewApp(false)}
+                  >
+                    <ContentPasteSearchOutlinedIcon
+                      sx={{ color: viewApp ? "#fff" : "#1976d2", width: 16 }}
+                    />
+                    <p>Выбранные товары</p>
                   </button>
                 </div>
               </Typography>
@@ -84,9 +99,19 @@ const ModalOrderCRUD = () => {
             </Toolbar>
           </AppBar>
         </div>
-        <div className={`listsCRUD ${lengthList ? "viewFirstList" : ""}`}>
+        {/* ///// для desktopa */}
+        <div
+          className={`listsCRUD ${lengthList ? "viewFirstList" : ""} desctop`}
+        >
           <ListInvoice />
           <ListAcceptInvoice />
+        </div>
+
+        {/* ///// для mobile */}
+        <div
+          className={`listsCRUD ${lengthList ? "viewFirstList" : ""} mobile`}
+        >
+          {viewApp ? <ListInvoice /> : <ListAcceptInvoice />}
         </div>
       </div>
     </Dialog>

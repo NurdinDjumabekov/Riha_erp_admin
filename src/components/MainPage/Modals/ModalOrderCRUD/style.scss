@@ -1,15 +1,19 @@
 .mainOrders {
   width: 100%;
   padding: 140px 25px 2px;
-  height: 100vh;
+  height: 100%;
   position: relative;
+
+  @media (max-width: 1025px) {
+    padding: 140px 5px 2px;
+  }
 
   @media (max-width: 920px) {
     padding: 140px 5px 2px;
   }
 
   @media (max-width: 700px) {
-    padding: 185px 5px 2px;
+    padding: 195px 5px 70px;
   }
 
   &__inner {
@@ -38,6 +42,14 @@
           font-size: 13px;
           font-weight: 500;
           color: #fff;
+        }
+      }
+
+      button:nth-child(2) {
+        display: none;
+
+        @media (max-width: 1025px) {
+          display: flex;
         }
       }
 
@@ -106,10 +118,72 @@
         .choiceSel {
           width: 60%;
 
-          @media (max-width: 1000px) {
+          @media (max-width: 1025px) {
             width: 85%;
           }
         }
+      }
+    }
+  }
+
+  .desctop {
+    .selectsAll__inner {
+      @media (max-width: 1138px) {
+        width: 65%;
+      }
+    }
+
+    @media (max-width: 1025px) {
+      display: none !important;
+    }
+  }
+
+  .mobile {
+    display: none !important;
+
+    @media (max-width: 1025px) {
+      display: flex !important;
+
+      .selectsAllActive {
+        padding: 0 5px;
+      }
+
+      .selectsAll__inner {
+        width: 100%;
+      }
+
+      .listInvoice {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.mainOrdersDesctop {
+  @media (max-width: 1025px) {
+    padding: 115px 5px 2px;
+
+    .acceptActions {
+      top: 75px;
+      padding: 2px 5px 0px 5px;
+
+      @media (max-width: 720px) {
+        width: 100%;
+      }
+
+      &__inner {
+        @media (max-width: 500px) {
+          justify-content: space-between;
+          width: 100%;
+          .confirmModal {
+            display: none;
+          }
+        }
+
+        // @media (max-width: 500px) {
+        //   // justify-content: space-between;
+        //   width: 100%;
+        // }
       }
     }
   }
