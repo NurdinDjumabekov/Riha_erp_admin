@@ -22,7 +22,6 @@ const MenuAdmin = () => {
   const location = useLocation();
 
   const [active, setActive] = useState("/");
-  const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
   const handleChange = (link, id) => {

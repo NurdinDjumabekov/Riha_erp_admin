@@ -1,4 +1,6 @@
 .listInvoiceSI {
+  width: 100% !important;
+
   .selectsAll {
     display: flex;
     align-items: flex-end;
@@ -149,6 +151,7 @@
 
       p {
         font-size: 12px;
+        font-weight: 500;
 
         @media (max-width: 920px) {
           font-size: 14px;

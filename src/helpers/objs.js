@@ -88,19 +88,19 @@ export const listMenu = [
     title: "Производство",
     icon: <AvTimerOutlinedIcon sx={{ color: "#fff" }} />,
     iconActive: <AvTimerOutlinedIcon sx={{ color: "#988c7d" }} />,
-    link: "/ware_house",
+    link: "/",
   },
   {
     id: 5,
     title: "Склад готовой продукции",
     icon: <HomeWorkIcon sx={{ color: "#fff" }} />,
-    link: "/asd",
+    link: "/",
   },
   {
     id: 6,
-    title: "Список торговых агентов",
+    title: "Торговые агенты",
     icon: <ChecklistIcon sx={{ color: "#fff" }} />,
-    link: "/asd",
+    link: "/all_agents",
   },
   {
     id: 10,

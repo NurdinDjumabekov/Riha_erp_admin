@@ -49,7 +49,6 @@ export const pointsTT = [
   },
 ];
 
-
 const segments = [
   {
     color: "#43e843",
@@ -71,5 +70,53 @@ const segments = [
       [74.5988, 42.871], // Пункт B (конец маршрута)
       [74.6009, 42.8695], // Дорога 5
     ],
+  },
+];
+
+export const listRouteAllTAMy = [
+  {
+    id: 1,
+    fio: "Бакытова Анара ПФБ - ТА",
+    latitude: 42.874722,
+    longitude: 74.612222,
+    duty: 100,
+  },
+  {
+    id: 2,
+    fio: "Алдаянов Эрлан П-1 ТА",
+    latitude: 42.8803,
+    longitude: 74.595,
+    duty: 1200,
+  },
+  {
+    id: 3,
+    fio: "Бакытова Анара ПФБ - ТА",
+    latitude: 42.87,
+    longitude: 74.6,
+    duty: 9000,
+  },
+  {
+    id: 4,
+    fio: "Бейшекеева Анара (Сарманова) П-1 ТА",
+    latitude: 42.8775,
+    longitude: 74.59,
+    duty: 7600,
+  },
+  {
+    id: 5,
+    fio: "Бейшекеева Анара (Сарманова) П-1 ТА",
+    latitude: 42.885,
+    longitude: 74.629876,
+    duty: 87600,
+  },
+  {
+    agent: "Джумабеков Нурдин",
+    agent_guid: "B3120F36-3FCD-4CA0-8346-484881974846",
+    lat: "42.8451084",
+    lon: "74.6176045",
+    date: "2024-09-24 12:46",
+    codeid: "622",
+    date_system: "2024-09-24T12:38:46.760Z",
+    rn: "1",
   },
 ];

@@ -43,21 +43,30 @@ const ListInvoiceSI = () => {
   const { listProdsSI } = useSelector((state) => state.invoiceSlice);
   const { checkInvoice } = useSelector((state) => state.invoiceSlice);
   const { invoiceSendInfo } = useSelector((state) => state.invoiceSlice);
+  const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
 
-  const workShop = transformLists(listWorkshopSI, "guid", "name");
+  const workShop = transformLists(
+    listWorkshopSI,
+    "workshop_guid",
+    "workshop_name"
+  );
   const categs = transformLists(listCategsSI, "category_guid", "category_name");
 
   const onChangeWS = (item) => {
     dispatch(setActiveWorkShop(item)); ///// выбор селекта цехов
-    dispatch(getListCategs(item)); /// для получение категорий
+    const obj = { guid: item?.workshop_guid, agent_guid: guid };
+    dispatch(getListCategs(obj)); /// для получение категорий
     setSearch("");
   };
 
   const onChangeCateg = (item) => {
     dispatch(setActiveCategs(item)); ///// выбор селекта категорий
 
-    const obj = { guid: activeWorkShop?.guid, guidCateg: item?.category_guid };
-    dispatch(getListProds(obj));
+    const obj = {
+      guid: activeWorkShop?.workshop_guid,
+      guidCateg: item?.category_guid,
+    };
+    dispatch(getListProds({ ...obj, agent_guid: guid }));
     /// для получение списка товаров
     setSearch("");
   };
@@ -101,9 +110,18 @@ const ListInvoiceSI = () => {
       return;
     }
 
-    const forCreate = { listProdsSI, comment };
+    const list = listProdsSI?.map((i) => ({ ...i, workshop_price: i.price }));
+
+    const forCreate = { listProdsSI: list, comment };
+
+    const forSelect = {
+      guid: activeWorkShop?.workshop_guid,
+      guidCateg: activeCategs?.category_guid,
+      agent_guid: guid,
+    };
+
     const invoiceInfo = { ...invoiceSendInfo, action: 1 }; //// добавление товара (action: 1)
-    dispatch(createEditProdInInvoiceSI({ forCreate, invoiceInfo }));
+    dispatch(createEditProdInInvoiceSI({ forCreate, invoiceInfo, forSelect }));
     ///// добавление и редактирование товаров в накладной
   };
 

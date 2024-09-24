@@ -43,12 +43,18 @@ const ListProdsSI = () => {
       return;
     }
 
+    if (item?.amount < count) {
+      return;
+    }
+
     dispatch(changeCountCheckedListProdsSI({ ...item, count }));
     /////изменение ключа count в списке товаров
   };
 
+  console.log(listProdsSI, "listProdsSI");
+
   return (
-    <div className="listProdCRUD">
+    <div className="listProdCRUD_SI">
       <TableContainer
         component={Paper}
         sx={{ maxHeight: "100%" }}
@@ -57,10 +63,12 @@ const ListProdsSI = () => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: "5%" }}>№</TableCell>
-              <TableCell style={{ width: "60%" }}>Продукт</TableCell>
+              <TableCell style={{ width: "50%" }}>Продукт</TableCell>
               <TableCell align="left" style={{ width: "15%" }}>
                 Цена
+              </TableCell>
+              <TableCell align="left" style={{ width: "15%" }}>
+                *
               </TableCell>
               <TableCell align="left" style={{ width: "10%" }}>
                 Кол-во
@@ -77,14 +85,14 @@ const ListProdsSI = () => {
           <TableBody>
             {listProdsSI?.map((row, index) => (
               <TableRow key={row?.product_guid}>
-                <TableCell component="th" scope="row" style={{ width: "5%" }}>
-                  {index + 1}
-                </TableCell>
-                <TableCell component="th" scope="row" style={{ width: "60%" }}>
+                <TableCell component="th" scope="row" style={{ width: "50%" }}>
                   {row?.product_name}
                 </TableCell>
                 <TableCell align="left" style={{ width: "15%" }}>
-                  {row?.workshop_price} сом
+                  {row?.price} сом
+                </TableCell>
+                <TableCell align="left" style={{ width: "15%" }}>
+                  {row?.amount} {row?.unit}
                 </TableCell>
                 <TableCell align="left" style={{ width: "10%" }}>
                   <input

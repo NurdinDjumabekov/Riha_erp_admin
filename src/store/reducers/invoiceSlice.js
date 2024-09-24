@@ -8,6 +8,7 @@ import {
   transformListsProdsEdit,
 } from "../../helpers/transformLists";
 import { objStatusText } from "../../helpers/objs";
+import { setInvoiceInfo } from "./mainSlice";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -21,20 +22,24 @@ const initialState = {
   listProdsSI: [],
   listSendOrdersSI: [], //// временный список для хранения списка заказа ТА
   viewApp: true,
+  listInvoice: [],
+  listProdEveryInvoice: [],
 };
 
 ////// getListWorkShop - get список цехов
 export const getListWorkShop = createAsyncThunk(
   "getListWorkShop",
-  async function (props, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_workshop`;
+  async function ({ agent_guid }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_agent_leftover_workshop?agent_guid=${agent_guid}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
         const obj = response?.data?.[0];
-        dispatch(getListCategs(obj)); /// для получение категорий
-
-        const objSort = { value: obj?.guid, label: obj.name };
+        dispatch(getListCategs({ guid: obj?.workshop_guid, agent_guid })); /// для получение категорий
+        const objSort = {
+          value: obj?.workshop_guid,
+          label: obj?.workshop_name,
+        };
         dispatch(setActiveWorkShop({ ...obj, ...objSort }));
         ///// подставляю активныый селект в state
         return response?.data;
@@ -50,13 +55,14 @@ export const getListWorkShop = createAsyncThunk(
 ////// getListCategs - get список категорий
 export const getListCategs = createAsyncThunk(
   "getListCategs",
-  async function ({ guid }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_category?workshop_guid=${guid}`;
+  async function ({ guid, agent_guid }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_agent_leftover_category?workshop_guid=${guid}&agent_guid=${agent_guid}`;
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         const obj = response?.data?.[0];
-        dispatch(getListProds({ guid, guidCateg: obj?.category_guid }));
+        const data = { guid, guidCateg: obj?.category_guid, agent_guid };
+        dispatch(getListProds(data));
         /// для получение товаров
 
         const objSort = {
@@ -78,8 +84,9 @@ export const getListCategs = createAsyncThunk(
 ////// getListProds - get список товаров
 export const getListProds = createAsyncThunk(
   "getListProds",
-  async function ({ guid, guidCateg }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_product?category_guid=${guidCateg}&workshop_guid=${guid}`;
+  async function (props, { dispatch, rejectWithValue }) {
+    const { guid, guidCateg, agent_guid } = props;
+    const url = `${REACT_APP_API_URL}/ta/get_agent_leftover?agent_guid=${agent_guid}&workshop_guid=${guid}&category_guid=${guidCateg}`;
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
@@ -138,7 +145,7 @@ export const createInvoiceSendTT = createAsyncThunk(
 export const createEditProdInInvoiceSI = createAsyncThunk(
   "createEditProdInInvoiceSI",
   async function (props, { dispatch, rejectWithValue }) {
-    const { forCreate, invoiceInfo, forSendTT } = props;
+    const { forCreate, invoiceInfo, forSendTT, forSelect } = props;
 
     const { listProdsSI, comment } = forCreate;
     const { action, invoice_guid } = invoiceInfo;
@@ -165,6 +172,7 @@ export const createEditProdInInvoiceSI = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         if (action == 1) {
           myAlert("Товары добавлены в накладную!");
+          dispatch(getListProds(forSelect));
         }
         ///// для get обновленных данных с добавленной заявкой
         dispatch(getListProdsInInvoiceSI(invoice_guid));
@@ -231,6 +239,65 @@ export const sendInvoiceForTT = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         myAlert("Накладная отправлена торговой точке");
         dispatch(setInvoiceSendInfo({ seller_guid: "", invoice_guid: "" }));
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getMyInvoice - get список накладных отпущенных админом
+export const getMyInvoice = createAsyncThunk(
+  "getMyInvoice",
+  async function (guid, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_invoices?date=0&user_guid=${guid}`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getMyEveryInvoice - get список товаров накладных отпущенных админом
+export const getMyEveryInvoice = createAsyncThunk(
+  "getMyEveryInvoice",
+  async function (guid, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_invoice?invoice_guid=${guid}`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// acceptInvoice - принятие накладной ТА
+export const acceptInvoice = createAsyncThunk(
+  "acceptInvoice",
+  async function ({ data, navigate }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/update_invoice`;
+    try {
+      const response = await axios.put(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        if (response?.data?.result == 1) {
+          myAlert("Накладная принята");
+          dispatch(setInvoiceInfo({ guid: "", action: 0 }));
+          dispatch(getMyInvoice(data?.user_guid));
+        }
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -367,6 +434,44 @@ const invoiceSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getListProdsInInvoiceSI.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///////////// getMyInvoice
+    builder.addCase(getMyInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listInvoice = action.payload;
+    });
+    builder.addCase(getMyInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getMyInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///////////// getMyEveryInvoice
+    builder.addCase(getMyEveryInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listProdEveryInvoice = action.payload;
+    });
+    builder.addCase(getMyEveryInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getMyEveryInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////////// acceptInvoice
+    builder.addCase(acceptInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+    });
+    builder.addCase(acceptInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(acceptInvoice.pending, (state, action) => {
       state.preloader = true;
     });
   },

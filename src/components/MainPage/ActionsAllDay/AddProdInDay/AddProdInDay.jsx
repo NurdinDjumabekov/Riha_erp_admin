@@ -142,7 +142,7 @@ const AddProdInDay = () => {
   };
 
   return (
-    <div className="addProdInDay">
+    <div className="addProdInDay indridients">
       <div className="selectsAll__inner daySelects">
         <div className="myInputs">
           <h6>Поиск товаров </h6>

@@ -14,6 +14,7 @@ const initialState = {
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)
   listPointsEveryTA: [], /// сипсок точек каждого агента
   listRouteEveryTA: [], /// сипсок координат каждого агента
+  listRouteAllTA: [], /// сипсок координат всех агентов
 };
 
 ////// sendGeoUser - отправка геолокации пользователя(агента)
@@ -82,6 +83,24 @@ export const getDateRouteAgent = createAsyncThunk(
   }
 );
 
+////// getAllRouteAgent - get данных координат всех ТА
+export const getAllRouteAgent = createAsyncThunk(
+  "getAllRouteAgent",
+  async function (props, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_current_gps?agent_guid=0`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const mapSlice = createSlice({
   name: "mapSlice",
   initialState,
@@ -97,6 +116,10 @@ const mapSlice = createSlice({
     },
     setListRouteEveryTA: (state, action) => {
       state.listRouteEveryTA = action?.payload;
+    },
+
+    setListRouteAllTA: (state, action) => {
+      state.listRouteAllTA = action?.payload;
     },
   },
 
@@ -154,6 +177,19 @@ const mapSlice = createSlice({
     builder.addCase(getDateRouteAgent.pending, (state, action) => {
       state.preloader = true;
     });
+
+    ////////////// getAllRouteAgent
+    builder.addCase(getAllRouteAgent.fulfilled, (state, action) => {
+      state.preloader = false;
+      // state.listRouteAllTA = action.payload;
+    });
+    builder.addCase(getAllRouteAgent.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getAllRouteAgent.pending, (state, action) => {
+      state.preloader = true;
+    });
   },
 });
 
@@ -162,6 +198,7 @@ export const {
   setDateRoute,
   setListPointsEveryTA,
   setListRouteEveryTA,
+  setListRouteAllTA,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

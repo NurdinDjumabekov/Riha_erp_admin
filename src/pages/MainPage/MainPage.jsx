@@ -37,6 +37,7 @@ import UserIcon from "@mui/icons-material/AccountCircle";
 
 /////// style
 import "./style.scss";
+import ViewAllAgents from "../../components/MainPage/Modals/ViewAllAgents/ViewAllAgents";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -225,6 +226,7 @@ const MainPage = () => {
       <ModaIngridients />
       <ModalProduction />
       <ModalWareHome />
+      <ViewAllAgents />
     </>
   );
 };

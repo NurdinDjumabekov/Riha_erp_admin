@@ -38,6 +38,8 @@ const ModalCreateInvoice = () => {
     (state) => state.invoiceSlice
   );
 
+  const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
+
   const handleClose = () =>
     dispatch(setInvoiceSendInfo({ seller_guid: "", invoice_guid: "" }));
 
@@ -45,7 +47,7 @@ const ModalCreateInvoice = () => {
 
   useEffect(() => {
     if (!!invoiceSendInfo?.seller_guid) {
-      dispatch(getListWorkShop({ listInner: true }));
+      dispatch(getListWorkShop({ listInner: true, agent_guid: guid }));
       //// срабатывает только тогда, когда модалка открывается
     } else {
       dispatch(clearListOrdersSI());

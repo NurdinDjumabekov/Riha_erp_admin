@@ -19,6 +19,8 @@ import SettingsPage from "../pages/SettingsPage/SettingsPage";
 import MapsPage from "../pages/MapsPage/MapsPage";
 import CameraPage from "../pages/CameraPage/CameraPage";
 import SendInvoicePage from "../pages/SendInvoicePage/SendInvoicePage";
+import AllAgentsPage from "../pages/AllAgentsPage/AllAgentsPage";
+import MyInvoicePage from "../pages/MyInvoicePage/MyInvoicePage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -39,6 +41,8 @@ const MainRoutes = () => {
         ) : (
           <Route element={<MainLayouts />}>
             <Route path="/" element={<MainPage />} />
+            {/* ///// agentPages */}
+            <Route path="/my_invoice" element={<MyInvoicePage />} />
             <Route path="/camera" element={<CameraPage />} />
             <Route path="/maps" element={<MapsPage />} />
             <Route path="/send_app" element={<SendInvoicePage />} />
