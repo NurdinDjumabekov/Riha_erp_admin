@@ -23,6 +23,11 @@ import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import AvTimerOutlinedIcon from "@mui/icons-material/AvTimerOutlined";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import TaxiAlertIcon from "@mui/icons-material/TaxiAlert";
+
+/////// icons
+import RoomIcon from "@mui/icons-material/Room";
+// import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
 
 export const objStatusOrders = {
   0: {
@@ -98,8 +103,8 @@ export const listMenu = [
   },
   {
     id: 6,
-    title: "Торговые агенты",
-    icon: <ChecklistIcon sx={{ color: "#fff" }} />,
+    title: "Маршруты ТА",
+    icon: <TaxiAlertIcon sx={{ color: "#fff" }} />,
     link: "/all_agents",
   },
   {
@@ -119,5 +124,20 @@ export const listMenu = [
     title: "Справочники",
     icon: <AccountTreeOutlinedIcon sx={{ color: "#fff" }} />,
     link: "/as",
+  },
+];
+
+export const listActionRoute = [
+  {
+    id: 1,
+    title: "Координаты ТА",
+    icon: <RoomIcon sx={{ color: "#fff" }} />,
+    link: "/",
+  },
+  {
+    id: 2,
+    title: "Список маршрутов",
+    icon: <ChecklistRtlIcon sx={{ color: "#fff" }} />,
+    link: "/",
   },
 ];

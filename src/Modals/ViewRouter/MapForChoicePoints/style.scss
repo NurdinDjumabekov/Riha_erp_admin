@@ -1,0 +1,10 @@
+.mapForChoicePoints {
+  position: relative;
+
+  .clear {
+    position: absolute;
+    z-index: 20;
+    left: 30px;
+    top: 30px;
+  }
+}

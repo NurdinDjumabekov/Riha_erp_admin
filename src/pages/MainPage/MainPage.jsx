@@ -15,6 +15,7 @@ import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
 import ModalProduction from "../../components/MainPage/Modals/ModalProduction/ModalProduction";
 import ModalWareHome from "../../components/MainPage/Modals/ModalWareHome/ModalWareHome";
 import GraphicsEveryTA from "../../components/MainPage/Modals/GraphicsEveryTA/GraphicsEveryTA";
+import ViewRouter from "../../Modals/ViewRouter/ViewRouter";
 
 ////// helpers
 import { confirmAllDay } from "../../helpers/LocalData";
@@ -37,7 +38,7 @@ import UserIcon from "@mui/icons-material/AccountCircle";
 
 /////// style
 import "./style.scss";
-import ViewAllAgents from "../../components/MainPage/Modals/ViewAllAgents/ViewAllAgents";
+import { getAllRouteAgent } from "../../store/reducers/mapSlice";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -106,6 +107,7 @@ const MainPage = () => {
 
   useEffect(() => {
     updateDateRange();
+    dispatch(getAllRouteAgent());
   }, []);
 
   useEffect(() => {
@@ -226,7 +228,7 @@ const MainPage = () => {
       <ModaIngridients />
       <ModalProduction />
       <ModalWareHome />
-      <ViewAllAgents />
+      <ViewRouter />
     </div>
   );
 };

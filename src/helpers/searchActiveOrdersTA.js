@@ -14,3 +14,17 @@ export const chechListOrders = (list, product_guid) => {
   const isCheck = list?.some((item) => item?.product_guid === product_guid);
   return isCheck;
 };
+
+export const formatName = (fullName) => {
+  const nameParts = fullName?.trim()?.split(" ");
+
+  if (nameParts.length === 3) {
+    const [lastName, firstName, middleName] = nameParts;
+    return `${lastName} ${firstName?.charAt(0)}. ${middleName?.charAt(0)}.`;
+  } else if (nameParts.length === 2) {
+    const [lastName, firstName] = nameParts;
+    return `${lastName} ${firstName?.charAt(0)}.`;
+  } else {
+    return fullName;
+  }
+};

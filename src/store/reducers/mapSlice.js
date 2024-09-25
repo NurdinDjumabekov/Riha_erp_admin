@@ -181,7 +181,7 @@ const mapSlice = createSlice({
     ////////////// getAllRouteAgent
     builder.addCase(getAllRouteAgent.fulfilled, (state, action) => {
       state.preloader = false;
-      // state.listRouteAllTA = action.payload;
+      state.listRouteAllTA = action.payload;
     });
     builder.addCase(getAllRouteAgent.rejected, (state, action) => {
       state.error = action.payload;
