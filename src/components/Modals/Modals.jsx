@@ -1,9 +1,10 @@
 import "./style.scss";
-import krest from "../../asstes/icons/krestik.svg";
+import krest from "../../assets/icons/krest.svg";
 import { useEffect } from "react";
 
-const Modals = ({ openModal, children, setOpenModal }) => {
-  const closeModal = () => setOpenModal(false);
+const Modals = (props) => {
+  const { openModal, children, closeModal, title } = props;
+  const closeModalFN = () => closeModal();
 
   useEffect(() => {
     if (openModal) {
@@ -21,12 +22,13 @@ const Modals = ({ openModal, children, setOpenModal }) => {
   if (openModal) {
     return (
       <div className="modal">
-        <div className="modal__shadow" onClick={closeModal}></div>
+        <div className="modal__shadow" onClick={closeModalFN}></div>
         <div className="modal__inner">
-          {children}
-          <button className="krest" onClick={closeModal}>
+          <h6>{title}</h6>
+          <button className="krest" onClick={closeModalFN}>
             <img src={krest} alt="x" />
           </button>
+          <div className="content">{children}</div>
         </div>
       </div>
     );

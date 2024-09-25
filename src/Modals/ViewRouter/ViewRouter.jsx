@@ -25,6 +25,7 @@ import { listActionRoute } from "../../helpers/objs";
 ////// components
 import RouteTA from "./RouteTA/RouteTA";
 import ViewAgents from "./ViewAgents/ViewAgents";
+import { clearSelects } from "../../store/reducers/selectsSlice";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -49,6 +50,8 @@ const ViewRouter = () => {
 
       fetchRouteAgent();
       intervalId = setInterval(fetchRouteAgent, 10000);
+    } else {
+      dispatch(clearSelects());
     }
 
     return () => {

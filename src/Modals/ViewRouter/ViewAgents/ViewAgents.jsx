@@ -7,6 +7,7 @@ import { load } from "@2gis/mapgl";
 
 ////// style
 import "./style.scss";
+
 import { getListTA } from "../../../store/reducers/mainSlice";
 import { getAllRouteAgent } from "../../../store/reducers/mapSlice";
 import { formatName } from "../../../helpers/searchActiveOrdersTA";
@@ -33,7 +34,7 @@ const ViewAgents = () => {
       };
 
       fetchRouteAgent();
-      intervalId = setInterval(fetchRouteAgent, 100000);
+      intervalId = setInterval(fetchRouteAgent, 10000000);
     }
 
     return () => {
