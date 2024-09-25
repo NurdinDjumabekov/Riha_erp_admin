@@ -50,16 +50,18 @@ const ListAcceptProd = () => {
   };
 
   return (
-    <div className="listProdCRUD">
+    <div className="listAcceptProd">
       <TableContainer
         component={Paper}
         sx={{ maxHeight: "100%" }}
-        className="scroll_table"
+        className="scroll_table standartTable"
       >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: "5%" }}>№</TableCell>
+              <TableCell style={{ width: "5%" }} align="center">
+                №
+              </TableCell>
               <TableCell style={{ width: "60%" }}>Продукт</TableCell>
               <TableCell align="left" style={{ width: "15%" }}>
                 Цена
@@ -79,7 +81,12 @@ const ListAcceptProd = () => {
           <TableBody>
             {listSendOrders?.map((row, index) => (
               <TableRow key={row?.product_guid}>
-                <TableCell component="th" scope="row" style={{ width: "5%" }}>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  align="center"
+                  style={{ width: "5%" }}
+                >
                   {index + 1}
                 </TableCell>
                 <TableCell component="th" scope="row" style={{ width: "60%" }}>

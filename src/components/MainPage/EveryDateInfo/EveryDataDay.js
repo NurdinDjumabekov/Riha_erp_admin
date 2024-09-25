@@ -95,9 +95,9 @@ const EveryDataDay = ({ content }) => {
               }}
             >
               <>
-                <h6>Кол-во агентов: {agents_counts}</h6>
-                <p className="name">Сумма: {roundingNum(total_sum)} сом</p>
-                <p className="name">
+                <h3>Кол-во агентов: {agents_counts}</h3>
+                <p className="dayEvery">Сумма: {roundingNum(total_sum)} сом</p>
+                <p className="dayEvery">
                   Кол-во товара: {roundingNum(total_count)} шт
                 </p>
               </>

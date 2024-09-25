@@ -184,7 +184,7 @@ const AddProdInDay = () => {
       <TableContainer
         component={Paper}
         sx={{ height: "99%" }}
-        className="scroll_table"
+        className="scroll_table standartTable"
       >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

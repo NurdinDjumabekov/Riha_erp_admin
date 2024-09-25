@@ -11,12 +11,14 @@ const ListIngredients = ({ list }) => {
     <TableContainer
       component={Paper}
       sx={{ height: "99%", width: "60%" }}
-      className="scroll_table"
+      className="scroll_table standartTable"
     >
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
-            <TableCell style={{ width: "3%" }}>№</TableCell>
+            <TableCell style={{ width: "3%" }} align="center">
+              №
+            </TableCell>
             <TableCell style={{ width: "72%" }}>Продукт</TableCell>
             <TableCell align="left" style={{ width: "10%" }}>
               Кол-во/вес
@@ -29,7 +31,12 @@ const ListIngredients = ({ list }) => {
         <TableBody>
           {list?.map((row, index) => (
             <TableRow hover key={index}>
-              <TableCell component="th" scope="row" style={{ width: "3%" }}>
+              <TableCell
+                align="center"
+                component="th"
+                scope="row"
+                style={{ width: "3%" }}
+              >
                 {index + 1}
               </TableCell>
               <TableCell component="th" scope="row" style={{ width: "72%" }}>

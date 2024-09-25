@@ -58,12 +58,14 @@ const ListsWareHome = () => {
         <TableContainer
           component={Paper}
           sx={{ maxHeight: "100%" }}
-          className="scroll_table"
+          className="scroll_table standartTable"
         >
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                <TableCell style={{ width: "5%" }}>№</TableCell>
+                <TableCell align="center" style={{ width: "5%" }}>
+                  №
+                </TableCell>
                 <TableCell style={{ width: "55%" }}>Продукт</TableCell>
                 <TableCell align="left" style={{ width: "12%" }}>
                   Цена
@@ -82,7 +84,12 @@ const ListsWareHome = () => {
             <TableBody>
               {allProdsWH?.map((row, index) => (
                 <TableRow key={row?.product_guid}>
-                  <TableCell component="th" scope="row" style={{ width: "5%" }}>
+                  <TableCell
+                    align="center"
+                    component="th"
+                    scope="row"
+                    style={{ width: "5%" }}
+                  >
                     {index + 1}
                   </TableCell>
                   <TableCell
@@ -111,14 +118,16 @@ const ListsWareHome = () => {
                     </div>
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
-                    <input
-                      type="checkbox"
-                      onChange={(e) => onChangeCheck(e, row)}
-                      className="checkboxInner"
-                      name="check"
-                      checked={row?.is_checked}
-                      // disabled={!checkInvoice}
-                    />
+                    <div className="checkboxTable">
+                      <input
+                        type="checkbox"
+                        onChange={(e) => onChangeCheck(e, row)}
+                        className="checkboxInner"
+                        name="check"
+                        checked={row?.is_checked}
+                        // disabled={!checkInvoice}
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

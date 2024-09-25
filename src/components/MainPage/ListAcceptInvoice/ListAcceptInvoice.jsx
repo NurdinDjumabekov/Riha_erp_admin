@@ -75,7 +75,7 @@ const ListAcceptInvoice = () => {
             disabled={!checkInvoice}
           >
             <DeleteOutlineIcon sx={{ width: 18, height: 18 }} />
-            <p>Удалить запись</p>
+            <p>Удалить заявку</p>
           </button>
         </div>
       </div>

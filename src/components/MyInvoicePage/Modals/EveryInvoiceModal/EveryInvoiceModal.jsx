@@ -94,12 +94,14 @@ const EveryInvoiceModal = () => {
           <TableContainer
             component={Paper}
             sx={{ maxHeight: "100%" }}
-            className="croll_table"
+            className="scroll_table standartTable"
           >
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ width: "5%" }}>№</TableCell>
+                  <TableCell align="center" style={{ width: "5%" }}>
+                    №
+                  </TableCell>
                   <TableCell style={{ width: "55%" }}>Продукт</TableCell>
                   <TableCell align="left" style={{ width: "20%" }}>
                     Цена
@@ -116,6 +118,7 @@ const EveryInvoiceModal = () => {
                       component="th"
                       scope="row"
                       style={{ width: "5%" }}
+                      align="center"
                     >
                       {index + 1}
                     </TableCell>

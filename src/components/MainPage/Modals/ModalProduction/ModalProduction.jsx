@@ -14,7 +14,6 @@ import Slide from "@mui/material/Slide";
 import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
-import Select from "react-select";
 
 ////// fns
 import { setInvoiceInfo } from "../../../../store/reducers/mainSlice";
@@ -23,18 +22,15 @@ import { sendInWareHomeFN } from "../../../../store/reducers/productionSlice";
 import { setListProduction } from "../../../../store/reducers/productionSlice";
 import { getListProdProduction } from "../../../../store/reducers/productionSlice";
 import { clearSelects } from "../../../../store/reducers/selectsSlice";
-import { setActiveTA } from "../../../../store/reducers/selectsSlice";
 
 ////// style
 import "./style.scss";
 
 ////// helpers
-import { getTodayDate } from "../../../../helpers/transformDate";
 import { formatDateOnly } from "../../../../helpers/transformDate";
 import { emptyCountCheck, validNums } from "../../../../helpers/validations";
 import { myAlert } from "../../../../helpers/MyAlert";
 import { sumCountsFN, totalSum } from "../../../../helpers/totals";
-import { getDaysOfCurrentMonth } from "../../../../helpers/weeks";
 
 ////// icons
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
@@ -50,7 +46,6 @@ const ModalProduction = () => {
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
   const { listProduction } = useSelector((state) => state.productionSlice);
   const { listTA, activeDate } = useSelector((state) => state.mainSlice);
-  const { activeTA } = useSelector((state) => state.selectsSlice);
 
   const handleClose = () => {
     const obj = { guid: "", action: 0, listInvoice: [] };
@@ -96,16 +91,9 @@ const ModalProduction = () => {
     ///  отправка товаров на склад через функцию
   };
 
-  const onChangeAgents = (item) => {
-    dispatch(setActiveTA(item));
-    ///// выбор селекта ТА
-
-    dispatch(getListProdProduction({ date: item?.value }));
-  };
-
   useEffect(() => {
     if (invoiceInfo?.action == 4) {
-      dispatch(getListProdProduction({ date: getTodayDate() }));
+      dispatch(getListProdProduction());
       //// get товары в производстве
     } else {
       dispatch(setListProduction([]));
@@ -143,17 +131,6 @@ const ModalProduction = () => {
         </div>
 
         <div className="modalProduction__sortDate">
-          <div>
-            <div className="myInputs">
-              <h6>Выберите дату</h6>
-              <Select
-                options={getDaysOfCurrentMonth()}
-                className="select"
-                onChange={onChangeAgents}
-                value={activeTA}
-              />
-            </div>
-          </div>
           <button
             onClick={sendInWareHome}
             className="sendData"
@@ -168,12 +145,14 @@ const ModalProduction = () => {
           <TableContainer
             component={Paper}
             sx={{ maxHeight: "100%" }}
-            className="scroll_table"
+            className="scroll_table standartTable"
           >
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ width: "5%" }}>№</TableCell>
+                  <TableCell align="center" style={{ width: "5%" }}>
+                    №
+                  </TableCell>
                   <TableCell style={{ width: "53%" }}>Продукт</TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
                     Цена
@@ -196,6 +175,7 @@ const ModalProduction = () => {
                       component="th"
                       scope="row"
                       style={{ width: "5%" }}
+                      align="center"
                     >
                       {index + 1}
                     </TableCell>

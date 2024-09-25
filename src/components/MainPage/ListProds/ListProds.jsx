@@ -53,12 +53,14 @@ const ListProds = () => {
       <TableContainer
         component={Paper}
         sx={{ maxHeight: "100%" }}
-        className="scroll_table"
+        className="scroll_table standartTable"
       >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: "5%" }}>№</TableCell>
+              <TableCell align="center" style={{ width: "5%" }}>
+                №
+              </TableCell>
               <TableCell style={{ width: "60%" }}>Продукт</TableCell>
               <TableCell align="left" style={{ width: "15%" }}>
                 Цена
@@ -78,7 +80,12 @@ const ListProds = () => {
           <TableBody>
             {listProds?.map((row, index) => (
               <TableRow key={row?.product_guid}>
-                <TableCell component="th" scope="row" style={{ width: "5%" }}>
+                <TableCell
+                  align="center"
+                  component="th"
+                  scope="row"
+                  style={{ width: "5%" }}
+                >
                   {index + 1}
                 </TableCell>
                 <TableCell component="th" scope="row" style={{ width: "60%" }}>
@@ -99,14 +106,15 @@ const ListProds = () => {
                   />
                 </TableCell>
                 <TableCell align="left" style={{ width: "10%" }}>
-                  <input
-                    type="checkbox"
-                    onChange={(e) => onChangeCheck(e, row)}
-                    className="checkboxInner"
-                    name="check"
-                    checked={row?.is_checked}
-                    disabled={!checkInvoice}
-                  />
+                  <div className="checkboxTable">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => onChangeCheck(e, row)}
+                      name="check"
+                      checked={row?.is_checked}
+                      disabled={!checkInvoice}
+                    />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

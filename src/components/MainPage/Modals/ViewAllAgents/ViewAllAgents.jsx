@@ -144,7 +144,7 @@ const ViewAllAgents = () => {
             <TableContainer
               component={Paper}
               sx={{ height: "100%" }}
-              className="scroll_table"
+              className="scroll_table standartTable"
             >
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>

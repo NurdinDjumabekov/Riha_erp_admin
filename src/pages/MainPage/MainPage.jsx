@@ -167,7 +167,7 @@ const MainPage = () => {
   const objType = { 2: <MenuLeft /> }; //// только для админа
 
   return (
-    <>
+    <div className="mainCalendare">
       <div className="plan">
         <div className="userInfo">
           <UserIcon sx={{ color: "#2c3e50" }} />
@@ -227,7 +227,7 @@ const MainPage = () => {
       <ModalProduction />
       <ModalWareHome />
       <ViewAllAgents />
-    </>
+    </div>
   );
 };
 

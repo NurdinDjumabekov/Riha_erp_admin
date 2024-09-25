@@ -7,9 +7,6 @@
   font-family: "Montserrat", sans-serif;
 }
 
-.container {
-}
-
 li {
   list-style: none;
 }
@@ -57,14 +54,11 @@ button {
 .select {
   .css-1nmdiq5-menu {
     > div {
-      // overflow: hidden;
       > div {
         @media (min-width: 920px) {
-          // height: 20px !important;
           padding: 4px 5px !important;
           font-size: 13px;
           overflow: hidden;
-          // max-width: 95% !important;
         }
       }
     }
@@ -94,8 +88,85 @@ button {
     background-color: #fffefe;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #23a5d9;
+    background-color: #c1c1c1;
   }
+}
+
+.standartTable {
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.144) !important;
+  border-radius: 5px !important;
+
+  table {
+    thead {
+      tr {
+        th:first-child {
+          padding: 5px 0 5px 0px !important;
+        }
+        th {
+          padding: 5px 8px !important;
+          font-weight: 600;
+          background: #edf2f9;
+          color: #0e1726;
+          font-size: 12px;
+          font-weight: 600;
+        }
+        .titleCheckbox {
+          padding-left: 15px !important;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        th:first-child {
+          padding: 5px 0 5px 0px !important;
+        }
+
+        td,
+        th {
+          padding: 5px 8px !important;
+          height: 10px;
+          font-size: 12px !important;
+          border-right: 1px solid #edf2f9;
+          border-bottom: 1px solid #edf2f9;
+
+          span {
+            padding: 0 !important;
+          }
+
+          .counts {
+            width: 100px;
+            background: #fff;
+            border-radius: 3px;
+            border: 1px solid #e0e6ed;
+            font-size: 13px;
+            padding: 0px 5px;
+            height: 20px;
+
+            &:focus {
+              border: 1px solid #e0e6ed;
+              outline: none;
+            }
+          }
+        }
+
+        .footerTable {
+          font-weight: bold !important;
+          height: 30px !important;
+        }
+
+        .actionsDel {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+        }
+      }
+    }
+  }
+}
+
+.actionsBtnHeader {
 }
 
 @media (min-width: 920px) {
@@ -125,5 +196,30 @@ button {
       width: 18px !important;
       height: 18px !important;
     }
+  }
+}
+
+.emptyData {
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    text-align: center;
+    font-size: 22px;
+  }
+}
+
+.checkboxTable {
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    border: 1px solid #e0e6ed !important;
+    height: 23px;
   }
 }

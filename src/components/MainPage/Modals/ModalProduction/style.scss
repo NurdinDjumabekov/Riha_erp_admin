@@ -2,7 +2,7 @@
   height: 100vh;
   padding: 10px;
   position: relative;
-  padding: 130px 20px 10px;
+  padding: 115px 20px 10px;
 
   &__inner {
     position: absolute;
@@ -20,7 +20,7 @@
     width: 100%;
     display: flex;
     align-items: flex-end;
-    justify-content: space-between;
+    justify-content: flex-end;
 
     .myInputs {
       width: 250px;
@@ -79,94 +79,34 @@
   &__invoice {
     height: 100%;
 
-    table {
-      thead {
-        tr {
-          th {
-            padding: 5px 0 5px 10px !important;
-            font-weight: 600;
-            background: #23a5d9;
-            color: #fff;
-            border-right: 1px solid rgba(224, 224, 224, 1);
-          }
-          .titleCheckbox {
-            padding-left: 15px !important;
-          }
-        }
-      }
-
-      tbody {
-        tr {
-          td,
-          th {
-            padding: 3px 10px 3px 10px !important;
-            background: rgba(43, 165, 213, 0.43);
-            height: 10px;
-            font-size: 13px !important;
-            border-right: 1px solid rgba(224, 224, 224, 1);
-
-            span {
-              padding: 0 !important;
-            }
-
-            input {
-              background: red;
-              width: 70px;
-              background: #fff;
-              border-radius: 3px;
-              border: 1px solid #e1dede !important;
-              font-size: 13px;
-              padding: 0px 5px;
-
-              &::placeholder {
-                color: #a9afb8;
-              }
-
-              &:focus {
-                border: 1px solid #6a696987;
-                outline: none;
-              }
-            }
-
-            .checkboxInner {
-              width: 16px;
-              height: 16px;
-              cursor: pointer;
-            }
-
-            .countsBlock {
-              display: flex;
-              align-items: flex-end;
-              gap: 5px;
-
-              > div {
-                width: 23px;
-                height: 23px;
-                cursor: pointer;
-              }
-
-              .counts {
-                height: 23px;
-              }
-            }
-          }
-
-          .actionsDel {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent;
-          }
-
-          .footerTable {
-            font-weight: bold !important;
-            height: 30px !important;
-          }
-        }
-      }
-    }
-
     > div {
+      .countsBlock {
+        display: flex;
+        align-items: flex-end;
+        gap: 5px;
+
+        > div {
+          width: 23px;
+          height: 23px;
+          cursor: pointer;
+        }
+
+        .counts {
+          height: 23px;
+        }
+      }
+
+      .actionsDel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+      }
+
+      .footerTable {
+        font-weight: bold !important;
+        height: 30px !important;
+      }
     }
   }
 }

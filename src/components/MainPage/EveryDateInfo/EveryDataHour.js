@@ -24,23 +24,9 @@ import { getListProdsInInvoice } from "../../../store/reducers/mainSlice";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
-// const CustomWidthTooltip = styled(({ className, ...props }) => (
-//   <Tooltip {...props} classes={{ popper: className }} />
-// ))({
-//   [`& .${tooltipClasses.tooltip}`]: {
-//     maxWidth: 300,
-//     maxHeight: 500,
-//     padding: 10,
-//   },
-//   "& p": {
-//     fontSize: "12px",
-//     margin: "5px 0",
-//   },
-// });
-
 const EveryDataHour = ({ content }) => {
   const { status, agent, invoice_guid } = content?.event?._def?.extendedProps;
-  const { total_price } = content?.event?._def?.extendedProps;
+  const { total_price, codeid } = content?.event?._def?.extendedProps;
 
   const dispatch = useDispatch();
 
@@ -61,9 +47,10 @@ const EveryDataHour = ({ content }) => {
   return (
     <div className="everyOrder" onClick={editEveryInvoice}>
       <div className="everyOrder__inner">
-        <h6>{agent}</h6>
-        <p className="name">{total_price} сом</p>
-        <div className="status">
+        <h6>№ {codeid}</h6>
+        <h5>{agent}</h5>
+        <p className="name">{total_price} с</p>
+        {/* <div className="status">
           <Tooltip
             title={objStatusOrders?.[status]?.text || "Заявка будет обработана"}
             placement="top"
@@ -75,14 +62,14 @@ const EveryDataHour = ({ content }) => {
               },
             }}
           >
-            {/* <div className="status__inner">
+            <div className="status__inner">
               {objStatusOrders?.[+status]?.img || (
                 <HelpOutlineIcon sx={{ color: "#222" }} />
               )}
-            </div> */}
+            </div>
             <p></p>
           </Tooltip>
-        </div>
+        </div> */}
       </div>
     </div>
   );

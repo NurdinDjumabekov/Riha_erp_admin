@@ -11,12 +11,14 @@ const ListProds = ({ list }) => {
     <TableContainer
       component={Paper}
       sx={{ height: "99%", width: "60%" }}
-      className="scroll_table"
+      className="scroll_table standartTable"
     >
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
-            <TableCell style={{ width: "5%" }}>№</TableCell>
+            <TableCell align="center" style={{ width: "5%" }}>
+              №
+            </TableCell>
             <TableCell style={{ width: "52%" }}>Продукт</TableCell>
             <TableCell align="left" style={{ width: "25%" }}>
               Цена
@@ -29,7 +31,12 @@ const ListProds = ({ list }) => {
         <TableBody>
           {list?.map((row, index) => (
             <TableRow hover key={index}>
-              <TableCell component="th" scope="row" style={{ width: "5%" }}>
+              <TableCell
+                align="center"
+                component="th"
+                scope="row"
+                style={{ width: "5%" }}
+              >
                 {index + 1}
               </TableCell>
               <TableCell component="th" scope="row" style={{ width: "52%" }}>

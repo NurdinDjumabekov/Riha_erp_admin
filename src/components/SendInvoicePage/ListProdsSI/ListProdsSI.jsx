@@ -51,14 +51,12 @@ const ListProdsSI = () => {
     /////изменение ключа count в списке товаров
   };
 
-  console.log(listProdsSI, "listProdsSI");
-
   return (
     <div className="listProdCRUD_SI">
       <TableContainer
         component={Paper}
         sx={{ maxHeight: "100%" }}
-        className="scroll_table"
+        className="scroll_table standartTable"
       >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -67,19 +65,11 @@ const ListProdsSI = () => {
               <TableCell align="left" style={{ width: "15%" }}>
                 Цена
               </TableCell>
-              <TableCell align="left" style={{ width: "15%" }}>
-                *
-              </TableCell>
+              <TableCell align="left" style={{ width: "15%" }}></TableCell>
               <TableCell align="left" style={{ width: "10%" }}>
                 Кол-во
               </TableCell>
-              <TableCell
-                align="left"
-                style={{ width: "10%" }}
-                className="titleCheckbox"
-              >
-                *
-              </TableCell>
+              <TableCell align="left" style={{ width: "10%" }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

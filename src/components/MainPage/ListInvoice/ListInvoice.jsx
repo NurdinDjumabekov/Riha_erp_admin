@@ -25,7 +25,6 @@ import { setActiveCategs } from "../../../store/reducers/selectsSlice";
 import {
   createInvoice,
   getListCategs,
-  getListOrders,
   setListTA,
 } from "../../../store/reducers/mainSlice";
 import { getListProds } from "../../../store/reducers/mainSlice";

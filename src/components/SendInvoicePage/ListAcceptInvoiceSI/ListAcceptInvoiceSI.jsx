@@ -31,7 +31,7 @@ const ListAcceptInvoiceSI = () => {
       invoice_guid,
       date_from: "2024-06-09 11:00", /// просто надо заполнить
       date_to: "2024-06-09 17:30", /// просто надо заполнить
-      status: 2, /// 2 подтвержден агентом
+      status: 1, /// 2 подтвержден агентом
       user_guid: dataSave?.guid,
       user_type: 1, // 1 agent 2 admin
       user_type1: 1, // 1 agent 2 admin

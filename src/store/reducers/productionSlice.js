@@ -13,15 +13,14 @@ const initialState = {
   activeDate: "2024-09-14",
 };
 
-////// getListProdProduction - get список товаров производства определенного дня
+////// getListProdProduction - get список товаров производства
 export const getListProdProduction = createAsyncThunk(
   "getListProdProduction",
-  async function ({ date }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_production_invoice?date=${date}`;
+  async function (props, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_production_invoice`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(setActiveTA({ label: date, value: date }));
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);

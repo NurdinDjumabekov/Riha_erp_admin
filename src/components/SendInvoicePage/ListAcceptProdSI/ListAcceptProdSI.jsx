@@ -49,26 +49,25 @@ const ListAcceptProdSI = ({ editProdInInvoice }) => {
   };
 
   return (
-    <div className="listProdCRUD acceptSI">
+    <div className="listProdCRUD_SI acceptSI">
       <TableContainer
         component={Paper}
         sx={{ maxHeight: "100%" }}
-        className="scroll_table"
+        className="scroll_table standartTable"
       >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: "5%" }}>№</TableCell>
-              <TableCell style={{ width: "60%" }}>Продукт</TableCell>
-              <TableCell align="left" style={{ width: "15%" }}>
+              <TableCell style={{ width: "52%" }}>Продукт</TableCell>
+              <TableCell align="left" style={{ width: "18%" }}>
                 Цена
               </TableCell>
-              <TableCell align="left" style={{ width: "10%" }}>
+              <TableCell align="left" style={{ width: "15%" }}>
                 Кол-во
               </TableCell>
               <TableCell
                 align="left"
-                style={{ width: "10%" }}
+                style={{ width: "15%" }}
                 className="titleCheckbox "
               >
                 *
@@ -76,18 +75,15 @@ const ListAcceptProdSI = ({ editProdInInvoice }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {listSendOrdersSI?.map((row, index) => (
+            {listSendOrdersSI?.map((row) => (
               <TableRow key={row?.product_guid}>
-                <TableCell component="th" scope="row" style={{ width: "5%" }}>
-                  {index + 1}
-                </TableCell>
-                <TableCell component="th" scope="row" style={{ width: "60%" }}>
+                <TableCell component="th" scope="row" style={{ width: "52%" }}>
                   {row?.product_name}
                 </TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
+                <TableCell align="left" style={{ width: "18%" }}>
                   {row?.price} сом
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
+                <TableCell align="left" style={{ width: "15%" }}>
                   <input
                     type="text"
                     onChange={(e) => onChangeCount(e, row)}
@@ -98,7 +94,7 @@ const ListAcceptProdSI = ({ editProdInInvoice }) => {
                     readOnly={!checkInvoice}
                   />
                 </TableCell>
-                <TableCell align="center" style={{ width: "10%" }}>
+                <TableCell align="center" style={{ width: "15%" }}>
                   <Tooltip title={"Удалить"} placement="top" disableInteractive>
                     <button
                       className="actionsDel"
@@ -118,7 +114,7 @@ const ListAcceptProdSI = ({ editProdInInvoice }) => {
               </TableRow>
             ))}
             <TableRow>
-              <TableCell colSpan={2} align="left" className="footerTable">
+              <TableCell colSpan={1} align="left" className="footerTable">
                 Итого
               </TableCell>
               <TableCell align="left" className="footerTable">

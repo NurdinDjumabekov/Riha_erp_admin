@@ -19,52 +19,6 @@
     .listAgents {
       width: 30%;
       padding: 0 0 0 5px;
-
-      table {
-        thead {
-          tr {
-            th {
-              padding: 5px 0 5px 10px !important;
-              font-weight: 600;
-              background: #23a5d9;
-              color: #fff;
-              border-right: 1px solid rgba(224, 224, 224, 1);
-            }
-            .titleCheckbox {
-              padding-left: 15px !important;
-            }
-          }
-        }
-
-        tbody {
-          tr {
-            td,
-            th {
-              padding: 3px 10px 3px 10px !important;
-              background: rgba(43, 165, 213, 0.43);
-              height: 10px;
-              font-size: 13px !important;
-              border-right: 1px solid rgba(224, 224, 224, 1);
-
-              span {
-                padding: 0 !important;
-              }
-            }
-
-            .actionsDel {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              background: transparent;
-            }
-
-            .footerTable {
-              font-weight: bold !important;
-              height: 30px !important;
-            }
-          }
-        }
-      }
     }
 
     .mapAgents {

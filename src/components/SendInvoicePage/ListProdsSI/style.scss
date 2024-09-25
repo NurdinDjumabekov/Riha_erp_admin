@@ -4,70 +4,16 @@
   table {
     thead {
       tr {
-        th {
-          padding: 2px 5px !important;
-          font-weight: 600;
-          background: #23a5d9;
-          color: #fff;
-          border-right: 1px solid rgba(224, 224, 224, 1);
-        }
-
         th:first-child {
-          padding-left: 8px !important;
-        }
-
-        .titleCheckbox {
-          padding-left: 15px !important;
+          padding: 5px 8px !important;
         }
       }
     }
 
     tbody {
       tr {
-        td,
-        th {
-          padding: 2px 5px !important;
-          background: rgba(43, 165, 213, 0.43);
-          height: 10px;
-          font-size: 13px !important;
-          border-right: 1px solid rgba(224, 224, 224, 1);
-
-          &:first-child {
-            padding-left: 8px !important;
-          }
-
-          span {
-            padding: 0 !important;
-          }
-
-          input {
-            width: 100px;
-            background: #fff;
-            border-radius: 3px;
-            border: 1px solid #e1dede !important;
-            font-size: 13px;
-            padding: 0px 5px;
-
-            &::placeholder {
-              color: #a9afb8;
-            }
-
-            &:focus {
-              border: 1px solid #6a696987;
-              outline: none;
-            }
-          }
-
-          .checkboxInner {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-          }
-
-          .counts {
-            height: 23px;
-            width: 50px;
-          }
+        th:first-child {
+          padding: 5px 8px !important;
         }
 
         .footerTable {

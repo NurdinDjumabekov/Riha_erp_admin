@@ -43,9 +43,9 @@ const SendInvoicePage = () => {
             <div className="mainContent">
               <h6>{item?.text}</h6>
               <p>{item?.sellers?.[0]?.seller_fio}</p>
-              {!!!item?.sellers?.[0]?.is_active && (
+              {/* {!!!item?.sellers?.[0]?.is_active && (
                 <div className="status"></div>
-              )}
+              )} */}
             </div>
           </li>
         ))}

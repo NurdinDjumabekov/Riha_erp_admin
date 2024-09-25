@@ -51,12 +51,14 @@ const ListsSendTA = () => {
         <TableContainer
           component={Paper}
           sx={{ maxHeight: "100%" }}
-          className="scroll_table"
+          className="scroll_table standartTable"
         >
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                <TableCell style={{ width: "5%" }}>№</TableCell>
+                <TableCell align="center" style={{ width: "5%" }}>
+                  №
+                </TableCell>
                 <TableCell style={{ width: "60%" }}>Продукт</TableCell>
                 <TableCell align="left" style={{ width: "15%" }}>
                   Цена
@@ -76,7 +78,12 @@ const ListsSendTA = () => {
             <TableBody>
               {listWHProdTA?.map((row, index) => (
                 <TableRow key={row?.product_guid}>
-                  <TableCell component="th" scope="row" style={{ width: "5%" }}>
+                  <TableCell
+                    align="center"
+                    component="th"
+                    scope="row"
+                    style={{ width: "5%" }}
+                  >
                     {index + 1}
                   </TableCell>
                   <TableCell
