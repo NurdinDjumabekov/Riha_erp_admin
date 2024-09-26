@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 
 ////// components
-import MapForChoicePoints from "../MapForChoicePoints/MapForChoicePoints";
 import { Table, TableBody, TableCell } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
@@ -21,23 +20,23 @@ import {
   ListRouteCRUD,
   getEveryRouteWithTT,
   getListRoute,
+  getListRoutesForMap,
+  getPointsRouteAgent,
   setActiveRoute,
-  setCrudRoute,
+  setRouteCRUD,
 } from "../../../store/reducers/mapSlice";
 
 ////// imgs
 import EditIcon from "../../../assets/MyIcons/EditIcon";
 import DeleteIcon from "../../../assets/MyIcons/DeleteIcon";
-import EyesIcon from "../../../assets/MyIcons/EyesIcon";
+import MapIcon from "../../../assets/MyIcons/MapIcon";
 
 const EveryRouteTA = () => {
   const dispatch = useDispatch();
 
-  const [lookRoute, setLookRoute] = useState(0);
-
   const { activeTA } = useSelector((state) => state.selectsSlice);
   const { listTA } = useSelector((state) => state.mainSlice);
-  const { listRoadRouteEveryTA, crudRoute, activeRoute } = useSelector(
+  const { listRoadRouteEveryTA, routeCRUD, activeRoute } = useSelector(
     (state) => state.mapSlice
   );
 
@@ -46,42 +45,47 @@ const EveryRouteTA = () => {
   const onChange = (item) => {
     dispatch(setActiveTA(item));
     dispatch(getListRoute({ agent_guid: item?.guid }));
+    /// get список маршрутов за 30 зней
+    dispatch(getPointsRouteAgent({ guid: item?.guid }));
+    /// get список маршрутов за каждый день
   };
 
   useEffect(() => {
     const value = list_TA?.[0]?.guid;
     const label = list_TA?.[0]?.fio;
-    dispatch(getListRoute({ agent_guid: value, first: true }));
-    dispatch(setActiveTA({ value, label }));
+    dispatch(getListRoute({ agent_guid: value }));
+    /// get список маршрутов за 30 зней
+    dispatch(setActiveTA({ value, label })); //// активный ТА
+    dispatch(getPointsRouteAgent({ guid: value }));
+    /// get список маршрутов за каждый день
   }, []);
 
   const openRouteModalCRUD = (actionType, data) => {
-    dispatch(setCrudRoute({ ...crudRoute, actionType }));
+    dispatch(setRouteCRUD({ ...routeCRUD, actionType }));
     //// открытие модалки для создания оболочки маршрута у ТА
 
     if (actionType == 2) {
       //// редактирование и удаление
-      const send = { ...crudRoute, ...data, actionType };
-      dispatch(setCrudRoute({ ...send, agent_select: activeTA }));
+      const send = { ...routeCRUD, ...data, actionType };
+      dispatch(setRouteCRUD({ ...send, agent_select: activeTA }));
     }
   };
 
   const clickCheckBoxForEdit = (e, item) => {
-    //// редактирование
-    // const bool = e.target.checked;
-    // const obj = { ...item, is_active: bool ? 1 : 0, activeTA };
-    // const data = { route_sheet_guid: item?.guid };
-    // dispatch(ListRouteCRUD({ ...obj, ...data, actionType: 2 }));
+    //// посмотреть более подробный список маршрутов
     dispatch(setActiveRoute({ guid: item?.guid })); /// активный маршрут для отображения
     dispatch(getEveryRouteWithTT(item?.guid)); /// запрос на получение маршрута
   };
 
   const clickDelRoute = (item) => {
-    //// редактирование
-    const obj = { ...item, status: -1 };
+    //// удаление
+    const obj = { ...item, status: -1, noneAlert: true };
     const data = { route_sheet_guid: item?.guid, activeTA };
     dispatch(ListRouteCRUD({ ...obj, ...data, actionType: 3 }));
   };
+
+  const lookListRoute = (item) => dispatch(getListRoutesForMap(item?.guid));
+  /// get список точек для полного маршрута
 
   return (
     <div className="everyRouteTA">
@@ -155,17 +159,14 @@ const EveryRouteTA = () => {
                 </TableCell>
                 <TableCell align="left" style={{ width: "15%" }}>
                   <div className="actions">
+                    <button onClick={() => lookListRoute(row)}>
+                      <MapIcon width={16} height={16} />
+                    </button>
                     <button onClick={() => openRouteModalCRUD(2, row)}>
                       <EditIcon width={17} height={17} />
                     </button>
                     <button onClick={() => clickDelRoute(row)}>
                       <DeleteIcon width={19} height={19} color={"red"} />
-                    </button>
-                    <button onClick={() => setLookRoute(row?.number)}>
-                      <EyesIcon width={17} height={17} />
-                      {lookRoute !== row?.number && (
-                        <div className="lineEyes"></div>
-                      )}
                     </button>
                   </div>
                 </TableCell>

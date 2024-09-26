@@ -15,6 +15,7 @@ import Slide from "@mui/material/Slide";
 import { setInvoiceInfo } from "../../store/reducers/mainSlice";
 import { getListTA } from "../../store/reducers/mainSlice";
 import { getAllRouteAgent } from "../../store/reducers/mapSlice";
+import { clearSelects } from "../../store/reducers/selectsSlice";
 
 ////// style
 import "./style.scss";
@@ -25,7 +26,7 @@ import { listActionRoute } from "../../helpers/objs";
 ////// components
 import RouteTA from "./RouteTA/RouteTA";
 import ViewAgents from "./ViewAgents/ViewAgents";
-import { clearSelects } from "../../store/reducers/selectsSlice";
+import HistoryRouteTA from "./HistoryRouteTA/HistoryRouteTA";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -34,7 +35,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ViewRouter = () => {
   const dispatch = useDispatch();
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
-  const { mapGeo, listRouteAllTA } = useSelector((state) => state.mapSlice);
 
   const [active, setActive] = React.useState(1);
 
@@ -61,7 +61,7 @@ const ViewRouter = () => {
     };
   }, [invoiceInfo?.action, dispatch]);
 
-  const obj = { 1: <ViewAgents />, 2: <RouteTA /> };
+  const obj = { 1: <ViewAgents />, 2: <RouteTA />, 3: <HistoryRouteTA /> };
 
   return (
     <Dialog
@@ -100,7 +100,8 @@ const ViewRouter = () => {
             </Toolbar>
           </AppBar>
         </div>
-        {obj?.[active]}
+        {/* {obj?.[active]} */}
+        <HistoryRouteTA />
       </div>
     </Dialog>
   );

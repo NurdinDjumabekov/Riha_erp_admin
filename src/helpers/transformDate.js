@@ -13,7 +13,6 @@ export const transformDate = (date) => {
 export const transformDateTime = (dateString) => {
   ///  Wed Aug 07 2024 17:12:26 GMT+0600 (Киргизия)  ===>  2024-08-07 17:12
   const date = new Date(dateString);
-
   const year = date?.getFullYear();
   const month = String(date?.getMonth() + 1)?.padStart(2, "0");
   const day = String(date?.getDate())?.padStart(2, "0");
@@ -48,6 +47,31 @@ export const reverseTransformActionDate = (dateString) => {
   return date;
 };
 
+export const reverseTransformActionTime = (dateString) => {
+  //// 2024-08-07  17:12 ===> Wed Aug 07 2024 17:12:26 GMT+0600 (Киргизия)
+
+  if (!dateString || typeof dateString !== "string") return null;
+
+  const [datePart, timePart] = dateString?.split(" ");
+  if (!datePart || !timePart) return null;
+
+  const [year, month, day] = datePart?.split("-");
+  const [hours, minutes] = timePart?.split(":");
+
+  if (!year || !month || !day || !hours || !minutes) return null;
+
+  // Создаем объект даты
+  const date = new Date(year, month - 1, day, hours, minutes);
+
+  // Проверяем, является ли созданный объект валидным
+  if (isNaN(date)) {
+    console.error("Invalid date generated from input:", dateString);
+    return null;
+  }
+
+  return date;
+};
+
 export const transformDates = (dateString) => {
   ///  Mon Apr 01 2019 20:29:00 GMT+0600  ===>  01.04.2019
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
@@ -62,6 +86,22 @@ export const transformTime = (dateString) => {
   const hours = date?.getHours()?.toString()?.padStart(2, "0");
   const minutes = date?.getMinutes()?.toString()?.padStart(2, "0");
   return `${hours}:${minutes}`;
+};
+
+export const extractTimeFromDateTime = (dateTimeString) => {
+  /// 2024-09-26 14:36 ====> 14:36
+  if (!dateTimeString || typeof dateTimeString !== "string") return null;
+  const [datePart, timePart] = dateTimeString?.split(" ");
+  if (!datePart || !timePart) return null;
+  return timePart;
+};
+
+export const reverseExtractTimeFromDateTime = (timeString) => {
+  /// 14:36 ====> 2024-09-26 14:36
+  if (!timeString || typeof timeString !== "string") return null;
+  const timeRegex = /^\d{2}:\d{2}$/;
+  if (!timeRegex.test(timeString)) return null;
+  return `2024-09-26 ${timeString}`;
 };
 
 export const generateNowWeek = () => {

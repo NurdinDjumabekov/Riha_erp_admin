@@ -14,4 +14,31 @@
       border-radius: 5px;
     }
   }
+  .time {
+    input {
+      min-width: 376px !important;
+    }
+
+    .react-datepicker-popper {
+      left: 0 !important;
+    }
+
+    .react-datepicker__tab-loop {
+      div {
+        width: 200px !important;
+        left: 50px !important;
+
+        .react-datepicker__time-container {
+          > div {
+            left: 2px !important;
+            width: 198px !important;
+
+            div {
+              width: 198px !important;
+            }
+          }
+        }
+      }
+    }
+  }
 }

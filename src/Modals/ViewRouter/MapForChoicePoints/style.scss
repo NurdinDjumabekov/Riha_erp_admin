@@ -1,10 +1,25 @@
 .mapForChoicePoints {
   position: relative;
+  height: 102%;
 
   .clear {
     position: absolute;
     z-index: 20;
     left: 30px;
     top: 30px;
+  }
+
+  #mapContainerChoice {
+    height: 100% !important;
+    width: 100% !important;
+  }
+}
+
+@keyframes blinkMap {
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
   }
 }

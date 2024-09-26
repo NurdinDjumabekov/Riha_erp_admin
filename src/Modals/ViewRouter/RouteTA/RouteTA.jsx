@@ -17,13 +17,10 @@ import { setActiveTA } from "../../../store/reducers/selectsSlice";
 import EveryRouteTA from "../EveryRouteTA/EveryRouteTA";
 import ActionsListRoute from "../ActionsListRoute/ActionsListRoute";
 import EveryRouteListTT from "../EveryRouteListTT/EveryRouteListTT";
+import ActionMapRoute from "../ActionMapRoute/ActionMapRoute";
 
 const RouteTA = () => {
   const dispatch = useDispatch();
-
-  const { activeTA } = useSelector((state) => state.selectsSlice);
-  const { listTA } = useSelector((state) => state.mainSlice);
-  const { listRoadRouteEveryTA } = useSelector((state) => state.mapSlice);
 
   return (
     <>
@@ -34,11 +31,9 @@ const RouteTA = () => {
         </div>
       </div>
       <ActionsListRoute />
+      <ActionMapRoute />
     </>
   );
 };
 
 export default RouteTA;
-{
-  /* <MapForChoicePoints /> */
-}

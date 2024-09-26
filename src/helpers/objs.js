@@ -28,6 +28,7 @@ import TaxiAlertIcon from "@mui/icons-material/TaxiAlert";
 /////// icons
 import RoomIcon from "@mui/icons-material/Room";
 // import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
+import HistoryIcon from "@mui/icons-material/History";
 
 export const objStatusOrders = {
   0: {
@@ -130,7 +131,7 @@ export const listMenu = [
 export const listActionRoute = [
   {
     id: 1,
-    title: "Координаты ТА",
+    title: "Координаты всех ТА",
     icon: <RoomIcon sx={{ color: "#fff" }} />,
     link: "/",
   },
@@ -140,4 +141,16 @@ export const listActionRoute = [
     icon: <ChecklistRtlIcon sx={{ color: "#fff" }} />,
     link: "/",
   },
+  {
+    id: 3,
+    title: "История маршрутов",
+    icon: <HistoryIcon sx={{ color: "#fff" }} />,
+    link: "/",
+  },
 ];
+
+export const styleRoutes = {
+  routeLineWidth: ["interpolate", ["linear"], ["zoom"], 10, 20, 10, 5],
+  substrateLineWidth: ["interpolate", ["linear"], ["zoom"], 5, 1, 7, 10],
+  haloLineWidth: 10,
+};

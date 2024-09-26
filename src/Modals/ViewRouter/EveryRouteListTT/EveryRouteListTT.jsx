@@ -11,54 +11,77 @@ import { TableRow, Paper } from "@mui/material";
 import "./style.scss";
 
 ////// helpers
+import { reverseExtractTimeFromDateTime } from "../../../helpers/transformDate";
 
 ////// fns
-import { ListRouteCRUD, setCrudRoute } from "../../../store/reducers/mapSlice";
+import {
+  everyRouteCRUD,
+  setActiveViewMap,
+  setEveryListRouteCRUD,
+} from "../../../store/reducers/mapSlice";
 
 ////// imgs
 import EditIcon from "../../../assets/MyIcons/EditIcon";
 import DeleteIcon from "../../../assets/MyIcons/DeleteIcon";
-import EyesIcon from "../../../assets/MyIcons/EyesIcon";
+import MapIcon from "../../../assets/MyIcons/MapIcon";
 
 const EveryRouteListTT = () => {
   const dispatch = useDispatch();
 
-  const { activeTA } = useSelector((state) => state.selectsSlice);
-  const { listTA } = useSelector((state) => state.mainSlice);
-  const { crudRoute, roadRouteEveryTA } = useSelector(
+  const { roadRouteEveryTA, everyListRouteCRUD } = useSelector(
     (state) => state.mapSlice
   );
 
-  const openRouteModalCRUD = (actionType, data) => {
-    dispatch(setCrudRoute({ ...crudRoute, actionType }));
+  const openRouteModalCRUD = (actionType, item) => {
+    dispatch(setEveryListRouteCRUD({ ...everyListRouteCRUD, actionType }));
     //// открытие модалки для создания оболочки маршрута у ТА
 
     if (actionType == 2) {
-      //// редактирование и удаление
-      const send = { ...crudRoute, ...data, actionType };
-      dispatch(setCrudRoute({ ...send, agent_select: activeTA }));
+      // редактирование
+      const { point_guid, point, guid, start_time, end_time } = item;
+      const send = { ...everyListRouteCRUD, ...item, actionType };
+      const obj = { seller_select: { value: point_guid, label: point } };
+      const times = {
+        start_time: reverseExtractTimeFromDateTime(start_time),
+        end_time: reverseExtractTimeFromDateTime(end_time),
+        route_guid: guid,
+      };
+      dispatch(setEveryListRouteCRUD({ ...send, ...obj, ...times }));
     }
   };
 
   const clickCheckBoxForEdit = (e, item) => {
     //// редактирование
-    const bool = e.target.checked;
-    const obj = { ...item, is_active: bool ? 1 : 0, activeTA };
-    const data = { route_sheet_guid: item?.guid };
-    dispatch(ListRouteCRUD({ ...obj, ...data, actionType: 2 }));
+    const { point_guid, point, guid } = item;
+    const send = { ...everyListRouteCRUD, ...item, actionType: 2 };
+    const obj = { seller_select: { value: point_guid, label: point } };
+    const checkedObj = { status: e.target.checked ? 1 : 0, route_guid: guid };
+    const data = { ...send, ...obj, ...checkedObj, noneAlert: true };
+    dispatch(everyRouteCRUD(data));
   };
 
   const clickDelRoute = (item) => {
-    //// редактирование
-    const obj = { ...item, status: -1 };
-    const data = { route_sheet_guid: item?.guid, activeTA };
-    dispatch(ListRouteCRUD({ ...obj, ...data, actionType: 3 }));
+    //// удаление
+    const { point_guid, point, guid } = item;
+    const send = { ...everyListRouteCRUD, ...item, actionType: 3 };
+    const obj = { seller_select: { value: point_guid, label: point } };
+    const checkedObj = { route_guid: guid, status: -1 };
+    const data = { ...send, ...obj, ...checkedObj, noneAlert: true };
+    dispatch(everyRouteCRUD(data));
+  };
+
+  const editCoordsMap = (item) => {
+    const { guid, lat, lon } = item;
+    dispatch(setActiveViewMap({ ...item, guid, lat, lon, actionType: 1 }));
+    //// открытие модалки
   };
 
   return (
     <div className="everyRouteListTT">
-      <div className="choice">
-        <button onClick={() => openRouteModalCRUD(1)}>+ Добавить</button>
+      <div className="everyRouteListTT__actions">
+        <div className="choice">
+          <button onClick={() => openRouteModalCRUD(1)}>+ Добавить</button>
+        </div>
       </div>
       <TableContainer
         component={Paper}
@@ -71,24 +94,21 @@ const EveryRouteListTT = () => {
               <TableCell align="center" style={{ width: "5%" }}>
                 №
               </TableCell>
-              <TableCell align="left" style={{ width: "30%" }}>
+              <TableCell align="left" style={{ width: "41%" }}>
                 Наименование ТТ
               </TableCell>
-              <TableCell align="center" style={{ width: "15%" }}>
+              <TableCell align="center" style={{ width: "12%" }}>
                 Приход
               </TableCell>
-              <TableCell align="center" style={{ width: "15%" }}>
+              <TableCell align="center" style={{ width: "12%" }}>
                 Уход
-              </TableCell>
-              <TableCell align="center" style={{ width: "10%" }}>
-                Координаты
               </TableCell>
               <TableCell align="center" style={{ width: "10%" }}>
                 Статус
               </TableCell>
               <TableCell
                 align="center"
-                style={{ width: "15%" }}
+                style={{ width: "20%" }}
                 className="titleCheckbox"
               >
                 *
@@ -106,16 +126,13 @@ const EveryRouteListTT = () => {
                 >
                   {row?.ordering}
                 </TableCell>
-                <TableCell component="th" scope="row" style={{ width: "30%" }}>
+                <TableCell component="th" scope="row" style={{ width: "41%" }}>
                   {row?.point}
                 </TableCell>
-                <TableCell align="center" style={{ width: "15%" }}>
+                <TableCell align="center" style={{ width: "12%" }}>
                   {row?.start_time}
                 </TableCell>
-                <TableCell align="center" style={{ width: "15%" }}>
-                  {row?.end_time}
-                </TableCell>
-                <TableCell align="center" style={{ width: "15%" }}>
+                <TableCell align="center" style={{ width: "12%" }}>
                   {row?.end_time}
                 </TableCell>
                 <TableCell align="center" style={{ width: "10%" }}>
@@ -124,13 +141,16 @@ const EveryRouteListTT = () => {
                       type="checkbox"
                       onClick={(e) => clickCheckBoxForEdit(e, row)}
                       className="checkboxInner"
-                      name="is_active"
-                      checked={!!row?.is_active}
+                      name="status"
+                      checked={!!row?.status}
                     />
                   </div>
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
+                <TableCell align="left" style={{ width: "20%" }}>
                   <div className="actions">
+                    <button onClick={() => editCoordsMap(row)}>
+                      <MapIcon width={16} height={16} />
+                    </button>
                     <button onClick={() => openRouteModalCRUD(2, row)}>
                       <EditIcon width={17} height={17} />
                     </button>

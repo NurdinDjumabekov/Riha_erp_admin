@@ -1,21 +1,50 @@
+/////// hooks
 import React, { useEffect, useState } from "react";
 import { load } from "@2gis/mapgl";
-import { useSelector } from "react-redux";
-import { Directions } from "@2gis/mapgl-directions";
+import { useDispatch, useSelector } from "react-redux";
 
+////// styles
 import "./style.scss";
-import { styleRoutes } from "../../../helpers/objs";
 
-const MapForChoicePoints = () => {
+/////// helpers
+import { styleRoutes } from "../../../helpers/objs";
+import { transformLists } from "../../../helpers/transformLists";
+
+/////// conmponents
+import { Directions } from "@2gis/mapgl-directions";
+import DatePicker from "react-datepicker";
+import Select from "react-select";
+
+////// fns
+import {
+  setActiveDate,
+  setActiveTA,
+} from "../../../store/reducers/selectsSlice";
+import {
+  reverseTransformActionDate,
+  transformActionDate,
+} from "../../../helpers/transformDate";
+import { ru } from "date-fns/locale";
+
+const MapHistory = () => {
+  const dispatch = useDispatch();
+
   const [map, setMap] = useState(null);
   const [directions, setDirections] = useState(null);
   const [markers, setMarkers] = useState([]);
 
   const { mapGeo, key, activeViewMap } = useSelector((state) => state.mapSlice);
+  const { activeTA, activeDate } = useSelector((state) => state.selectsSlice);
+  const { listTA } = useSelector((state) => state.mainSlice);
+
+  const onChange = (item) => dispatch(setActiveTA(item));
+
+  const onChangeDate = (item) =>
+    dispatch(setActiveDate(transformActionDate(item)));
 
   useEffect(() => {
     load().then((mapgl) => {
-      const initializedMap = new mapgl.Map("mapContainerChoice", {
+      const initializedMap = new mapgl.Map("mapContainerHistory", {
         center: [
           mapGeo?.longitude || 74.5975735,
           mapGeo?.latitude || 42.8508686,
@@ -88,13 +117,38 @@ const MapForChoicePoints = () => {
     }
   }, [map, activeViewMap, directions]);
 
+  const list_TA = transformLists(listTA, "guid", "fio");
+
   return (
     <>
-      <div className="mapForChoicePoints">
-        <div id="mapContainerChoice" className="map-container"></div>
+      <div className="mapHistory">
+        <div className="mapHistory__header">
+          <div className="select">
+            <Select
+              options={list_TA}
+              className="select"
+              onChange={onChange}
+              value={activeTA}
+              name="activeTA"
+            />
+          </div>
+          <div className="date">
+            <DatePicker
+              selected={reverseTransformActionDate(activeDate)}
+              onChange={onChangeDate}
+              yearDropdownItemNumber={100}
+              placeholderText="ДД.ММ.ГГГГ"
+              shouldCloseOnSelect={true}
+              scrollableYearDropdown
+              dateFormat="dd.MM.yyyy"
+              locale={ru}
+            />
+          </div>
+        </div>
+        <div id="mapContainerHistory" className="map-container"></div>
       </div>
     </>
   );
 };
 
-export default MapForChoicePoints;
+export default MapHistory;

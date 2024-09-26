@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { transformActionDate } from "../../helpers/transformDate";
 
 const initialState = {
   activeWorkShop: {},
   activeCategs: {},
   activeTA: {},
+  activeDate: transformActionDate(new Date()),
 };
 
 const selectsSlice = createSlice({
@@ -19,6 +21,9 @@ const selectsSlice = createSlice({
     setActiveTA: (state, action) => {
       state.activeTA = action.payload;
     },
+    setActiveDate: (state, action) => {
+      state.activeDate = action.payload;
+    },
     clearSelects: (state, action) => {
       state.activeWorkShop = {};
       state.activeCategs = {};
@@ -26,7 +31,12 @@ const selectsSlice = createSlice({
     },
   },
 });
-export const { setActiveWorkShop, setActiveCategs, setActiveTA, clearSelects } =
-  selectsSlice.actions;
+export const {
+  setActiveWorkShop,
+  setActiveCategs,
+  setActiveTA,
+  setActiveDate,
+  clearSelects,
+} = selectsSlice.actions;
 
 export default selectsSlice.reducer;
