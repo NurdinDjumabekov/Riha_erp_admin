@@ -11,35 +11,22 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import Select from "react-select";
 import Slider from "react-slick";
 
 ////// style
 import "./style.scss";
-import { setActiveTTForPhoto } from "../../../../store/reducers/photoSlice";
 import { getListPhotos } from "../../../../store/reducers/photoSlice";
-
-////// helpers
-import { transformLists } from "../../../../helpers/transformLists";
-import { formatDateMonth } from "../../../../helpers/transformDate";
-
-////// fns
-
-////// icons
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const ViewPhotos = (props) => {
-  const { setViewPhotos, viewPhotos, setViewDate } = props;
+  const { setViewPhotos, viewPhotos, guid_point } = props;
   const dispatch = useDispatch();
 
   const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
-  const { activeDateForPhotos } = useSelector((state) => state.photoSlice);
-  const { activeTTForPhoto } = useSelector((state) => state.photoSlice);
   const { listPhotos } = useSelector((state) => state.photoSlice);
-  const { listPointsEveryTA } = useSelector((state) => state.mapSlice);
 
   const [viewSlider, setViewSlider] = React.useState(false);
   const [slideIndex, setSlideIndex] = React.useState(0);
@@ -53,18 +40,8 @@ const ViewPhotos = (props) => {
   };
 
   useEffect(() => {
-    dispatch(getListPhotos({ activeDateForPhotos, guid, activeTTForPhoto }));
-  }, [activeTTForPhoto]);
-
-  const listTT = transformLists(listPointsEveryTA, "guid", "text");
-
-  const onChangeCateg = (value) => dispatch(setActiveTTForPhoto(value));
-
-  const openModalChoiceDate = () => {
-    //// открываю модалку для выбора времени
-    setViewDate(true);
-    setViewPhotos(false);
-  };
+    dispatch(getListPhotos({ guid, guid_point }));
+  }, [guid_point]);
 
   const clickPhoto = (index) => {
     //// для просмотра каждой фотки
@@ -120,21 +97,6 @@ const ViewPhotos = (props) => {
           </div>
         ) : (
           <>
-            <div className="viewPhotos__selects">
-              <div className="myInputs">
-                <Select
-                  options={listTT}
-                  className="select"
-                  onChange={onChangeCateg}
-                  value={activeTTForPhoto}
-                />
-              </div>
-              <div className="myInputs" onClick={() => setViewDate(true)}>
-                <p onClick={openModalChoiceDate}>
-                  {formatDateMonth(activeDateForPhotos)}
-                </p>
-              </div>
-            </div>
             <div className="viewPhotos__main">
               {listPhotos?.map((i, index) => (
                 <div onClick={() => clickPhoto(index)}>

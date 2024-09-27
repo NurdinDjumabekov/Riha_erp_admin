@@ -7,9 +7,10 @@ import { transformActionDate } from "../../helpers/transformDate";
 const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
-  activeTTForPhoto: {},
-  activeDateForPhotos: transformActionDate(new Date()),
+  activeTTForPhoto: {}, /// delete
+  activeDateForPhotos: transformActionDate(new Date()), /// delete
   listPhotos: [],
+  activeRouteList: {}, /// активный маршрутный лист
 };
 
 ////// sendPhotos - отправка фото торговой точки
@@ -33,11 +34,50 @@ export const sendPhotos = createAsyncThunk(
 export const getListPhotos = createAsyncThunk(
   "getListPhotos",
   async function (props, { dispatch, rejectWithValue }) {
-    const { activeDateForPhotos, guid, activeTTForPhoto } = props;
-    const url = `${REACT_APP_API_URL}/ta/get_file?date=0&agent_guid=${guid}&point_guid=${activeTTForPhoto?.guid}`;
+    const { guid, guid_point } = props;
+
+    const date = transformActionDate(new Date());
+    const url = `${REACT_APP_API_URL}/ta/get_file?date=${date}&agent_guid=${guid}&point_guid=${guid_point}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getActiveRouteList - get активного маршрутного листа, который выдается каждому агенту
+export const getActiveRouteList = createAsyncThunk(
+  "getActiveRouteList",
+  async function (agent_guid, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/agent_route_sheet?agent_guid=${agent_guid}`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data?.[0];
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// activeRouteListCRUD - изменение активного маршрутного листа, который выдается каждому агенту
+export const activeRouteListCRUD = createAsyncThunk(
+  "activeRouteListCRUD",
+  async function ({ data, guid }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/set_route_sheet`;
+    try {
+      const response = await axios.put(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        dispatch(getActiveRouteList(guid));
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -58,6 +98,9 @@ const photoSlice = createSlice({
     setActiveDateForPhotos: (state, action) => {
       state.activeDateForPhotos = action?.payload;
     },
+    setActiveRouteList: (state, action) => {
+      state.activeRouteList = action?.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -73,22 +116,26 @@ const photoSlice = createSlice({
     builder.addCase(getListPhotos.pending, (state, action) => {
       state.preloader = true;
     });
+
+    ////////////// getActiveRouteList
+    builder.addCase(getActiveRouteList.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.activeRouteList = action.payload;
+    });
+    builder.addCase(getActiveRouteList.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getActiveRouteList.pending, (state, action) => {
+      state.preloader = true;
+    });
   },
 });
 
-export const { setActiveTTForPhoto, setActiveDateForPhotos } =
-  photoSlice.actions;
+export const {
+  setActiveTTForPhoto,
+  setActiveDateForPhotos,
+  setActiveRouteList,
+} = photoSlice.actions;
 
 export default photoSlice.reducer;
-
-// load().then((mapgl) => {
-//   map = new mapgl.Map("map-container", {
-//     center: [42.8508686, 74.5975735],
-//     zoom: 13,
-//     key: "4b360754-94b6-4399-9a7b-35811336eb5f",
-//   });
-
-//   const marker = new mapgl.Marker(map, {
-//     coordinates: [42.8508686, 74.5975735],
-//   });
-// });

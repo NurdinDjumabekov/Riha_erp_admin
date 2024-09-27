@@ -100,8 +100,7 @@ const ViewRouter = () => {
             </Toolbar>
           </AppBar>
         </div>
-        {/* {obj?.[active]} */}
-        <HistoryRouteTA />
+        {obj?.[active]}
       </div>
     </Dialog>
   );

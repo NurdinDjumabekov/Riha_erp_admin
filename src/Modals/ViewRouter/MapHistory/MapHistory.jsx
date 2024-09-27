@@ -142,6 +142,7 @@ const MapHistory = () => {
               scrollableYearDropdown
               dateFormat="dd.MM.yyyy"
               locale={ru}
+              maxDate={new Date()}
             />
           </div>
         </div>

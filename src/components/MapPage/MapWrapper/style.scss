@@ -1,3 +1,34 @@
 .mapBlock {
   height: 100%;
+
+  .customMarker {
+    background: transparent;
+
+    &::before {
+      content: "";
+    }
+
+    &__inner {
+      animation: blink 2s infinite;
+    }
+
+    &__point {
+      width: 25px;
+      height: 35px;
+      background-image: url("../../../assets/images/map.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    &__name {
+      p {
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .mapgl_RyvsmCnoVe7ui2MClLMS {
+    margin: 100px 0 0 0;
+  }
 }

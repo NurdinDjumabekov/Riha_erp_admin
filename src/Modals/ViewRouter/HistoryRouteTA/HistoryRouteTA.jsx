@@ -8,10 +8,10 @@ import MapHistory from "../MapHistory/MapHistory";
 ////// helpers
 
 ////// fns
+import { getListTA } from "../../../store/reducers/mainSlice";
 
 ////// style
 import "./style.scss";
-import { getListTA } from "../../../store/reducers/mainSlice";
 
 const HistoryRouteTA = () => {
   const dispatch = useDispatch();

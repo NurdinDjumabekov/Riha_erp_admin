@@ -14,6 +14,7 @@ import MenuAdmin from "../../common/MenuAdmin/MenuAdmin";
 import { getListTA } from "../../store/reducers/mainSlice";
 import { getListWorkShop } from "../../store/reducers/mainSlice";
 import { getPointsRouteAgent } from "../../store/reducers/mapSlice";
+import { getActiveRouteList } from "../../store/reducers/photoSlice";
 
 const MainLayouts = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,8 @@ const MainLayouts = () => {
     dispatch(getListWorkShop());
     dispatch(getListTA({ first: true }));
     dispatch(getPointsRouteAgent({ guid, first: true }));
+    dispatch(getPointsRouteAgent({ guid, first: true }));
+    dispatch(getActiveRouteList(guid));
     //// отправляю запрос для получения точек каждого агента
   }, []);
 

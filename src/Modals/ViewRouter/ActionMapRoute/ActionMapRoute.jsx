@@ -5,13 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 ////// components
 import Modals from "../../../components/Modals/Modals";
 import MapForChoicePoints from "../MapForChoicePoints/MapForChoicePoints";
+import MapForChoiceTT from "../MapForChoiceTT/MapForChoiceTT";
 
 ////// fns
 import { setActiveViewMap } from "../../../store/reducers/mapSlice";
 
 ////// style
 import "./style.scss";
-import MapForChoiceTT from "../MapForChoiceTT/MapForChoiceTT";
+
+////// helpers
 import { clearActiveMap } from "../../../helpers/clear";
 
 const ActionMapRoute = () => {

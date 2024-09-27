@@ -1,12 +1,10 @@
 import React, { useRef, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 /////// components
 import ViewPhotos from "../../components/CameraPage/Modals/ViewPhotos/ViewPhotos";
-import ChoiceDateForPhotos from "../../components/CameraPage/Modals/ChoiceDateForPhotos/ChoiceDateForPhotos";
 import Webcam from "react-webcam";
-import Select from "react-select";
 
 /////// style
 import "./style.scss";
@@ -18,38 +16,24 @@ import DownloadIcon from "@mui/icons-material/Download";
 
 ////// fns
 import { getListPhotos, sendPhotos } from "../../store/reducers/photoSlice";
-import { setActiveTTForPhoto } from "../../store/reducers/photoSlice";
-
-////// helpers
-import { transformLists } from "../../helpers/transformLists";
-import { myAlert } from "../../helpers/MyAlert";
 
 const CameraPage = () => {
   const dispatch = useDispatch();
+  const { guid_point } = useParams();
 
   const webcamRef = useRef(null);
   const fileInputRef = useRef(null);
 
   const [cameraFront, setCameraFront] = useState(true);
   const [viewPhotos, setViewPhotos] = useState(false);
-  const [viewDate, setViewDate] = useState(false);
   const [animation, setAnimation] = useState(false);
 
   const { dataSave } = useSelector((state) => state.saveDataSlice);
-  const { listPointsEveryTA } = useSelector((state) => state.mapSlice);
-  const { activeTTForPhoto } = useSelector((state) => state.photoSlice);
-  const { activeDateForPhotos } = useSelector((state) => state.photoSlice);
+  const { activeDateForPhotos, activeRouteList } = useSelector(
+    (state) => state.photoSlice
+  );
 
-  const createPhoto = () => {
-    if (!!!activeTTForPhoto?.guid) {
-      myAlert("Выберите торговую точку!", "error");
-      return;
-    }
-
-    sendPhoto();
-  };
-
-  const sendPhoto = useCallback(() => {
+  const createPhoto = useCallback(() => {
     setAnimation(true);
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) {
@@ -58,7 +42,8 @@ const CameraPage = () => {
 
       const formData = new FormData();
       formData?.append("agent_guid", dataSave?.guid);
-      formData?.append("point_guid", activeTTForPhoto?.guid);
+      formData?.append("point_guid", guid_point);
+      formData?.append("route_guid", activeRouteList?.guid);
       formData?.append("file", file);
       dispatch(sendPhotos({ data: formData }));
     }
@@ -66,31 +51,18 @@ const CameraPage = () => {
     setTimeout(() => {
       setAnimation(false);
     }, 200);
-  }, [webcamRef, activeTTForPhoto?.guid]);
-
-  const listTT = transformLists(listPointsEveryTA, "guid", "text");
-
-  const onChangeCateg = (value) => dispatch(setActiveTTForPhoto(value));
+  }, [webcamRef, guid_point]);
 
   const handleButtonClick = () => {
-    if (!!!activeTTForPhoto?.guid) {
-      myAlert("Выберите торговую точку!", "error");
-      return;
-    }
-
     fileInputRef.current.click();
   };
 
   const handleFileChange = (e) => {
-    if (!!!activeTTForPhoto?.guid) {
-      myAlert("Выберите торговую точку!", "error");
-      return;
-    }
     const file = e?.target?.files;
     if (file) {
       const formData = new FormData();
       formData?.append("agent_guid", dataSave?.guid);
-      formData?.append("point_guid", activeTTForPhoto?.guid);
+      formData?.append("point_guid", guid_point);
       formData?.append("file", file?.[0]); /// check
       dispatch(sendPhotos({ data: formData }));
     }
@@ -101,7 +73,7 @@ const CameraPage = () => {
     setViewPhotos(true);
 
     ///// get  всех фото
-    const obj = { activeDateForPhotos, guid: dataSave?.guid, activeTTForPhoto };
+    const obj = { activeDateForPhotos, guid: dataSave?.guid, guid_point };
     dispatch(getListPhotos(obj));
   };
 
@@ -109,15 +81,6 @@ const CameraPage = () => {
     <div className="cameraPage">
       <div className="cameraPage__inner">
         <div className="loadFiles">
-          <div className="myInputs">
-            <h6>Торговые точки</h6>
-            <Select
-              options={listTT}
-              className="select"
-              onChange={onChangeCateg}
-              value={activeTTForPhoto}
-            />
-          </div>
           <input
             type="file"
             ref={fileInputRef}
@@ -160,13 +123,7 @@ const CameraPage = () => {
       <ViewPhotos
         viewPhotos={viewPhotos}
         setViewPhotos={setViewPhotos}
-        setViewDate={setViewDate}
-      />
-      <ChoiceDateForPhotos
-        viewPhotos={viewPhotos}
-        setViewPhotos={setViewPhotos}
-        setViewDate={setViewDate}
-        viewDate={viewDate}
+        guid_point={guid_point}
       />
     </div>
   );

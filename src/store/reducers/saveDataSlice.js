@@ -11,8 +11,12 @@ const saveDataSlice = createSlice({
     setDataSave: (state, action) => {
       state.dataSave = action.payload;
     },
+
+    clearDataSave: (state, action) => {
+      state.dataSave = { guid: "", fio: "", user_type: "" };
+    },
   },
 });
-export const { setDataSave } = saveDataSlice.actions;
+export const { setDataSave, clearDataSave } = saveDataSlice.actions;
 
 export default saveDataSlice.reducer;

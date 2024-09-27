@@ -1,6 +1,6 @@
 .map2Gis {
   width: 100%;
-  height: 100vh;
+  height: 95vh;
 
   .btnNavMap {
     padding: 0;
@@ -14,61 +14,50 @@
     box-sizing: border-box;
     box-shadow: 0 1px 3px 0 rgba(38, 38, 38, 0.5);
     border-radius: 4px;
-    position: absolute;
+    position: fixed;
     z-index: 20;
     right: 15px;
-    bottom: 250px;
+    bottom: 180px;
   }
 
-  .mapgl_RyvsmCnoVe7ui2MClLMS {
-    width: 40px !important;
-
-    button {
-      width: 40px !important;
-      height: 40px !important;
-
-      svg {
-        width: 40px !important;
-        height: 40px !important;
-      }
-    }
-  }
-
-  .mapgl_T5RQQ2NOfnY3_e00os8n .mapgl_BhGb3GmPN9rfS36yYYbH {
-    display: none !important;
-  }
-
-  .history {
+  .start {
     position: fixed;
-    left: 10px;
-    top: 13px;
-    z-index: 10;
+    z-index: 21;
+    bottom: 80px;
+    width: 95%;
+    right: 15px;
+    width: 230px;
+    height: 50px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
-    gap: 5px;
+    padding: 0 20px;
+    gap: 8px;
+    background: #00ab55;
+    justify-content: center;
 
-    button {
-      background: #fff;
-      font-size: 16px;
+    @media (max-width: 500px) {
+      left: 50%;
+      transform: translateX(-50%);
+      width: 95%;
+    }
+
+    p {
+      font-size: 17px;
       font-weight: 500;
-      padding: 5px 12px;
-      border-radius: 5px;
-      color: #222;
-      box-shadow: 0 1px 3px 0 rgba(38, 38, 38, 0.5);
-      height: 30px;
+      color: #fff;
     }
 
-    .closeroutes {
-      padding: 0;
-      width: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      > svg {
-        width: 22px;
-        height: 22px;
-      }
+    svg {
+      width: 25px;
+      height: 25px;
+      color: #fff;
     }
+  }
+
+  .end {
+    background: rgb(216, 56, 56);
+    top: 20px;
   }
 }

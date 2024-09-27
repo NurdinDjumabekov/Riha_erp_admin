@@ -12,6 +12,12 @@
   #mapContainerChoice {
     height: 100% !important;
     width: 100% !important;
+
+    .customMarker {
+      &__index {
+        font-weight: 500;
+      }
+    }
   }
 }
 

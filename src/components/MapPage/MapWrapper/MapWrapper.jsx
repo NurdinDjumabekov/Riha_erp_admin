@@ -1,161 +1,39 @@
-////// hooks
-import React from "react";
-import { useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
-
-///// map
+import React, { useRef, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { load } from "@2gis/mapgl";
-
-////// style
+import { Directions } from "@2gis/mapgl-directions";
+import { styleRoutes } from "../../../helpers/objs";
 import "./style.scss";
+import { setActiveActions_TA } from "../../../store/reducers/mapSlice";
 
-const MapWrapper = ({ buttonRef }) => {
-  const statusRef = useRef(null); // Для статуса
+const MapWrapper = ({ searchMe }) => {
+  const dispatch = useDispatch();
+  const { mapGeo, everyRoutes_TA } = useSelector((state) => state.mapSlice);
+  const { key } = useSelector((state) => state.mapSlice);
 
-  const { mapGeo, listPointsEveryTA } = useSelector((state) => state.mapSlice);
-  const { listRouteEveryTA } = useSelector((state) => state.mapSlice);
+  const [map, setMap] = useState(null);
+  const [directions, setDirections] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
-    let map;
-
     load().then((mapgl) => {
-      map = new mapgl.Map("map-container", {
+      const initializedMap = new mapgl.Map("mapContainerTA", {
         center: [
           mapGeo?.longitude || 74.5975735,
           mapGeo?.latitude || 42.8508686,
         ],
         zoom: 13,
-        key: "4b360754-94b6-4399-9a7b-35811336eb5f",
+        key,
       });
 
-      // Добавляем маркер на начальные координаты
-      new mapgl.Marker(map, {
-        coordinates: [mapGeo?.longitude, mapGeo?.latitude],
+      setMap(initializedMap);
+
+      const directionsInstance = new Directions(initializedMap, {
+        directionsApiKey: key,
       });
+      setDirections(directionsInstance);
 
-      let circle; // Круглый маркер для местоположения пользователя
-
-      function success(pos) {
-        const center = [74.5975735, 42.8508686];
-
-        if (statusRef.current) {
-          statusRef.current.textContent = "Location found!";
-        }
-
-        if (circle) {
-          circle.destroy();
-        }
-
-        circle = new mapgl.CircleMarker(map, {
-          coordinates: center,
-          radius: 14,
-          color: "#0088ff",
-          strokeWidth: 4,
-          strokeColor: "#ffffff",
-          stroke2Width: 6,
-          stroke2Color: "#0088ff55",
-        });
-
-        map.setCenter(center);
-        map.setZoom(12);
-      }
-
-      // Обработка ошибок геолокации
-      function error() {
-        if (statusRef.current) {
-          statusRef.current.textContent = "Unable to retrieve your location";
-        }
-      }
-
-      // Функция для поиска текущего местоположения
-      function geoFindMe() {
-        if (!navigator.geolocation) {
-          if (statusRef.current) {
-            statusRef.current.textContent =
-              "Geolocation is not supported by your browser";
-          }
-        } else {
-          if (statusRef.current) {
-            statusRef.current.textContent = "Locating…";
-          }
-          navigator.geolocation.getCurrentPosition(success, error);
-        }
-      }
-
-      // Привязываем функцию к кнопке "Найти меня"
-      if (buttonRef.current) {
-        buttonRef.current.addEventListener("click", geoFindMe);
-      }
-
-      if (listPointsEveryTA?.length !== 0) {
-        listPointsEveryTA?.forEach((markerData) => {
-          const marker = new mapgl.Marker(map, {
-            coordinates: markerData.coordinates,
-            label: {
-              text: markerData?.text,
-              fontSize: 10,
-              offset: [0, 25],
-              relativeAnchor: [0.5, 0],
-              zIndex: 5,
-              offset: [0, 15],
-              relativeAnchor: [0.5, 0],
-              image: {
-                url: "https://docs.2gis.com/img/mapgl/tooltip-top.svg",
-                size: [100, 50],
-                stretchX: [
-                  [10, 40],
-                  [60, 90],
-                ],
-                // stretchY: [[20, 400]],
-                padding: [10, 5, 5, 5],
-              },
-            },
-          });
-        });
-      }
-
-      if (listRouteEveryTA?.length !== 0) {
-        listRouteEveryTA?.forEach((segment, i) => {
-          const zIndex = listRouteEveryTA?.length - 1 - i;
-
-          // Добавляем полилинии для маршрута
-          new mapgl.Polyline(map, {
-            coordinates: segment.coords,
-            width: 10,
-            color: segment.color,
-            width2: 14,
-            color2: "#ffffff",
-            zIndex,
-          });
-
-          if (segment.label) {
-            const isFirstPoint = i === 0;
-            const lastPointIndex = segment.coords.length - 1;
-            const coords = isFirstPoint
-              ? segment.coords[0]
-              : segment.coords[lastPointIndex];
-
-            // Добавляем круглый маркер
-            new mapgl.CircleMarker(map, {
-              coordinates: coords,
-              radius: 16,
-              color: "#0088ff",
-              strokeWidth: 2,
-              strokeColor: "#ffffff",
-              zIndex: isFirstPoint ? 5 : 3,
-            });
-
-            // Добавляем текстовую метку (label)
-            new mapgl.Label(map, {
-              coordinates: coords,
-              text: segment.label,
-              fontSize: 14,
-              color: "#ffffff",
-              zIndex: isFirstPoint ? 6 : 4,
-            });
-          }
-        });
-      }
+      initializedMap.mapgl = mapgl;
     });
 
     return () => {
@@ -163,7 +41,100 @@ const MapWrapper = ({ buttonRef }) => {
         map.destroy();
       }
     };
-  }, [listPointsEveryTA]);
+  }, [key]);
+
+  useEffect(() => {
+    if (map && everyRoutes_TA?.length > 0) {
+      markers.forEach((m) => m.destroy());
+      setMarkers([]);
+
+      if (directions) {
+        directions.clear();
+      }
+
+      const routePoints = everyRoutes_TA?.map((point) => [
+        parseFloat(point.lon),
+        parseFloat(point.lat),
+      ]);
+
+      const newMarkers = everyRoutes_TA.map((point, index) => {
+        const customMarker = document.createElement("div");
+        customMarker.className = "customMarker";
+        customMarker.innerHTML = `${
+          !!point?.myGeo
+            ? "<div class='customMarker__inner'><i></i></div>"
+            : `<div class='customMarker__point'><i></i></div>
+            <div class='customMarker__name'><p><span class='customMarker__index'>${
+              index + 1
+            }</span>. ${point.point}</p></div>`
+        }
+        `;
+
+        const marker = new map.mapgl.HtmlMarker(map, {
+          coordinates: [parseFloat(point.lon), parseFloat(point.lat)],
+          html: customMarker,
+          anchor: [0.5, 1],
+        });
+
+        customMarker.addEventListener("click", () => {
+          const obj = {
+            ...point,
+            guid_point: point?.guid,
+            actionType: 1,
+            point: point?.point,
+          };
+          dispatch(setActiveActions_TA(obj));
+          //  модалка для  действий (сфотать, отпустить накладную и т.д.)
+        });
+
+        return marker;
+      });
+
+      setMarkers(newMarkers);
+
+      if (routePoints.length >= 2 && directions) {
+        directions.carRoute({
+          points: routePoints,
+          style: styleRoutes,
+        });
+      }
+    }
+  }, [map, everyRoutes_TA, directions, mapGeo]);
+
+  const searchMeFN = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLocation = [
+            position.coords.longitude,
+            position.coords.latitude,
+          ];
+
+          // Центрируем карту на геолокации пользователя
+          map.setCenter(userLocation);
+          map.setZoom(15); // Можно изменить масштаб карты
+
+          // Добавим маркер на место пользователя
+          // const userMarker = new map.mapgl.Marker(map, {
+          //   coordinates: userLocation,
+          //   color: "#ff0000", // Красный маркер для пользователя
+          // });
+
+          // // Удалить маркер через какое-то время, если нужно
+          // setTimeout(() => userMarker.remove(), 5000);
+        },
+        (error) => {
+          console.error("Error getting geolocation:", error);
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+
+  useEffect(() => {
+    searchMeFN();
+  }, [searchMe]);
 
   return (
     <div className="mapBlock">
@@ -178,7 +149,7 @@ export default MapWrapper;
 const MapMain = React.memo(
   () => {
     return (
-      <div id="map-container" style={{ width: "100%", height: "100%" }}></div>
+      <div id="mapContainerTA" style={{ width: "100%", height: "100%" }}></div>
     );
   },
   () => true

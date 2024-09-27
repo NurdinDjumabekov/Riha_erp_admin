@@ -10,7 +10,7 @@ import "./style.scss";
 import CameraIcon from "@mui/icons-material/CameraAlt";
 import SettingsIcon from "@mui/icons-material/ManageAccounts";
 import Calendare from "@mui/icons-material/EventNote";
-import MapIcon from "@mui/icons-material/AddLocationAlt";
+import MapIcon from "@mui/icons-material/Room";
 import PayIcon from "@mui/icons-material/PlaylistAddCheckCircle";
 
 const MenuAgents = () => {
@@ -20,10 +20,10 @@ const MenuAgents = () => {
   const listMenuAgents = [
     { id: 1, text: "Заявки", icons: <Calendare />, link: "/" },
     { id: 7, text: "Накладные", icons: <PayIcon />, link: "/my_invoice" },
-    { id: 2, text: "Камера", icons: <CameraIcon />, link: "/camera" },
-    { id: 3, text: "Карта", icons: <MapIcon />, link: "/maps" },
-    { id: 5, text: "Отпуск ТТ", icons: <PayIcon />, link: "/send_app" },
-    // { id: 4, text: "Настройки", icons: <SettingsIcon />, link: "/settings" },
+    // { id: 2, text: "Камера", icons: <CameraIcon />, link: "/camera" },
+    { id: 3, text: "Маршруты", icons: <MapIcon />, link: "/maps" },
+    // { id: 5, text: "Отпуск ТТ", icons: <PayIcon />, link: "/send_app" },
+    { id: 6, text: "Настройки", icons: <SettingsIcon />, link: "/settings" },
   ];
 
   useEffect(() => {

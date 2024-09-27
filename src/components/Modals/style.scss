@@ -31,6 +31,11 @@
     border-radius: 5px;
     width: 400px;
 
+    @media (max-width: 430px) {
+      width: 100%;
+      top: 42%;
+    }
+
     h6 {
       width: 100%;
       font-size: 17px;

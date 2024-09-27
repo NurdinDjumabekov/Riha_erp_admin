@@ -1,5 +1,5 @@
 ////hooks
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 /////// style
@@ -9,50 +9,72 @@ import "./style.scss";
 import iconNav from "../../assets/icons/arrowMapNav.svg";
 
 ////// components
-import ChoiceDateForMap from "../../components/MapPage/ChoiceDateForMap/ChoiceDateForMap";
+import ActionsRouteTA from "../../Modals/ActionsRouteTA/ViewRouterTA";
 import MapWrapper from "../../components/MapPage/MapWrapper/MapWrapper";
 
 /////// fns
-import { getPointsRouteAgent } from "../../store/reducers/mapSlice";
-import { setListRouteEveryTA } from "../../store/reducers/mapSlice";
+import { getListRoutes_TA } from "../../store/reducers/mapSlice";
+import AddIcon from "../../assets/MyIcons/AddIcon";
+import { activeRouteListCRUD } from "../../store/reducers/photoSlice";
+import { transformDateTime } from "../../helpers/transformDate";
 
 ///// icons
-import CloseIcon from "@mui/icons-material/Close";
 
 const MapsPage = () => {
   const dispatch = useDispatch();
 
-  const buttonRef = useRef(null); // Для кнопки "Найти меня"
-
-  const [openCateg, setOpenCateg] = useState(false);
-
-  const { listRouteEveryTA } = useSelector((state) => state.mapSlice);
+  const { activeActions_TA } = useSelector((state) => state.mapSlice);
+  const { activeRouteList } = useSelector((state) => state.photoSlice);
   const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
 
-  const clearRoutesTA = () => {
-    dispatch(setListRouteEveryTA([]));
-    //// очистка координат у ТА
-    dispatch(getPointsRouteAgent({ guid }));
-    //// отправляю запрос для получения точек каждого агента
+  const [searchMe, setSearchMe] = useState(false);
+
+  const { dataSave } = useSelector((state) => state.saveDataSlice);
+
+  useEffect(() => {
+    dispatch(getListRoutes_TA(dataSave?.guid)); ///  get данных координат точек для ТА
+  }, []);
+
+  const searchMeFN = () => setSearchMe(!searchMe);
+  //// для поиска себя на карте
+
+  console.log(activeRouteList, "activeRouteList");
+
+  const startEndListRoute = (type) => {
+    //// начать маршрутный лист
+    const data = {
+      route_sheet_guid: activeRouteList?.guid,
+      start_date: transformDateTime(new Date()),
+      end_date: transformDateTime(new Date()),
+      comment: "",
+      action_type: type, /// / 1 - Старт марщшуртного листа, 2 - Конец
+    };
+    dispatch(activeRouteListCRUD({ data, guid }));
+  };
+
+  const obj = {
+    0: (
+      <button className="start" onClick={() => startEndListRoute(1)}>
+        <AddIcon width={16} height={16} color={"#fff"} />
+        <p>Начать путь</p>
+      </button>
+    ),
+    1: (
+      <button className="start end" onClick={() => startEndListRoute(2)}>
+        <AddIcon width={16} height={16} color={"#fff"} />
+        <p>Завершить путь</p>
+      </button>
+    ),
   };
 
   return (
     <div className="map2Gis">
-      {!openCateg && (
-        <button ref={buttonRef} className="btnNavMap">
-          <img src={iconNav} alt=">" />
-        </button>
-      )}
-      <div className="history">
-        <button onClick={() => setOpenCateg(true)}>Маршруты</button>
-        {listRouteEveryTA?.length !== 0 && (
-          <button onClick={clearRoutesTA} className="closeroutes">
-            <CloseIcon />
-          </button>
-        )}
-      </div>
-      <ChoiceDateForMap openCateg={openCateg} setOpenCateg={setOpenCateg} />
-      <MapWrapper buttonRef={buttonRef} />
+      <button className="btnNavMap" onClick={searchMeFN}>
+        <img src={iconNav} alt=">" />
+      </button>
+      {obj?.[activeRouteList?.status]}
+      <MapWrapper searchMe={searchMe} />
+      <ActionsRouteTA />
     </div>
   );
 };

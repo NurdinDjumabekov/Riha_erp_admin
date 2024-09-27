@@ -20,7 +20,9 @@ const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   mapGeo: { latitude: "", longitude: "" },
-  key: "4b360754-94b6-4399-9a7b-35811336eb5f",
+  key: "55b8e108-a5ba-4c19-867c-ca553419ddeb",
+
+  //////////////////////////////////////// для админа
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)
   listPointsEveryTA: [], /// сипсок точек каждого агента
   listRouteEveryTA: [], /// сипсок координат каждого агента
@@ -49,8 +51,16 @@ const initialState = {
     seller_select: {},
   }, //// список маршрутов каждого дня
   activeRoute: { guid: "" },
-  activeViewMap: { guid: "", lat: "", lon: "", actionType: 0, listRoute: [] }, // 1 - просто выбор точки, 2 - выбор координат
-  //// для откыртия и редактирования координат маршрутов
+  activeViewMap: { guid: "", lat: "", lon: "", actionType: 0, listRoute: [] },
+  // 1 - просто выбор точки админом, 2 - выбор координат админом,
+  // для откыртия и редактирования координат маршрутов
+
+  //////////////////////////////////////// для агента
+  //// check
+  listRoute_TA: [], /// список маршрутов для ТА
+  everyRoutes_TA: [], /// каждый маршрут для ТА (от первой точки до последней)
+  activeActions_TA: { guid_point: "", point: "", actionType: 0 },
+  // 1 - модалка для  действий (сфотать, отпустить накладную и т.д.)
 };
 
 ////// sendGeoUser - отправка геолокации пользователя(агента)
@@ -72,6 +82,8 @@ export const sendGeoUser = createAsyncThunk(
     }
   }
 );
+
+////////////////////////// account admin
 
 ////// getPointsRouteAgent - get данных координат точек для каждого ТА
 export const getPointsRouteAgent = createAsyncThunk(
@@ -284,6 +296,45 @@ export const editCoordsPoint = createAsyncThunk(
   }
 );
 
+////////////////////////// account agent
+
+////// getListRoutes_TA - get данных координат точек для ТА
+export const getListRoutes_TA = createAsyncThunk(
+  "getListRoutes_TA",
+  async function (agent_guid, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/agent_route_sheet?agent_guid=${agent_guid}`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        dispatch(getEveryRoutes_TA(response.data?.[0]?.guid));
+        return response.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getEveryRoutes_TA - get данных каждой координаты точек для ТА
+export const getEveryRoutes_TA = createAsyncThunk(
+  "getEveryRoutes_TA",
+  async function (route_sheet_guid, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/agent_routes?route_sheet_guid=${route_sheet_guid}`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const mapSlice = createSlice({
   name: "mapSlice",
   initialState,
@@ -321,6 +372,9 @@ const mapSlice = createSlice({
     },
     setActiveViewMap: (state, action) => {
       state.activeViewMap = action?.payload;
+    },
+    setActiveActions_TA: (state, action) => {
+      state.activeActions_TA = action?.payload;
     },
   },
 
@@ -437,6 +491,38 @@ const mapSlice = createSlice({
     builder.addCase(getListRoutesForMap.pending, (state, action) => {
       state.preloader = true;
     });
+
+    //////////////// getEveryRoutes_TA
+    builder.addCase(getEveryRoutes_TA.fulfilled, (state, action) => {
+      state.preloader = false;
+      const myData = {
+        lat: state.mapGeo?.latitude,
+        lon: state.mapGeo?.longitude,
+        start_time: "",
+        end_time: "",
+        ordering: "",
+        status: 1,
+        comment: "",
+        set_start_time: null,
+        set_end_time: null,
+        point_guid: "",
+        point: "",
+        route_sheet_guid: "",
+        guid: "",
+        // lat: "42.8572672",
+        // lon: "74.6258432",
+        myGeo: true,
+      };
+      state.everyRoutes_TA = [myData, ...action.payload];
+    });
+    builder.addCase(getEveryRoutes_TA.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      state.listRoute_TA = [];
+    });
+    builder.addCase(getEveryRoutes_TA.pending, (state, action) => {
+      state.preloader = true;
+    });
   },
 });
 
@@ -452,6 +538,7 @@ export const {
   setEveryListRouteCRUD,
   clearEveryListRouteCRUD,
   setActiveViewMap,
+  setActiveActions_TA,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

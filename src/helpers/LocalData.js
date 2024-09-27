@@ -1,3 +1,7 @@
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import SendIcon from "@mui/icons-material/SendToMobile";
+import PaymentsIcon from "@mui/icons-material/Payments";
+
 let eventGuid = 0;
 let todayStr = new Date().toISOString().replace(/T.*$/, ""); // YYYY-MM-DD of today
 
@@ -118,5 +122,84 @@ export const listRouteAllTAMy = [
     codeid: "622",
     date_system: "2024-09-24T12:38:46.760Z",
     rn: "1",
+  },
+];
+
+const coords = [
+  {
+    comment: "",
+    end_time: "15:39",
+    guid: "5CED9EA0-8F98-4221-9BF9-5B902AF84987",
+    lat: "42.844673",
+    lon: "74.619599",
+    ordering: 3,
+    point: "Джантошева 97A",
+    point_guid: "74AE9AB8-1C3D-11E7-82A3-000C2986F897",
+    route_sheet_guid: "F0AC18EE-2015-404C-A4B8-F2C847268C3A",
+    start_time: "15:20",
+    status: 1,
+  },
+  {
+    comment: "",
+    end_time: "15:39",
+    guid: "5CED9EA0-8F98-4221-9BF9-5B902AF84987",
+    lat: "42.85734168574616",
+    lon: "74.5963286810956",
+    ordering: 3,
+    point: "к. Шота Руставели ",
+    point_guid: "74AE9AB8-1C3D-11E7-82A3-000C2986F897",
+    route_sheet_guid: "F0AC18EE-2015-404C-A4B8-F2C847268C3A",
+    start_time: "15:20",
+    status: 1,
+  },
+  {
+    comment: "",
+    end_time: "15:39",
+    guid: "5CED9EA0-8F98-4221-9BF9-5B902AF84987",
+    lat: "42.86142814852352",
+    lon: "74.5873528201789",
+    ordering: 3,
+    point: "к. Шота Руставели ",
+    point_guid: "74AE9AB8-1C3D-11E7-82A3-000C2986F897",
+    route_sheet_guid: "F0AC18EE-2015-404C-A4B8-F2C847268C3A",
+    start_time: "15:20",
+    status: 1,
+  },
+  {
+    comment: "",
+    end_time: "15:39",
+    guid: "5CED9EA0-8F98-4221-9BF9-5B902AF84987",
+    lat: "42.86674719048398",
+    lon: "74.63610611708658",
+    ordering: 3,
+    point: "к. Шота Руставели ",
+    point_guid: "74AE9AB8-1C3D-11E7-82A3-000C2986F897",
+    route_sheet_guid: "F0AC18EE-2015-404C-A4B8-F2C847268C3A",
+    start_time: "15:20",
+    status: 1,
+  },
+];
+
+export const listActions_TA = [
+  {
+    id: 1,
+    name: "Произвести выгрузку",
+    icon: <SendIcon />,
+    color: "#00ab55",
+    link: "",
+  },
+  {
+    id: 2,
+    name: "Прикрепить фото и видео",
+    icon: <AddAPhotoIcon />,
+    color: "#2196f3",
+    link: "/maps_camera",
+  },
+  {
+    id: 3,
+    name: "Забрать деньги",
+    icon: <PaymentsIcon />,
+    color: "#805dca",
+    link: "",
   },
 ];

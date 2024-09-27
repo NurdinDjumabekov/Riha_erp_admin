@@ -45,6 +45,8 @@ const MainRoutes = () => {
             <Route path="/my_invoice" element={<MyInvoicePage />} />
             <Route path="/camera" element={<CameraPage />} />
             <Route path="/maps" element={<MapsPage />} />
+            <Route path="/maps_camera/:guid_point" element={<CameraPage />} />
+            {/* <Route path="/maps" element={<MapsPage />} /> */}
             <Route path="/send_app" element={<SendInvoicePage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>

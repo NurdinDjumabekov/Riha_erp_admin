@@ -55,12 +55,14 @@ const MapForChoicePoints = () => {
         point.lat,
       ]);
 
-      const newMarkers = activeViewMap.listRoute.map((point) => {
+      const newMarkers = activeViewMap?.listRoute?.map((point, index) => {
         const customMarker = document.createElement("div");
         customMarker.className = "customMarker";
         customMarker.innerHTML = `
           <div class='customMarker__inner'><i></i></div>
-          <div class='customMarker__name'><p>${point.point}</p></div>
+          <div class='customMarker__name'><p><span class='customMarker__index'>${
+            index + 1
+          }</span>. ${point.point}</p></div>
         `;
 
         const marker = new map.mapgl.HtmlMarker(map, {
