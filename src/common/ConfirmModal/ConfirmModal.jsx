@@ -20,44 +20,51 @@ const ConfirmModal = ({ state, yesFN, noFN, title }) => {
         onClose={noFN}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title" sx={{ textAlign: "center" }}>
-          {title}
-        </DialogTitle>
-        <DialogActions
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "20px 60px",
-          }}
-        >
-          <button
-            onClick={() => yesFN()}
-            className="send"
-            style={{
-              backgroundColor: "green",
-              color: "white",
-              padding: "5px 7px",
-              borderRadius: 3,
-              width: 70,
-            }} // Inline стили
-          >
-            Да
-          </button>
-          <button
-            onClick={() => noFN()}
-            className="end"
-            style={{
-              backgroundColor: "red",
-              color: "white",
-              padding: "5px 7px",
-              borderRadius: 3,
-              width: 70,
-            }} // Inline стили
-          >
-            Нет
-          </button>
-        </DialogActions>
+        <div className="confirmModal__inner">
+          <div className="confirmModal__block">
+            <DialogTitle
+              id="responsive-dialog-title"
+              sx={{ textAlign: "center" }}
+            >
+              {title}
+            </DialogTitle>
+            <DialogActions
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "20px 60px",
+              }}
+            >
+              <button
+                onClick={() => yesFN()}
+                className="send"
+                style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  padding: "5px 7px",
+                  borderRadius: 3,
+                  width: 70,
+                }}
+              >
+                Да
+              </button>
+              <button
+                onClick={() => noFN()}
+                className="end"
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                  padding: "5px 7px",
+                  borderRadius: 3,
+                  width: 70,
+                }}
+              >
+                Нет
+              </button>
+            </DialogActions>
+          </div>
+        </div>
       </Dialog>
     </div>
   );

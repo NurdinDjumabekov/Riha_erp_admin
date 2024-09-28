@@ -18,6 +18,7 @@ import { getActiveRouteList } from "../../store/reducers/photoSlice";
 
 const MainLayouts = () => {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
 
   const { user_type, guid } = useSelector(
     (state) => state.saveDataSlice?.dataSave
@@ -35,9 +36,11 @@ const MainLayouts = () => {
   const objMenu = { 1: <MenuAgents />, 2: <MenuAdmin /> };
   /// user_type - 1 agent 2 admin
 
+  const noPadding = user_type == 2 || pathname === "/maps";
+
   return (
     <div className="layouts">
-      <div className={`pages ${user_type == 2 ? "adminInfo" : ""}`}>
+      <div className={`pages ${noPadding ? "adminInfo" : ""}`}>
         <Outlet />
       </div>
       {objMenu?.[user_type]}

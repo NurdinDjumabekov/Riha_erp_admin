@@ -49,7 +49,7 @@ const ViewRouter = () => {
       };
 
       fetchRouteAgent();
-      intervalId = setInterval(fetchRouteAgent, 10000);
+      intervalId = setInterval(fetchRouteAgent, 1000000);
     } else {
       dispatch(clearSelects());
     }

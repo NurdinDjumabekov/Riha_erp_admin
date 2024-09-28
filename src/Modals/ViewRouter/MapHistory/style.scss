@@ -2,14 +2,17 @@
   height: 100%;
   width: 100%;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   &__header {
     position: absolute;
     left: 0px;
     top: 0px;
     z-index: 99;
-    width: 100%;
-    padding: 12px 20px;
+    width: 75%;
+    padding: 12px 10px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -22,7 +25,7 @@
     }
 
     .date {
-      width: 300px;
+      width: 170px;
 
       input:last-child {
         height: 30px;
@@ -42,11 +45,93 @@
         }
       }
     }
+
+    .infoRoute {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      > div {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+
+        .vialetRoute,
+        .bluetoute,
+        .greenRoute,
+        .redRoute {
+          display: flex;
+          align-items: center;
+
+          &::before {
+            content: "";
+            display: block;
+            width: 10px;
+            min-width: 10px;
+            height: 10px;
+            background: rgb(79, 0, 128);
+            margin: 0 10px 0 0;
+          }
+
+          font-size: 12px;
+        }
+
+        .bluetoute {
+          &::before {
+            background: rgba(0, 157, 255, 0.656);
+          }
+        }
+        .greenRoute {
+          &::before {
+            background: green;
+          }
+        }
+        .redRoute {
+          &::before {
+            background: red;
+          }
+        }
+      }
+    }
+  }
+
+  .customMarker {
+    background: transparent;
+
+    &::before {
+      content: "";
+    }
+
+    &__inner {
+      animation: blink 2s infinite;
+    }
+
+    &__point {
+      width: 25px;
+      height: 35px;
+      background-image: url("../../../assets/images/map.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    &__name {
+      background: rgb(220, 43, 43);
+
+      p {
+        font-size: 12px;
+        font-weight: 400;
+        color: #fff;
+      }
+    }
+
+    .active {
+      background: rgb(31, 187, 31);
+    }
   }
 
   #mapContainerHistory {
     height: 100%;
-    width: 100%;
+    width: 75%;
 
     .mapgl_RyvsmCnoVe7ui2MClLMS {
       margin: 80px 10px 0 0;

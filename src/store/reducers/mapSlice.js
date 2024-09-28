@@ -20,7 +20,7 @@ const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   mapGeo: { latitude: "", longitude: "" },
-  key: "55b8e108-a5ba-4c19-867c-ca553419ddeb",
+  key: "4b360754-94b6-4399-9a7b-35811336eb5f",
 
   //////////////////////////////////////// для админа
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)
@@ -61,6 +61,7 @@ const initialState = {
   everyRoutes_TA: [], /// каждый маршрут для ТА (от первой точки до последней)
   activeActions_TA: { guid_point: "", point: "", actionType: 0 },
   // 1 - модалка для  действий (сфотать, отпустить накладную и т.д.)
+  listHistoryRoute: [], //// история списка маршрутов ТА
 };
 
 ////// sendGeoUser - отправка геолокации пользователя(агента)
@@ -296,9 +297,7 @@ export const editCoordsPoint = createAsyncThunk(
   }
 );
 
-////////////////////////// account agent
-
-////// getListRoutes_TA - get данных координат точек для ТА
+////// getListRoutes_TA - get данных координат точек определенного агента
 export const getListRoutes_TA = createAsyncThunk(
   "getListRoutes_TA",
   async function (agent_guid, { dispatch, rejectWithValue }) {
@@ -317,7 +316,7 @@ export const getListRoutes_TA = createAsyncThunk(
   }
 );
 
-////// getEveryRoutes_TA - get данных каждой координаты точек для ТА
+////// getEveryRoutes_TA - get данных каждой координаты точек для определенного ТА
 export const getEveryRoutes_TA = createAsyncThunk(
   "getEveryRoutes_TA",
   async function (route_sheet_guid, { dispatch, rejectWithValue }) {
@@ -332,6 +331,24 @@ export const getEveryRoutes_TA = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
+  }
+);
+
+////// getHistoryRoute - get историб маршрутов
+export const getHistoryRoute = createAsyncThunk(
+  "getHistoryRoute",
+  async function (agent_guid, { dispatch, rejectWithValue }) {
+    // const url = `${REACT_APP_API_URL}/ta/agent_route_sheet?agent_guid=${agent_guid}&history=1`;
+    // try {
+    //   const response = await axios(url);
+    //   if (response.status >= 200 && response.status < 300) {
+    //     return response.data;
+    //   } else {
+    //     throw Error(`Error: ${response.status}`);
+    //   }
+    // } catch (error) {
+    //   return rejectWithValue(error.message);
+    // }
   }
 );
 
@@ -486,7 +503,7 @@ const mapSlice = createSlice({
     builder.addCase(getListRoutesForMap.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
-      state.roadRouteEveryTA = [];
+      state.activeViewMap = [];
     });
     builder.addCase(getListRoutesForMap.pending, (state, action) => {
       state.preloader = true;
@@ -496,9 +513,9 @@ const mapSlice = createSlice({
     builder.addCase(getEveryRoutes_TA.fulfilled, (state, action) => {
       state.preloader = false;
       const myData = {
-        lat: state.mapGeo?.latitude,
-        lon: state.mapGeo?.longitude,
-        start_time: "",
+        // lat: state.mapGeo?.latitude,
+        // lon: state.mapGeo?.longitude,
+        start_time: "28.09.2024",
         end_time: "",
         ordering: "",
         status: 1,
@@ -509,8 +526,8 @@ const mapSlice = createSlice({
         point: "",
         route_sheet_guid: "",
         guid: "",
-        // lat: "42.8572672",
-        // lon: "74.6258432",
+        lat: "42.844889",
+        lon: "74.618788",
         myGeo: true,
       };
       state.everyRoutes_TA = [myData, ...action.payload];
@@ -518,9 +535,22 @@ const mapSlice = createSlice({
     builder.addCase(getEveryRoutes_TA.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
-      state.listRoute_TA = [];
+      state.everyRoutes_TA = [];
     });
     builder.addCase(getEveryRoutes_TA.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    //////////////// getHistoryRoute
+    builder.addCase(getHistoryRoute.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listHistoryRoute = action.payload;
+    });
+    builder.addCase(getHistoryRoute.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getHistoryRoute.pending, (state, action) => {
       state.preloader = true;
     });
   },

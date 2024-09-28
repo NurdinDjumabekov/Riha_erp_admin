@@ -1,14 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { myAlert } from "../../helpers/MyAlert";
-import axiosInstance from "../../axiosInstance";
 import { transformActionDate } from "../../helpers/transformDate";
 
 const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
-  activeTTForPhoto: {}, /// delete
-  activeDateForPhotos: transformActionDate(new Date()), /// delete
+  activeTTForPhoto: {},
   listPhotos: [],
   activeRouteList: {}, /// активный маршрутный лист
 };
@@ -34,10 +31,10 @@ export const sendPhotos = createAsyncThunk(
 export const getListPhotos = createAsyncThunk(
   "getListPhotos",
   async function (props, { dispatch, rejectWithValue }) {
-    const { guid, guid_point } = props;
+    const { guid, guid_point, route_guid } = props;
 
     const date = transformActionDate(new Date());
-    const url = `${REACT_APP_API_URL}/ta/get_file?date=${date}&agent_guid=${guid}&point_guid=${guid_point}`;
+    const url = `${REACT_APP_API_URL}/ta/get_file?date=${date}&agent_guid=${guid}&point_guid=${guid_point}&route_guid=${route_guid}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
@@ -95,9 +92,7 @@ const photoSlice = createSlice({
     setActiveTTForPhoto: (state, action) => {
       state.activeTTForPhoto = action?.payload;
     },
-    setActiveDateForPhotos: (state, action) => {
-      state.activeDateForPhotos = action?.payload;
-    },
+
     setActiveRouteList: (state, action) => {
       state.activeRouteList = action?.payload;
     },
@@ -132,10 +127,6 @@ const photoSlice = createSlice({
   },
 });
 
-export const {
-  setActiveTTForPhoto,
-  setActiveDateForPhotos,
-  setActiveRouteList,
-} = photoSlice.actions;
+export const { setActiveTTForPhoto, setActiveRouteList } = photoSlice.actions;
 
 export default photoSlice.reducer;

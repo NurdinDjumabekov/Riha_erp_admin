@@ -238,7 +238,8 @@ export const sendInvoiceForTT = createAsyncThunk(
       const response = await axiosInstance.put(url, data);
       if (response.status >= 200 && response.status < 300) {
         myAlert("Накладная отправлена торговой точке");
-        dispatch(setInvoiceSendInfo({ seller_guid: "", invoice_guid: "" }));
+        // dispatch(setInvoiceSendInfo({ seller_guid: "", invoice_guid: "" }));
+        data?.navigate("/maps");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);

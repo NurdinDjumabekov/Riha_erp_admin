@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 /////// components
 import ViewPhotos from "../../components/CameraPage/Modals/ViewPhotos/ViewPhotos";
@@ -13,13 +13,16 @@ import "./style.scss";
 import restart from "../../assets/icons/arrow-repeat.svg";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DownloadIcon from "@mui/icons-material/Download";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 ////// fns
 import { getListPhotos, sendPhotos } from "../../store/reducers/photoSlice";
 
 const CameraPage = () => {
   const dispatch = useDispatch();
-  const { guid_point } = useParams();
+  const navigate = useNavigate();
+
+  const { route_guid, guid_point } = useParams();
 
   const webcamRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -29,9 +32,6 @@ const CameraPage = () => {
   const [animation, setAnimation] = useState(false);
 
   const { dataSave } = useSelector((state) => state.saveDataSlice);
-  const { activeDateForPhotos, activeRouteList } = useSelector(
-    (state) => state.photoSlice
-  );
 
   const createPhoto = useCallback(() => {
     setAnimation(true);
@@ -40,12 +40,14 @@ const CameraPage = () => {
       // Преобразуем base64 в файл PNG
       const file = base64ToFile(imageSrc, "photo.png");
 
-      const formData = new FormData();
-      formData?.append("agent_guid", dataSave?.guid);
-      formData?.append("point_guid", guid_point);
-      formData?.append("route_guid", activeRouteList?.guid);
-      formData?.append("file", file);
-      dispatch(sendPhotos({ data: formData }));
+      if (file) {
+        const formData = new FormData();
+        formData?.append("agent_guid", dataSave?.guid);
+        formData?.append("point_guid", guid_point);
+        formData?.append("route_guid", route_guid);
+        formData?.append("file", file);
+        dispatch(sendPhotos({ data: formData }));
+      }
     }
 
     setTimeout(() => {
@@ -56,26 +58,34 @@ const CameraPage = () => {
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
+  const handleFileChange = async (e) => {
+    const files = e?.target?.files;
 
-  const handleFileChange = (e) => {
-    const file = e?.target?.files;
-    if (file) {
+    if (files && files.length > 0) {
       const formData = new FormData();
-      formData?.append("agent_guid", dataSave?.guid);
-      formData?.append("point_guid", guid_point);
-      formData?.append("file", file?.[0]); /// check
-      dispatch(sendPhotos({ data: formData }));
+      formData.append("agent_guid", dataSave?.guid);
+      formData.append("point_guid", guid_point);
+      formData.append("route_guid", route_guid);
+      formData.append("file", files[0]);
+      try {
+        await dispatch(sendPhotos({ data: formData })).unwrap();
+        console.log("File uploaded successfully");
+        e.target.value = null;
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
     }
   };
 
   const viewAllPhotos = () => {
     //// открываю модалку для просмотра всех фото
     setViewPhotos(true);
-
-    ///// get  всех фото
-    const obj = { activeDateForPhotos, guid: dataSave?.guid, guid_point };
+    ///// get  всех фото и видео
+    const obj = { guid: dataSave?.guid, guid_point, route_guid };
     dispatch(getListPhotos(obj));
   };
+
+  const prevNav = () => navigate(-1);
 
   return (
     <div className="cameraPage">
@@ -90,8 +100,11 @@ const CameraPage = () => {
             style={{ display: "none" }}
           />
 
-          {/* Кнопка для открытия окна выбора файла */}
-          <button onClick={handleButtonClick}>
+          <button className="prev" onClick={prevNav}>
+            <ArrowBackIcon sx={{ color: "#222" }} />
+          </button>
+
+          <button className="download" onClick={handleButtonClick}>
             <DownloadIcon sx={{ color: "#222" }} />
           </button>
         </div>
@@ -124,6 +137,7 @@ const CameraPage = () => {
         viewPhotos={viewPhotos}
         setViewPhotos={setViewPhotos}
         guid_point={guid_point}
+        route_guid={route_guid}
       />
     </div>
   );

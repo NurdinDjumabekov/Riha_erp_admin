@@ -2,6 +2,7 @@
 import * as React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 ////// components
 import Dialog from "@mui/material/Dialog";
@@ -33,6 +34,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ModalCreateInvoice = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { invoiceSendInfo, viewApp } = useSelector(
     (state) => state.invoiceSlice
@@ -40,8 +42,10 @@ const ModalCreateInvoice = () => {
 
   const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
 
-  const handleClose = () =>
+  const handleClose = () => {
+    navigate(-1);
     dispatch(setInvoiceSendInfo({ seller_guid: "", invoice_guid: "" }));
+  };
 
   const changeViewApp = (bool) => dispatch(setViewApp(bool));
 

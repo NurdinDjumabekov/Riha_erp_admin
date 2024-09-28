@@ -7,27 +7,32 @@ import "./style.scss";
 
 ////// imgs
 import iconNav from "../../assets/icons/arrowMapNav.svg";
+import AddIcon from "../../assets/MyIcons/AddIcon";
 
 ////// components
 import ActionsRouteTA from "../../Modals/ActionsRouteTA/ViewRouterTA";
 import MapWrapper from "../../components/MapPage/MapWrapper/MapWrapper";
+import ConfirmModal from "../../common/ConfirmModal/ConfirmModal";
 
 /////// fns
 import { getListRoutes_TA } from "../../store/reducers/mapSlice";
-import AddIcon from "../../assets/MyIcons/AddIcon";
 import { activeRouteListCRUD } from "../../store/reducers/photoSlice";
+
+////// helpers
 import { transformDateTime } from "../../helpers/transformDate";
 
 ///// icons
+import CheckIcon from "@mui/icons-material/Check";
+import { myAlert } from "../../helpers/MyAlert";
 
 const MapsPage = () => {
   const dispatch = useDispatch();
 
-  const { activeActions_TA } = useSelector((state) => state.mapSlice);
   const { activeRouteList } = useSelector((state) => state.photoSlice);
   const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
 
   const [searchMe, setSearchMe] = useState(false);
+  const [closeRoute, setCloseRoute] = useState(false);
 
   const { dataSave } = useSelector((state) => state.saveDataSlice);
 
@@ -38,19 +43,23 @@ const MapsPage = () => {
   const searchMeFN = () => setSearchMe(!searchMe);
   //// для поиска себя на карте
 
-  console.log(activeRouteList, "activeRouteList");
-
   const startEndListRoute = (type) => {
+    if (type == 1) {
+      myAlert(`Стартовое время ${transformDateTime(new Date())}`);
+    }
     //// начать маршрутный лист
     const data = {
       route_sheet_guid: activeRouteList?.guid,
       start_date: transformDateTime(new Date()),
       end_date: transformDateTime(new Date()),
       comment: "",
-      action_type: type, /// / 1 - Старт марщшуртного листа, 2 - Конец
+      action_type: type, /// / 1 - Старт маршрутного листа, 2 - Конец
     };
     dispatch(activeRouteListCRUD({ data, guid }));
+    setCloseRoute(false);
   };
+
+  const routeEnd = () => myAlert("Вы обошли все точки на сегодня");
 
   const obj = {
     0: (
@@ -60,22 +69,35 @@ const MapsPage = () => {
       </button>
     ),
     1: (
-      <button className="start end" onClick={() => startEndListRoute(2)}>
+      <button className="start end" onClick={() => setCloseRoute(true)}>
         <AddIcon width={16} height={16} color={"#fff"} />
-        <p>Завершить путь</p>
+        <p>Завершить маршрут</p>
+      </button>
+    ),
+    2: (
+      <button className="start nice" onClick={routeEnd}>
+        <CheckIcon width={16} height={16} color={"#222"} />
       </button>
     ),
   };
 
   return (
-    <div className="map2Gis">
-      <button className="btnNavMap" onClick={searchMeFN}>
-        <img src={iconNav} alt=">" />
-      </button>
-      {obj?.[activeRouteList?.status]}
-      <MapWrapper searchMe={searchMe} />
-      <ActionsRouteTA />
-    </div>
+    <>
+      <div className="map2Gis">
+        <button className="btnNavMap" onClick={searchMeFN}>
+          <img src={iconNav} alt=">" />
+        </button>
+        {obj?.[activeRouteList?.status]}
+        <MapWrapper searchMe={searchMe} />
+        <ActionsRouteTA />
+      </div>
+      <ConfirmModal
+        state={closeRoute}
+        yesFN={() => startEndListRoute(2)}
+        noFN={() => setCloseRoute(false)}
+        title={"Завершить маршрут ?"}
+      />
+    </>
   );
 };
 

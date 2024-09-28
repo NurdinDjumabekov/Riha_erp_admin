@@ -1,6 +1,5 @@
 .cameraPage {
   height: 100%;
-  padding: 0 0 60px 0;
   position: relative;
   z-index: 1;
 
@@ -18,39 +17,43 @@
     }
 
     .loadFiles {
-      position: fixed;
-      left: 0px;
-      top: 0px;
-      z-index: 10;
-      width: 100%;
-      padding: 10px 15px 10px 10px;
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 30px;
-
-      .myInputs {
-        width: 100%;
-        max-width: 400px;
-
-        h6 {
-          margin-bottom: 2px;
-          font-weight: 500;
-        }
-      }
-
-      button {
-        background: rgba(128, 128, 128, 0.205);
+      .download {
+        position: fixed;
+        right: 20px;
+        bottom: 160px;
+        z-index: 10;
+        background: rgb(255, 255, 255);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
         width: 50px;
-        height: 38px;
-        border-radius: 5px;
+        height: 50px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
 
         svg {
-          width: 80%;
-          height: 80%;
+          width: 55%;
+          height: 55%;
+        }
+      }
+
+      .prev {
+        position: fixed;
+        left: 20px;
+        top: 20px;
+        z-index: 10;
+        background: rgb(255, 255, 255);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          width: 55%;
+          height: 55%;
         }
       }
     }
@@ -58,7 +61,7 @@
 
   .photoSettings {
     position: fixed;
-    bottom: 60px;
+    bottom: 0px;
     left: 0;
     width: 100%;
     z-index: 10;

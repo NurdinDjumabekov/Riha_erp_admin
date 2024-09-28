@@ -1,9 +1,39 @@
 .confirmModal {
-  background: green !important;
+  @media (max-width: 899px) {
+    &__inner {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+    }
+
+    &__block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: 5px;
+    }
+  }
+
+  * {
+    background: transparent;
+  }
+
   .send {
+    background: green !important;
   }
 
   .end {
     background: red;
+  }
+}
+
+@media (max-width: 899px) {
+  .css-1epvpsb-MuiPaper-root-MuiDialog-paper {
+    background: transparent !important;
   }
 }

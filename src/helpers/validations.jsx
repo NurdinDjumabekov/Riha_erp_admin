@@ -30,3 +30,23 @@ export const checkEditInputs = (list) => {
 
   return hasCheckedItem;
 };
+
+export const checkIsFile = (fileUrl) => {
+  // Извлекаем расширение файла из URL
+  const extension = fileUrl.split(".").pop().toLowerCase();
+
+  // Массив расширений для фотофайлов
+  const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
+
+  // Массив расширений для видеофайлов
+  const videoExtensions = ["mp4", "mov", "avi", "mkv", "webm"];
+
+  // Проверяем тип файла
+  if (videoExtensions.includes(extension)) {
+    return "video";
+  } else if (imageExtensions.includes(extension)) {
+    return "image";
+  } else {
+    return "unknown"; // Если тип файла не определён
+  }
+};

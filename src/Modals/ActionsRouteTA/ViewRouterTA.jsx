@@ -1,6 +1,7 @@
 ////hooks
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 /////// style
 import "./style.scss";
@@ -14,8 +15,7 @@ import Modals from "../../components/Modals/Modals";
 import { setActiveActions_TA } from "../../store/reducers/mapSlice";
 
 /////// helpers
-import { listActions_TA } from "../../helpers/LocalData";
-import { useNavigate } from "react-router-dom";
+import { listActions_TA, logoSeller } from "../../helpers/LocalData";
 
 const ActionsRouteTA = () => {
   const dispatch = useDispatch();
@@ -24,21 +24,19 @@ const ActionsRouteTA = () => {
   const { activeActions_TA } = useSelector((state) => state.mapSlice);
 
   const closeModal = () => {
-    dispatch(setActiveActions_TA({ guid_point: "", actionType: 0 }));
+    dispatch(setActiveActions_TA({ guid: "", actionType: 0 }));
     /// очишаю для закрытия модалки
   };
 
-  const link =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsBoEakbCXS0yKg6yRKEsmsMyf9qbMLhwBEyokbVraQoK0ZarRTmE4GjmOI5tjkpCWaLY&usqp=CAU";
-
   const clickCateg = ({ link }) => {
-    navigate(`${link}/${activeActions_TA?.guid_point}`);
+    const linkNext = `/${activeActions_TA?.guid}/${activeActions_TA?.point_guid}`;
+    navigate(`${link}${linkNext}`);
   };
 
   return (
     <div className="actionsRouteTA">
       <Modals
-        openModal={!!activeActions_TA?.guid_point}
+        openModal={!!activeActions_TA?.guid}
         closeModal={closeModal}
         title={`Торговая точка : '${activeActions_TA?.point}'`}
       >
@@ -46,7 +44,10 @@ const ActionsRouteTA = () => {
           <div className="titlesInfo">
             <div className="header">
               <div className="logo">
-                <img src={activeActions_TA?.seller_photo || link} alt="" />
+                <img
+                  src={activeActions_TA?.seller_photo || logoSeller}
+                  alt=""
+                />
               </div>
               <div className="user">
                 <span>{activeActions_TA?.seller_fio}</span>

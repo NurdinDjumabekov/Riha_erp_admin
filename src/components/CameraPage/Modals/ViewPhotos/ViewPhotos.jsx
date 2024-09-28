@@ -15,14 +15,17 @@ import Slider from "react-slick";
 
 ////// style
 import "./style.scss";
+
+////// fns
 import { getListPhotos } from "../../../../store/reducers/photoSlice";
+import { checkIsFile } from "../../../../helpers/validations";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const ViewPhotos = (props) => {
-  const { setViewPhotos, viewPhotos, guid_point } = props;
+  const { setViewPhotos, viewPhotos, guid_point, route_guid } = props;
   const dispatch = useDispatch();
 
   const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
@@ -40,14 +43,20 @@ const ViewPhotos = (props) => {
   };
 
   useEffect(() => {
-    dispatch(getListPhotos({ guid, guid_point }));
-  }, [guid_point]);
+    dispatch(getListPhotos({ guid, guid_point, route_guid }));
+  }, [guid_point, route_guid]);
 
   const clickPhoto = (index) => {
     //// для просмотра каждой фотки
     setSlideIndex(index);
     setViewSlider(true);
   };
+
+  const fileUrl =
+    "https://riha-production.333.kg/files/previews/Q4OVzBJZ8iUnJojS36SubScII.png";
+  const fileType = checkIsFile(fileUrl);
+
+  console.log(fileType, "fileType");
 
   //////////////////// Slider
   const settings = {
@@ -58,6 +67,12 @@ const ViewPhotos = (props) => {
     slidesToScroll: 1,
     initialSlide: slideIndex,
   };
+
+  const listPhotosNew = listPhotos?.filter(
+    (item) => checkIsFile(item.file_path) === "image"
+  );
+
+  console.log(listPhotosNew, "listPhotosNew");
 
   return (
     <Dialog
@@ -88,7 +103,7 @@ const ViewPhotos = (props) => {
         {viewSlider ? (
           <div className="mainSlider">
             <Slider {...settings}>
-              {listPhotos?.map((i) => (
+              {listPhotosNew?.map((i) => (
                 <div>
                   <img src={i?.file_path} alt="###" />
                 </div>
@@ -96,15 +111,25 @@ const ViewPhotos = (props) => {
             </Slider>
           </div>
         ) : (
-          <>
-            <div className="viewPhotos__main">
-              {listPhotos?.map((i, index) => (
-                <div onClick={() => clickPhoto(index)}>
-                  <img src={i?.file_path} alt="###" />
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="viewPhotos__main">
+            {listPhotos?.map((i, index) => (
+              <div key={index}>
+                {checkIsFile(i?.file_path) === "image" ? (
+                  <img
+                    src={i?.file_path}
+                    alt="###"
+                    onClick={() => clickPhoto(index)}
+                  />
+                ) : (
+                  <div className="videoBlock">
+                    <video controls>
+                      <source src={i?.file_path} type="video/mp4" />
+                    </video>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </Dialog>

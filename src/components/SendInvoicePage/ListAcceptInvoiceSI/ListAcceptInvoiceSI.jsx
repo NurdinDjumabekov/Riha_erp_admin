@@ -1,6 +1,7 @@
 ////// hooks
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 ////// components
 import ListAcceptProdSI from "../ListAcceptProdSI/ListAcceptProdSI";
@@ -18,6 +19,7 @@ import "./style.scss";
 
 const ListAcceptInvoiceSI = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { dataSave } = useSelector((state) => state.saveDataSlice);
   const { invoice_guid } = useSelector(
@@ -35,6 +37,7 @@ const ListAcceptInvoiceSI = () => {
       user_guid: dataSave?.guid,
       user_type: 1, // 1 agent 2 admin
       user_type1: 1, // 1 agent 2 admin
+      navigate,
     };
     const invoiceInfo = { invoice_guid, action: 2 }; //// редактирование товара (action: 2)
     dispatch(createEditProdInInvoiceSI({ forCreate, invoiceInfo, forSendTT }));

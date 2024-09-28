@@ -31,6 +31,7 @@ const MainRoutes = () => {
   const { listProds, listTA } = useSelector((state) => state.mainSlice);
   const { listTitleOrders } = useSelector((state) => state.mainSlice);
   const { listOrders, invoiceInfo } = useSelector((state) => state.mainSlice);
+  const { activeRouteList } = useSelector((state) => state.photoSlice);
 
   return (
     <>
@@ -39,17 +40,24 @@ const MainRoutes = () => {
         {!!!dataSave?.guid ? (
           <Route path="/" element={<LoginPage />} />
         ) : (
-          <Route element={<MainLayouts />}>
-            <Route path="/" element={<MainPage />} />
-            {/* ///// agentPages */}
-            <Route path="/my_invoice" element={<MyInvoicePage />} />
-            <Route path="/camera" element={<CameraPage />} />
-            <Route path="/maps" element={<MapsPage />} />
-            <Route path="/maps_camera/:guid_point" element={<CameraPage />} />
-            {/* <Route path="/maps" element={<MapsPage />} /> */}
-            <Route path="/send_app" element={<SendInvoicePage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Route>
+          <>
+            <Route element={<MainLayouts />}>
+              <Route path="/" element={<MainPage />} />
+              {/* ///// agentPages */}
+              <Route path="/my_invoice" element={<MyInvoicePage />} />
+              <Route path="/camera" element={<CameraPage />} />
+              <Route path="/maps" element={<MapsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Route>
+            <Route
+              path="/send_app/:route_guid/:guid_point"
+              element={<SendInvoicePage />}
+            />
+            <Route
+              path="/maps_camera/:route_guid/:guid_point"
+              element={<CameraPage />}
+            />
+          </>
         )}
         {/* <Route path="*" element={<NotFoundPage />} /> */}
       </Routes>

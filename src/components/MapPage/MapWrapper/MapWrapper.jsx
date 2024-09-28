@@ -1,15 +1,27 @@
-import React, { useRef, useEffect, useState } from "react";
+/////// hooks
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+////// maps
 import { load } from "@2gis/mapgl";
 import { Directions } from "@2gis/mapgl-directions";
+
+////// helpers
 import { styleRoutes } from "../../../helpers/objs";
+
+////// styles
 import "./style.scss";
+
+////// fns
+import { setMapGeo } from "../../../store/reducers/mapSlice";
 import { setActiveActions_TA } from "../../../store/reducers/mapSlice";
+import { myAlert } from "../../../helpers/MyAlert";
 
 const MapWrapper = ({ searchMe }) => {
   const dispatch = useDispatch();
   const { mapGeo, everyRoutes_TA } = useSelector((state) => state.mapSlice);
   const { key } = useSelector((state) => state.mapSlice);
+  const { activeRouteList } = useSelector((state) => state.photoSlice);
 
   const [map, setMap] = useState(null);
   const [directions, setDirections] = useState(null);
@@ -23,7 +35,7 @@ const MapWrapper = ({ searchMe }) => {
           mapGeo?.latitude || 42.8508686,
         ],
         zoom: 13,
-        key,
+        key: key,
       });
 
       setMap(initializedMap);
@@ -64,28 +76,18 @@ const MapWrapper = ({ searchMe }) => {
           !!point?.myGeo
             ? "<div class='customMarker__inner'><i></i></div>"
             : `<div class='customMarker__point'><i></i></div>
-            <div class='customMarker__name'><p><span class='customMarker__index'>${
-              index + 1
-            }</span>. ${point.point}</p></div>`
+            <div class='customMarker__name'><p><span class='customMarker__index'>${index}</span>. ${point.point}</p></div>`
         }
         `;
 
         const marker = new map.mapgl.HtmlMarker(map, {
           coordinates: [parseFloat(point.lon), parseFloat(point.lat)],
+          type: "html",
           html: customMarker,
           anchor: [0.5, 1],
         });
 
-        customMarker.addEventListener("click", () => {
-          const obj = {
-            ...point,
-            guid_point: point?.guid,
-            actionType: 1,
-            point: point?.point,
-          };
-          dispatch(setActiveActions_TA(obj));
-          //  модалка для  действий (сфотать, отпустить накладную и т.д.)
-        });
+        customMarker.addEventListener("click", () => clickPoint(point));
 
         return marker;
       });
@@ -105,23 +107,16 @@ const MapWrapper = ({ searchMe }) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const userLocation = [
-            position.coords.longitude,
-            position.coords.latitude,
-          ];
-
-          // Центрируем карту на геолокации пользователя
-          map.setCenter(userLocation);
-          map.setZoom(15); // Можно изменить масштаб карты
-
-          // Добавим маркер на место пользователя
-          // const userMarker = new map.mapgl.Marker(map, {
-          //   coordinates: userLocation,
-          //   color: "#ff0000", // Красный маркер для пользователя
-          // });
-
-          // // Удалить маркер через какое-то время, если нужно
-          // setTimeout(() => userMarker.remove(), 5000);
+          const { latitude, longitude } = position.coords;
+          dispatch(setMapGeo({ latitude, longitude }));
+          const userLocation = [longitude, latitude];
+          if (map) {
+            // Центрируем карту на геолокации пользователя
+            map.setCenter(userLocation);
+            map.setZoom(15); // Можно изменить масштаб карты
+          } else {
+            console.error("Map is not initialized yet.");
+          }
         },
         (error) => {
           console.error("Error getting geolocation:", error);
@@ -133,8 +128,30 @@ const MapWrapper = ({ searchMe }) => {
   };
 
   useEffect(() => {
-    searchMeFN();
-  }, [searchMe]);
+    if (map && searchMe) {
+      searchMeFN();
+    }
+  }, [map, searchMe]);
+
+  const clickPoint = (point) => {
+    const obj = { ...point, actionType: 1, activeRouteList };
+
+    // console.log(activeRouteList, "activeRouteList");
+
+    // if (activeRouteList?.status == 0) {
+    //   myAlert("Начните свой маршрут!");
+    // }
+
+    // if (activeRouteList?.status == 2) {
+    //   myAlert("Вы обошли все точки на сегодня!");
+    // }
+
+    // if (activeRouteList?.status == 1) {
+    // }
+    /// действия можно делать только когда маршрут стал активным
+    //  модалка для  действий (сфотать, отпустить накладную и т.д.)
+    dispatch(setActiveActions_TA(obj));
+  };
 
   return (
     <div className="mapBlock">

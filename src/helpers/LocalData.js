@@ -186,7 +186,7 @@ export const listActions_TA = [
     name: "Произвести выгрузку",
     icon: <SendIcon />,
     color: "#00ab55",
-    link: "",
+    link: "/send_app",
   },
   {
     id: 2,
@@ -203,3 +203,26 @@ export const listActions_TA = [
     link: "",
   },
 ];
+
+const asda = {
+  comment: "",
+  end_time: "12:10",
+  guid: "8B2FA324-1A9D-4E17-BC28-961E29C6B7B5",
+  lat: "42.892466738541785",
+  lon: "74.53660586276366",
+  ordering: 2,
+  point: "к. Восток-5 (базар) ",
+  guid_point: "0F981F22-1C3C-11E7-82A3-000C2986F897",
+  route_sheet_guid: "F384863D-F97E-46EE-8437-BD1395713306",
+  seller_fio: "Сухорукова Светлана Ивановна",
+  seller_number: "755369169",
+  seller_photo:
+    "https://st2.depositphotos.com/1003098/5850/i/450/depositphotos_58506567-stock-photo-salespeople-standing-in-hardware-store.jpg",
+  set_end_time: null,
+  set_start_time: null,
+  start_time: "11:50",
+  status: 1,
+};
+
+export const logoSeller =
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsBoEakbCXS0yKg6yRKEsmsMyf9qbMLhwBEyokbVraQoK0ZarRTmE4GjmOI5tjkpCWaLY&usqp=CAU";

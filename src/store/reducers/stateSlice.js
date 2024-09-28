@@ -1,19 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  mapGeo: { latitude: "", longitude: "" },
+  фывф: { latitude: "", longitude: "" },
 };
 
 const stateSlice = createSlice({
   name: "stateSlice",
   initialState,
   reducers: {
-    setMapGeo: (state, action) => {
-      state.mapGeo = action?.payload;
+    фывыф: (state, action) => {
+      state.фывф = action?.payload;
     },
   },
 });
 
-export const { setMapGeo } = stateSlice.actions;
+export const { фывыф } = stateSlice.actions;
 
 export default stateSlice.reducer;
