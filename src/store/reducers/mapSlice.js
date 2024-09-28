@@ -20,7 +20,7 @@ const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   mapGeo: { latitude: "", longitude: "" },
-  key: "4b360754-94b6-4399-9a7b-35811336eb5f",
+  key: "55b8e108-a5ba-4c19-867c-ca553419ddeb",
 
   //////////////////////////////////////// для админа
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)
@@ -62,6 +62,7 @@ const initialState = {
   activeActions_TA: { guid_point: "", point: "", actionType: 0 },
   // 1 - модалка для  действий (сфотать, отпустить накладную и т.д.)
   listHistoryRoute: [], //// история списка маршрутов ТА
+  pointInfo: {}, /// для историй маршрутов (храню данные точки на которую нажимают на карте)
 };
 
 ////// sendGeoUser - отправка геолокации пользователя(агента)
@@ -324,6 +325,7 @@ export const getEveryRoutes_TA = createAsyncThunk(
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
+        dispatch(setPointInfo(response.data?.[0]));
         return response.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -331,24 +333,6 @@ export const getEveryRoutes_TA = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
-);
-
-////// getHistoryRoute - get историб маршрутов
-export const getHistoryRoute = createAsyncThunk(
-  "getHistoryRoute",
-  async function (agent_guid, { dispatch, rejectWithValue }) {
-    // const url = `${REACT_APP_API_URL}/ta/agent_route_sheet?agent_guid=${agent_guid}&history=1`;
-    // try {
-    //   const response = await axios(url);
-    //   if (response.status >= 200 && response.status < 300) {
-    //     return response.data;
-    //   } else {
-    //     throw Error(`Error: ${response.status}`);
-    //   }
-    // } catch (error) {
-    //   return rejectWithValue(error.message);
-    // }
   }
 );
 
@@ -392,6 +376,9 @@ const mapSlice = createSlice({
     },
     setActiveActions_TA: (state, action) => {
       state.activeActions_TA = action?.payload;
+    },
+    setPointInfo: (state, action) => {
+      state.pointInfo = action?.payload;
     },
   },
 
@@ -540,19 +527,6 @@ const mapSlice = createSlice({
     builder.addCase(getEveryRoutes_TA.pending, (state, action) => {
       state.preloader = true;
     });
-
-    //////////////// getHistoryRoute
-    builder.addCase(getHistoryRoute.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listHistoryRoute = action.payload;
-    });
-    builder.addCase(getHistoryRoute.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(getHistoryRoute.pending, (state, action) => {
-      state.preloader = true;
-    });
   },
 });
 
@@ -569,6 +543,7 @@ export const {
   clearEveryListRouteCRUD,
   setActiveViewMap,
   setActiveActions_TA,
+  setPointInfo,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

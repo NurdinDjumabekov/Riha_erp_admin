@@ -15,19 +15,20 @@ import { getListRoutes_TA } from "../../../store/reducers/mapSlice";
 
 ////// style
 import "./style.scss";
+import { setListPhotos } from "../../../store/reducers/photoSlice";
 
 const HistoryRouteTA = () => {
   const dispatch = useDispatch();
 
-  const { activeTA } = useSelector((state) => state.selectsSlice);
   const { listTA } = useSelector((state) => state.mainSlice);
 
   const getData = async () => {
     try {
+      dispatch(setListPhotos());
       await dispatch(getListTA({ first: true })).unwrap();
       const obj = { label: listTA?.[0]?.fio, value: listTA?.[0]?.guid };
       dispatch(setActiveTA(obj));
-      dispatch(getListRoutes_TA(listTA?.[0]?.guid)); // get историб маршрутов
+      await dispatch(getListRoutes_TA(listTA?.[0]?.guid)).unwrap(); // get историб маршрутов
     } catch (error) {}
   };
 

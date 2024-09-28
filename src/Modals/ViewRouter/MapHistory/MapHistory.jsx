@@ -18,20 +18,19 @@ import { reverseTransformActionDate } from "../../../helpers/transformDate";
 import { Directions } from "@2gis/mapgl-directions";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
-
-////// fns
-import {
-  setActiveDate,
-  setActiveTA,
-} from "../../../store/reducers/selectsSlice";
-import { getListRoutes_TA } from "../../../store/reducers/mapSlice";
 import MapMenuInfo from "../MapMenuInfo/MapMenuInfo";
 
-const MapHistory = () => {
+////// fns
+import { setActiveTA } from "../../../store/reducers/selectsSlice";
+import { setActiveDate } from "../../../store/reducers/selectsSlice";
+import { setPointInfo } from "../../../store/reducers/mapSlice";
+import { getListRoutes_TA } from "../../../store/reducers/mapSlice";
+
+const MapHistory = ({}) => {
   const dispatch = useDispatch();
 
   //// activeViewMap check
-  /// listHistoryRoute, getHistoryRoute на потом
+  /// listHistoryRoute на потом
 
   const [map, setMap] = useState(null);
   const [directions, setDirections] = useState(null);
@@ -40,20 +39,18 @@ const MapHistory = () => {
   const { mapGeo, key, everyRoutes_TA } = useSelector(
     (state) => state.mapSlice
   );
-  const { listHistoryRoute } = useSelector((state) => state.mapSlice);
+  const { listHistoryRoute } = useSelector((state) => state.mapSlice); /// check
   const { activeTA, activeDate } = useSelector((state) => state.selectsSlice);
   const { listTA } = useSelector((state) => state.mainSlice);
 
   const onChange = (item) => {
-    dispatch(setActiveTA(item)); //// меняю активный state
-    dispatch(getListRoutes_TA(item?.value)); // get историб маршрутов
+    dispatch(getListRoutes_TA(item?.value)); /// для получения более подробно инфы о точке
+    dispatch(setActiveTA(item));
   };
 
   const onChangeDate = (item) => {
     dispatch(setActiveDate(transformActionDate(item)));
   };
-
-  console.log(everyRoutes_TA, "everyRoutes_TA");
 
   useEffect(() => {
     load().then((mapgl) => {
@@ -98,16 +95,21 @@ const MapHistory = () => {
       ]);
 
       const newMarkers = everyRoutes_TA?.map((point, index) => {
-        const checkTA = !!point?.start_time; /// если время есть, то ТА посетил точку
+        const checkTA = !!point?.set_start_time; /// если время есть, то ТА посетил точку
+        const checkTIndex = index == 0; /// если время есть, то ТА посетил точку
+
+        const markerNameClass = `customMarker__name ${checkTA ? "active" : ""}
+        ${checkTIndex ? "workShop" : ""}`;
+
+        const markerIndex = checkTIndex ? "" : `${index}.`;
 
         const customMarker = document.createElement("div");
         customMarker.className = "customMarker";
-        customMarker.innerHTML = `<div class='customMarker__point'><i></i></div>
-        <div class='customMarker__name ${
-          checkTA ? "active" : ""
-        }'> <p><span class='customMarker__index'>${index + 1}</span>. ${
-          point?.point || "Цех"
-        }</p></div>`;
+        customMarker.innerHTML = `
+        <div class="customMarker__point"><i></i></div>
+        <div class="${markerNameClass}"><p><span class="customMarker__index">${markerIndex}</span>
+        ${point?.point || "Цех"}</p></div>
+      `;
 
         const marker = new map.mapgl.HtmlMarker(map, {
           coordinates: [parseFloat(point.lon), parseFloat(point.lat)],
@@ -116,7 +118,12 @@ const MapHistory = () => {
           anchor: [0.5, 1],
         });
 
-        customMarker.addEventListener("click", () => clickPoint(point, index));
+        customMarker.addEventListener("click", () => {
+          if (index !== 0) {
+            /// если это не цех
+            clickPoint(point);
+          }
+        });
 
         return marker;
       });
@@ -132,9 +139,7 @@ const MapHistory = () => {
     }
   }, [map, everyRoutes_TA, directions, mapGeo]);
 
-  const clickPoint = (point, index) => {
-    console.log(point, "point");
-  };
+  const clickPoint = (point) => dispatch(setPointInfo(point));
 
   const list_TA = transformLists(listTA, "guid", "fio");
 

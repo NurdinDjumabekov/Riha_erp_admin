@@ -96,6 +96,10 @@ const photoSlice = createSlice({
     setActiveRouteList: (state, action) => {
       state.activeRouteList = action?.payload;
     },
+
+    setListPhotos: (state, action) => {
+      state.listPhotos = [];
+    },
   },
 
   extraReducers: (builder) => {
@@ -127,6 +131,7 @@ const photoSlice = createSlice({
   },
 });
 
-export const { setActiveTTForPhoto, setActiveRouteList } = photoSlice.actions;
+export const { setActiveTTForPhoto, setActiveRouteList, setListPhotos } =
+  photoSlice.actions;
 
 export default photoSlice.reducer;
