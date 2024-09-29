@@ -21,6 +21,8 @@ const HistoryRouteTA = () => {
   const dispatch = useDispatch();
 
   const { listTA } = useSelector((state) => state.mainSlice);
+  const { activeDate } = useSelector((state) => state.selectsSlice);
+  const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
 
   const getData = async () => {
     try {
@@ -28,7 +30,8 @@ const HistoryRouteTA = () => {
       await dispatch(getListTA({ first: true })).unwrap();
       const obj = { label: listTA?.[0]?.fio, value: listTA?.[0]?.guid };
       dispatch(setActiveTA(obj));
-      await dispatch(getListRoutes_TA(listTA?.[0]?.guid)).unwrap(); // get историб маршрутов
+      const data = { agent_guid: listTA?.[0]?.guid, user_type, activeDate };
+      await dispatch(getListRoutes_TA(data)).unwrap(); // get историб маршрутов
     } catch (error) {}
   };
 

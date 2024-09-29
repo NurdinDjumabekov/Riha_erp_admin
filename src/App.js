@@ -41,7 +41,10 @@ const App = () => {
       }
     };
 
+    getLocationAndSend();
+
     if (user_type == 1) {
+      //// только для ТА
       const intervalId = setInterval(getLocationAndSend, 1000000);
 
       // Очищаем таймер при размонтировании компонента

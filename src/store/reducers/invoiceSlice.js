@@ -24,6 +24,7 @@ const initialState = {
   viewApp: true,
   listInvoice: [],
   listProdEveryInvoice: [],
+  listHistoryAcceptInvoice: [], /// история принятых накладынй ТА
 };
 
 ////// getListWorkShop - get список цехов
@@ -309,6 +310,24 @@ export const acceptInvoice = createAsyncThunk(
   }
 );
 
+////// historyAcceptInvoice - история принятых накладных ТА в виде пдф
+export const historyAcceptInvoice = createAsyncThunk(
+  "historyAcceptInvoice",
+  async function ({ agent_guid }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_invoice_files?agent_guid=${agent_guid}`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const invoiceSlice = createSlice({
   name: "invoiceSlice",
   initialState,
@@ -473,6 +492,19 @@ const invoiceSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(acceptInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////////// historyAcceptInvoice
+    builder.addCase(historyAcceptInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listHistoryAcceptInvoice = action.payload;
+    });
+    builder.addCase(historyAcceptInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(historyAcceptInvoice.pending, (state, action) => {
       state.preloader = true;
     });
   },

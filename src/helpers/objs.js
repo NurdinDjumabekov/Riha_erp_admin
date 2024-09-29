@@ -150,7 +150,40 @@ export const listActionRoute = [
 ];
 
 export const styleRoutes = {
-  routeLineWidth: ["interpolate", ["linear"], ["zoom"], 10, 20, 10, 5],
-  substrateLineWidth: ["interpolate", ["linear"], ["zoom"], 5, 1, 7, 10],
-  haloLineWidth: 10,
+  routeLineWidth: ["interpolate", ["linear"], ["zoom"], 5, 1, 2, 3],
+  substrateLineWidth: ["interpolate", ["linear"], ["zoom"], 1, 3, 2, 5],
+  haloLineWidth: 5,
 };
+
+export const styleRoutesNoPlan = {
+  routeLineWidth: ["interpolate", ["linear"], ["zoom"], 5, 1, 2, 3],
+  substrateLineWidth: ["interpolate", ["linear"], ["zoom"], 1, 3, 2, 5],
+  haloLineWidth: 15,
+};
+
+export const listAcceptInvoiceTem = [
+  {
+    codeid: 1,
+    guid: "qcwerqwrqwerqwer32",
+    total_price: 100,
+    date_create: "22-10-2024 19:00",
+    file: "http://mttp-renaissance.333.kg/files/5P4ZMTXT9RNEosDmFLCvXB60k.pdf",
+    sender: "админ",
+  },
+  {
+    codeid: 2,
+    guid: "231123",
+    total_price: 100,
+    date_create: "22-10-2024 19:00",
+    file: "http://mttp-renaissance.333.kg/files/5P4ZMTXT9RNEosDmFLCvXB60k.pdf",
+    sender: "админ",
+  },
+  {
+    codeid: 3,
+    guid: "asdasdas",
+    total_price: 100,
+    date_create: "22-10-2024 19:00",
+    file: "http://mttp-renaissance.333.kg/files/5P4ZMTXT9RNEosDmFLCvXB60k.pdf",
+    sender: "админ",
+  },
+];

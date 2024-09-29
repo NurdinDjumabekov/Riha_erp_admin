@@ -14,7 +14,6 @@ import Slide from "@mui/material/Slide";
 ////// fns
 import { setInvoiceInfo } from "../../store/reducers/mainSlice";
 import { getListTA } from "../../store/reducers/mainSlice";
-import { getAllRouteAgent } from "../../store/reducers/mapSlice";
 import { clearSelects } from "../../store/reducers/selectsSlice";
 
 ////// style
@@ -41,24 +40,11 @@ const ViewRouter = () => {
   const handleClose = () => dispatch(setInvoiceInfo({ guid: "", action: 0 }));
 
   useEffect(() => {
-    let intervalId;
     if (invoiceInfo?.action === 6) {
       dispatch(getListTA({ first: true }));
-      const fetchRouteAgent = () => {
-        dispatch(getAllRouteAgent());
-      };
-
-      fetchRouteAgent();
-      intervalId = setInterval(fetchRouteAgent, 1000000);
     } else {
       dispatch(clearSelects());
     }
-
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
   }, [invoiceInfo?.action, dispatch]);
 
   const obj = { 1: <ViewAgents />, 2: <RouteTA />, 3: <HistoryRouteTA /> };

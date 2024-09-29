@@ -38,7 +38,6 @@ import UserIcon from "@mui/icons-material/AccountCircle";
 
 /////// style
 import "./style.scss";
-import { getAllRouteAgent } from "../../store/reducers/mapSlice";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -107,7 +106,6 @@ const MainPage = () => {
 
   useEffect(() => {
     updateDateRange();
-    dispatch(getAllRouteAgent());
   }, []);
 
   useEffect(() => {

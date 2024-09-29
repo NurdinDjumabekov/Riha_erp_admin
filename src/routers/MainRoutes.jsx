@@ -21,6 +21,8 @@ import CameraPage from "../pages/CameraPage/CameraPage";
 import SendInvoicePage from "../pages/SendInvoicePage/SendInvoicePage";
 import AllAgentsPage from "../pages/AllAgentsPage/AllAgentsPage";
 import MyInvoicePage from "../pages/MyInvoicePage/MyInvoicePage";
+import AcceptInvoicePage from "../pages/AcceptInvoicePage/AcceptInvoicePage";
+import LookPdfPage from "../pages/LookPdfPage/LookPdfPage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -32,6 +34,7 @@ const MainRoutes = () => {
   const { listTitleOrders } = useSelector((state) => state.mainSlice);
   const { listOrders, invoiceInfo } = useSelector((state) => state.mainSlice);
   const { activeRouteList } = useSelector((state) => state.photoSlice);
+  const { mapGeo, listRouteAllTA } = useSelector((state) => state.mapSlice);
 
   return (
     <>
@@ -45,6 +48,8 @@ const MainRoutes = () => {
               <Route path="/" element={<MainPage />} />
               {/* ///// agentPages */}
               <Route path="/my_invoice" element={<MyInvoicePage />} />
+              <Route path="/accept_invoice" element={<AcceptInvoicePage />} />
+              <Route path="/view/:url" element={<LookPdfPage />} />
               <Route path="/camera" element={<CameraPage />} />
               <Route path="/maps" element={<MapsPage />} />
               <Route path="/settings" element={<SettingsPage />} />

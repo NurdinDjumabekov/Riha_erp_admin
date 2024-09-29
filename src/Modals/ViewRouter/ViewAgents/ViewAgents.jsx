@@ -1,40 +1,39 @@
+/////// hooks
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
-
-///// map
 import { load } from "@2gis/mapgl";
 
-////// style
+////// styles
 import "./style.scss";
 
+////// fns
 import { getListTA } from "../../../store/reducers/mainSlice";
 import { getAllRouteAgent } from "../../../store/reducers/mapSlice";
+
+////// helpers
 import { formatName } from "../../../helpers/searchActiveOrdersTA";
 
 const ViewAgents = () => {
   const dispatch = useDispatch();
 
+  const mapRef = useRef(null);
+  const [markers, setMarkers] = useState([]);
+  const [isCheck, setIsCheck] = useState(false); // Флаг для проверки готовности карты
+
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
-  const { mapGeo, listRouteAllTA, key } = useSelector(
+  const { mapGeo, key, listRouteAllTA } = useSelector(
     (state) => state.mapSlice
   );
 
-  const mapRef = useRef(null);
-  const [markers, setMarkers] = useState([]);
-
   useEffect(() => {
     let intervalId;
+    const getRoute = () => dispatch(getAllRouteAgent());
+    dispatch(getAllRouteAgent());
+
     if (invoiceInfo?.action === 6) {
       dispatch(getListTA({ first: true }));
-
-      // Функция для обновления данных агентов
-      const fetchRouteAgent = () => {
-        dispatch(getAllRouteAgent());
-      };
-
-      fetchRouteAgent();
-      intervalId = setInterval(fetchRouteAgent, 10000000);
+      intervalId = setInterval(getRoute, 10000);
     }
 
     return () => {
@@ -45,51 +44,45 @@ const ViewAgents = () => {
   }, [invoiceInfo?.action, dispatch]);
 
   useEffect(() => {
-    if (invoiceInfo?.action === 6) {
-      let map;
+    let map;
 
-      // Загружаем карту один раз и сохраняем в реф
-      load().then((mapgl) => {
-        map = new mapgl.Map("map-container-admin", {
-          center: [
-            mapGeo?.longitude || 74.5975735,
-            mapGeo?.latitude || 42.8508686,
-          ],
-          zoom: 13,
-          key,
-        });
-        mapRef.current = map;
+    const loadMap = async () => {
+      const mapgl = await load();
+      map = new mapgl.Map("map-container-admin", {
+        center: [mapGeo.longitude, mapGeo.latitude],
+        zoom: 13,
+        key,
       });
+      mapRef.current = map;
+      setIsCheck(true); // Устанавливаем флаг, что карта загружена
+    };
 
-      return () => {
-        if (mapRef.current) {
-          mapRef.current.destroy();
-        }
-      };
-    }
-  }, [mapGeo, invoiceInfo?.action]);
+    loadMap();
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.destroy();
+      }
+    };
+  }, [mapGeo, key]);
 
   useEffect(() => {
-    if (mapRef.current && listRouteAllTA) {
+    if (isCheck && listRouteAllTA.length > 0) {
       markers.forEach((marker) => marker?.destroy());
 
       const updateMarkers = () => {
         load().then((mapgl) => {
           const newMarkers = listRouteAllTA.map((item) => {
-            const { lat, lon, agent, status } = item;
+            const lat = parseFloat(item.lat);
+            const lon = parseFloat(item.lon);
+            const { agent } = item;
             if (lat && lon) {
               const customMarker = document.createElement("div");
               customMarker.className = "marker";
               customMarker.innerHTML = `
-                <div class="marker__inner ${
-                  !!status ? "deActive" : ""
-                }"><i></i></div>
+                <div class="marker__inner"><i></i></div>
                 <div class="marker__name"><p>${formatName(agent)}</p></div>
               `;
-
-              //   customMarker.addEventListener("click", () => {
-              //     alert(`Agent: ${formatName(agent)}`);
-              //   });
 
               return new mapgl.HtmlMarker(mapRef.current, {
                 coordinates: [lon, lat],
@@ -104,9 +97,10 @@ const ViewAgents = () => {
         });
       };
 
-      requestAnimationFrame(updateMarkers);
+      updateMarkers();
     }
-  }, [listRouteAllTA]);
+  }, [isCheck, listRouteAllTA]);
+  // Обновляю маркеры только после загрузки карты и данных
 
   return (
     <div className="viewAgents">
@@ -119,7 +113,6 @@ const ViewAgents = () => {
 
 export default ViewAgents;
 
-// Компонент для карты
 const MapMain = React.memo(
   () => {
     return (

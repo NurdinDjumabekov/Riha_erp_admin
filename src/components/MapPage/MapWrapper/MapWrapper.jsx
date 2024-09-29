@@ -15,7 +15,7 @@ import "./style.scss";
 ////// fns
 import { setMapGeo } from "../../../store/reducers/mapSlice";
 import { setActiveActions_TA } from "../../../store/reducers/mapSlice";
-import { myAlert } from "../../../helpers/MyAlert";
+import { getMyGeo } from "../../../helpers/transformDate";
 
 const MapWrapper = ({ searchMe }) => {
   const dispatch = useDispatch();
@@ -47,6 +47,8 @@ const MapWrapper = ({ searchMe }) => {
 
       initializedMap.mapgl = mapgl;
     });
+
+    // getMyGeo().then(({ lat, lon }) => {})}
 
     return () => {
       if (map) {

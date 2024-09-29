@@ -203,3 +203,25 @@ export const getTodayDate = () => {
 
   return `${year}-${month}-${day}`;
 };
+
+export const getMyGeo = () => {
+  ///// get my geo
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          resolve({ lat: latitude, lon: longitude });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          reject(error);
+        }
+      );
+    } else {
+      const error = new Error("Geolocation is not supported by this browser.");
+      console.error(error.message);
+      reject(error);
+    }
+  });
+};

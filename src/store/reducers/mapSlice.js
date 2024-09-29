@@ -13,6 +13,7 @@ import {
   clearEveryListRoute,
   clearRoute,
 } from "../../helpers/clear";
+import { listHistory, pastGeoData } from "../../helpers/LocalData";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -63,6 +64,7 @@ const initialState = {
   // 1 - модалка для  действий (сфотать, отпустить накладную и т.д.)
   listHistoryRoute: [], //// история списка маршрутов ТА
   pointInfo: {}, /// для историй маршрутов (храню данные точки на которую нажимают на карте)
+  listTA_RouteNoPlan: [], //// список коориднат по которым ехал Та(типо сам, не по плану)
 };
 
 ////// sendGeoUser - отправка геолокации пользователя(агента)
@@ -141,6 +143,7 @@ export const getAllRouteAgent = createAsyncThunk(
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
+        console.log("start");
         return response.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -301,13 +304,15 @@ export const editCoordsPoint = createAsyncThunk(
 ////// getListRoutes_TA - get данных координат точек определенного агента
 export const getListRoutes_TA = createAsyncThunk(
   "getListRoutes_TA",
-  async function (agent_guid, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/agent_route_sheet?agent_guid=${agent_guid}`;
+  async function (props, { dispatch, rejectWithValue }) {
+    const { agent_guid, user_type, activeDate } = props;
+    const url = `${REACT_APP_API_URL}/ta/agent_route_sheet?agent_guid=${agent_guid}&date=${activeDate}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(getEveryRoutes_TA(response.data?.[0]?.guid));
-        return response.data;
+        const obj = { route_sheet_guid: response.data?.[0]?.guid, user_type };
+        dispatch(getEveryRoutes_TA(obj));
+        return response.data?.[0]?.listRouteTA;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -320,13 +325,14 @@ export const getListRoutes_TA = createAsyncThunk(
 ////// getEveryRoutes_TA - get данных каждой координаты точек для определенного ТА
 export const getEveryRoutes_TA = createAsyncThunk(
   "getEveryRoutes_TA",
-  async function (route_sheet_guid, { dispatch, rejectWithValue }) {
+  async function (props, { dispatch, rejectWithValue }) {
+    const { route_sheet_guid, user_type } = props;
     const url = `${REACT_APP_API_URL}/ta/agent_routes?route_sheet_guid=${route_sheet_guid}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
         dispatch(setPointInfo(response.data?.[0]));
-        return response.data;
+        return { list: response.data, user_type };
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -496,28 +502,37 @@ const mapSlice = createSlice({
       state.preloader = true;
     });
 
+    //////////////// getListRoutes_TA
+    builder.addCase(getListRoutes_TA.fulfilled, (state, action) => {
+      state.preloader = false;
+      // state.listTA_RouteNoPlan = action.payload;
+      state.listTA_RouteNoPlan = listHistory;
+    });
+    builder.addCase(getListRoutes_TA.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      state.listTA_RouteNoPlan = [];
+    });
+    builder.addCase(getListRoutes_TA.pending, (state, action) => {
+      state.preloader = true;
+    });
+
     //////////////// getEveryRoutes_TA
     builder.addCase(getEveryRoutes_TA.fulfilled, (state, action) => {
+      const user_type = action.payload?.user_type; // 1 - Та, 2 - админ
+      const list = action.payload?.list; /// geo TA
+      const lat = state.mapGeo?.latitude; /// geo TA
+      const lon = state.mapGeo?.longitude;
       state.preloader = false;
+      const firstObj = action.payload?.list?.[0];
       const myData = {
-        // lat: state.mapGeo?.latitude,
-        // lon: state.mapGeo?.longitude,
+        ...firstObj,
+        lat: user_type == 1 ? lat : firstObj?.lat, //// delete 42.8572672
+        lon: user_type == 1 ? lon : firstObj?.lon, //// delete 74.6258432
         start_time: "28.09.2024",
-        end_time: "",
-        ordering: "",
-        status: 1,
-        comment: "",
-        set_start_time: null,
-        set_end_time: null,
-        point_guid: "",
-        point: "",
-        route_sheet_guid: "",
-        guid: "",
-        lat: "42.844889",
-        lon: "74.618788",
-        myGeo: true,
+        ...pastGeoData,
       };
-      state.everyRoutes_TA = [myData, ...action.payload];
+      state.everyRoutes_TA = [myData, ...list];
     });
     builder.addCase(getEveryRoutes_TA.rejected, (state, action) => {
       state.error = action.payload;

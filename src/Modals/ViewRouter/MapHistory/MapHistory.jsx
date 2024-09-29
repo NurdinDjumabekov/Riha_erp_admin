@@ -9,12 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 
 /////// helpers
-import { styleRoutes } from "../../../helpers/objs";
+import { styleRoutes, styleRoutesNoPlan } from "../../../helpers/objs";
 import { transformLists } from "../../../helpers/transformLists";
 import { transformActionDate } from "../../../helpers/transformDate";
 import { reverseTransformActionDate } from "../../../helpers/transformDate";
 
-/////// conmponents
+/////// components
 import { Directions } from "@2gis/mapgl-directions";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
@@ -29,27 +29,29 @@ import { getListRoutes_TA } from "../../../store/reducers/mapSlice";
 const MapHistory = ({}) => {
   const dispatch = useDispatch();
 
-  //// activeViewMap check
-  /// listHistoryRoute на потом
-
   const [map, setMap] = useState(null);
   const [directions, setDirections] = useState(null);
   const [markers, setMarkers] = useState([]);
+  const [secondRoute, setSecondRoute] = useState(null); // Состояние для второго маршрута
 
-  const { mapGeo, key, everyRoutes_TA } = useSelector(
+  const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
+  const { mapGeo, everyRoutes_TA, listTA_RouteNoPlan, key } = useSelector(
     (state) => state.mapSlice
   );
-  const { listHistoryRoute } = useSelector((state) => state.mapSlice); /// check
+
   const { activeTA, activeDate } = useSelector((state) => state.selectsSlice);
   const { listTA } = useSelector((state) => state.mainSlice);
 
   const onChange = (item) => {
-    dispatch(getListRoutes_TA(item?.value)); /// для получения более подробно инфы о точке
+    const obj = { agent_guid: item?.value, user_type, activeDate };
+    dispatch(getListRoutes_TA(obj));
     dispatch(setActiveTA(item));
   };
 
   const onChangeDate = (item) => {
     dispatch(setActiveDate(transformActionDate(item)));
+    const obj = { agent_guid: activeTA?.value, user_type, activeDate: item };
+    dispatch(getListRoutes_TA(obj));
   };
 
   useEffect(() => {
@@ -95,32 +97,35 @@ const MapHistory = ({}) => {
       ]);
 
       const newMarkers = everyRoutes_TA?.map((point, index) => {
-        const checkTA = !!point?.set_start_time; /// если время есть, то ТА посетил точку
-        const checkTIndex = index == 0; /// если время есть, то ТА посетил точку
+        const checkTA = !!point?.set_start_time; // если время есть, то ТА посетил точку
+        const checkTIndex = index === 0; // если это первая точка
 
-        const markerNameClass = `customMarker__name ${checkTA ? "active" : ""}
-        ${checkTIndex ? "workShop" : ""}`;
-
+        const markerNameClass = `customMarker__name ${
+          checkTA ? "active" : ""
+        } ${checkTIndex ? "workShop" : ""}`;
         const markerIndex = checkTIndex ? "" : `${index}.`;
 
         const customMarker = document.createElement("div");
         customMarker.className = "customMarker";
         customMarker.innerHTML = `
-        <div class="customMarker__point"><i></i></div>
-        <div class="${markerNameClass}"><p><span class="customMarker__index">${markerIndex}</span>
-        ${point?.point || "Цех"}</p></div>
-      `;
+          <div class="customMarker__point"><i></i></div>
+          <div class="${markerNameClass}">
+            <p><span class="customMarker__index">${markerIndex}</span>${
+          point?.point || "Цех"
+        }</p>
+          </div>
+        `;
 
         const marker = new map.mapgl.HtmlMarker(map, {
           coordinates: [parseFloat(point.lon), parseFloat(point.lat)],
           type: "html",
           html: customMarker,
+          icon: null,
           anchor: [0.5, 1],
         });
 
         customMarker.addEventListener("click", () => {
           if (index !== 0) {
-            /// если это не цех
             clickPoint(point);
           }
         });
@@ -138,6 +143,56 @@ const MapHistory = ({}) => {
       }
     }
   }, [map, everyRoutes_TA, directions, mapGeo]);
+
+  // useEffect(() => {
+  //   if (map && listTA_RouteNoPlan?.length > 0) {
+  //     if (secondRoute) {
+  //       secondRoute.clear();
+  //     }
+
+  //     const routePointsNoPlan = listTA_RouteNoPlan?.map((point) => [
+  //       parseFloat(point.lon),
+  //       parseFloat(point.lat),
+  //     ]);
+
+  //     const newDirectionsInstance = new Directions(map, {
+  //       directionsApiKey: key,
+  //     });
+
+  //     setSecondRoute(newDirectionsInstance);
+
+  //     // Создаем маркеры только для первой и последней точек маршрута
+  //     const startPoint = routePointsNoPlan[0];
+  //     const endPoint = routePointsNoPlan[routePointsNoPlan.length - 1];
+
+  //     // Создаем и добавляем маркер для первой точки
+  //     const startMarker = new map.mapgl.HtmlMarker(map, {
+  //       coordinates: startPoint,
+  //       type: "html",
+  //       html: `<div class="customMarker__start">Старт</div>`,
+  //       anchor: [0.5, 1],
+  //     });
+
+  //     // Создаем и добавляем маркер для последней точки
+  //     const endMarker = new map.mapgl.HtmlMarker(map, {
+  //       coordinates: endPoint,
+  //       type: "html",
+  //       html: `<div class="customMarker__end">Финиш</div>`,
+  //       anchor: [0.5, 1],
+  //     });
+
+  //     // Добавляем маркеры на карту
+  //     setMarkers((prev) => [...prev, startMarker, endMarker]);
+
+  //     // Прокладываем маршрут только если есть хотя бы две точки
+  //     if (routePointsNoPlan.length >= 2) {
+  //       newDirectionsInstance.carRoute({
+  //         points: routePointsNoPlan,
+  //         style: styleRoutesNoPlan, // Используем стиль для фактического маршрута
+  //       });
+  //     }
+  //   }
+  // }, [map, listTA_RouteNoPlan]);
 
   const clickPoint = (point) => dispatch(setPointInfo(point));
 
@@ -172,16 +227,17 @@ const MapHistory = ({}) => {
         <div className="infoRoute">
           <div>
             <div className="greenRoute">Посетил точку</div>
-            <div className="redRoute"> Не посетил</div>
+            <div className="redRoute">Не посетил</div>
           </div>
           <div>
             <div className="vialetRoute">
-              Маршрут по которому должен был ехать ТА
+              Маршрут, по которому должен был ехать ТА
             </div>
-            <div className="bluetoute">Маршрут по которому ТА поехал</div>
+            <div className="bluetoute">Маршрут, по которому ТА поехал</div>
           </div>
         </div>
       </div>
+
       <div id="mapContainerHistory" className="map-container"></div>
       <MapMenuInfo />
     </div>

@@ -48,7 +48,7 @@
 
     .infoRoute {
       display: flex;
-      gap: 10px;
+      gap: 50px;
       align-items: center;
       margin: 0 0 0 50px;
 
@@ -145,4 +145,19 @@
       margin: 80px 10px 0 0;
     }
   }
+}
+
+.hiddenMarker {
+  display: none;
+}
+
+#reset {
+  padding: 4px 10px;
+  background: red;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px 0 rgba(38, 38, 38, 1);
+  border: none;
+  color: #fff;
+  font-size: 122px;
+  cursor: pointer;
 }
