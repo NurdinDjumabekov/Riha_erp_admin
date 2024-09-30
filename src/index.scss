@@ -88,7 +88,7 @@ button {
     background-color: #fffefe;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #c1c1c1;
+    background-color: #c1c1c19b;
   }
 }
 
@@ -100,7 +100,7 @@ button {
     thead {
       tr {
         th:first-child {
-          padding: 5px 0 5px 0px !important;
+          padding: 12px 0 12px 0px !important;
         }
         th {
           padding: 8px 8px 5px !important;
@@ -139,7 +139,7 @@ button {
             width: 100px;
             background: #fff;
             border-radius: 3px;
-            border: 1px solid #e0e6ed;
+            border: 1px solid #cbcbcb;
             font-size: 13px;
             padding: 0px 5px;
             height: 20px;

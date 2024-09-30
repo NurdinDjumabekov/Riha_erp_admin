@@ -19,6 +19,11 @@ import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 import { roundingNum } from "../../../helpers/totals";
 import { setActiveTA } from "../../../store/reducers/selectsSlice";
 
+/////// icons
+import GroupIcon from "@mui/icons-material/Group";
+import PaidIcon from "@mui/icons-material/PaymentsOutlined";
+import CounterIcon from "@mui/icons-material/FormatListNumberedRtl";
+
 const CustomWidthTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))({
@@ -95,11 +100,17 @@ const EveryDataDay = ({ content }) => {
               }}
             >
               <>
-                <h3>Кол-во агентов: {agents_counts}</h3>
-                <p className="dayEvery">Сумма: {roundingNum(total_sum)} сом</p>
-                <p className="dayEvery">
-                  Кол-во товара: {roundingNum(total_count)} шт
-                </p>
+                <h3>
+                  <GroupIcon /> Агент: {agents_counts}
+                </h3>
+                <h3 className="dayEveryd">
+                  <PaidIcon />
+                  Сумма: {roundingNum(total_sum)} сом
+                </h3>
+                <h3 className="dayEveryd">
+                  <CounterIcon />
+                  Кол-во: {roundingNum(total_count)} шт
+                </h3>
               </>
             </Tooltip>
           </div>

@@ -12,9 +12,9 @@ const LookPdfPage = () => {
       <iframe
         src={url}
         width="100%"
-        height="600px"
-        title="PDF Viewer"
-        style={{ border: "none" }}
+        height="100%"
+        // title="PDF Viewer"
+        // style={{ border: "none" }}
       />
     </div>
   );

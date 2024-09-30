@@ -4,12 +4,12 @@ import { myAlert } from "../../helpers/MyAlert";
 import axiosInstance from "../../axiosInstance";
 import { getListOrders, setInvoiceInfo } from "./mainSlice";
 import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
-import { setActiveTA } from "./selectsSlice";
 
 const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   listProduction: [], /// список товаров в производстве
+  listProductionInvoice: [], /// список накладных в производстве
   activeDate: "2024-09-14",
 };
 
@@ -17,10 +17,14 @@ const initialState = {
 export const getListProdProduction = createAsyncThunk(
   "getListProdProduction",
   async function (props, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_production_invoice`;
+    const { date_from, date_to, setActiveInvoice } = props;
+    const url = `${REACT_APP_API_URL}/ta/get_production_invoice?date_from=${
+      date_from || ""
+    }&date_to=${date_to || ""}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
+        setActiveInvoice(response?.data?.[0]);
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -35,18 +39,21 @@ export const getListProdProduction = createAsyncThunk(
 export const sendInWareHomeFN = createAsyncThunk(
   "sendInWareHomeFN",
   async function (props, { dispatch, rejectWithValue }) {
-    const { data, listTA, activeDate } = props;
+    const { data, listTA, activeDate, setActiveInvoice } = props;
     const url = `${REACT_APP_API_URL}/ta/update_production_invoice`;
     try {
       const response = await axiosInstance.put(url, data);
       if (response.status >= 200 && response.status < 300) {
-        const obj = { guid: "", action: 0, listInvoice: [] };
-        dispatch(setInvoiceInfo(obj)); /// для закрытия модалки
         myAlert("Список товаров отправлен на склад");
+        const obj = { date_from: "", date_to: "", setActiveInvoice };
+        dispatch(getListProdProduction(obj));
+        console.log("asdasd");
+        //// для обновление списка товаров произ-ва
 
         const agents_guid = searchActiveOrdersTA(listTA);
         dispatch(getListOrders({ ...activeDate, agents_guid }));
         /// обновление данных календаря
+
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -116,6 +123,10 @@ const productionSlice = createSlice({
       state.listProduction = action.payload;
     },
 
+    setListProductionInvoice: (state, action) => {
+      state.listProductionInvoice = action.payload;
+    },
+
     /////изменение ключа count в списке товаров производства
     changeCountProduction: (state, action) => {
       const { product_guid, count } = action.payload;
@@ -129,10 +140,11 @@ const productionSlice = createSlice({
     ////////////// getListProdProduction
     builder.addCase(getListProdProduction.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listProduction = action.payload?.map((i) => ({
+      state.listProduction = action.payload?.[0]?.products?.map((i) => ({
         ...i,
         countOld: i.count,
       }));
+      state.listProductionInvoice = action.payload;
     });
     builder.addCase(getListProdProduction.rejected, (state, action) => {
       state.error = action.payload;
@@ -143,7 +155,10 @@ const productionSlice = createSlice({
     });
   },
 });
-export const { setListProduction, changeCountProduction } =
-  productionSlice.actions;
+export const {
+  setListProductionInvoice,
+  setListProduction,
+  changeCountProduction,
+} = productionSlice.actions;
 
 export default productionSlice.reducer;

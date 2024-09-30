@@ -18,13 +18,13 @@ import ListAcceptInvoice from "../../ListAcceptInvoice/ListAcceptInvoice";
 import { clearListOrders } from "../../../../store/reducers/mainSlice";
 import { getListWorkShop } from "../../../../store/reducers/mainSlice";
 import { setInvoiceInfo } from "../../../../store/reducers/mainSlice";
+import { clearSelects } from "../../../../store/reducers/selectsSlice";
 
 ////// icons
 import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
 
 ////// style
 import "./style.scss";
-import { clearSelects } from "../../../../store/reducers/selectsSlice";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

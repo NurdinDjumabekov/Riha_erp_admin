@@ -21,7 +21,7 @@ const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   mapGeo: { latitude: "", longitude: "" },
-  key: "55b8e108-a5ba-4c19-867c-ca553419ddeb",
+  key: "4b360754-94b6-4399-9a7b-35811336eb5f",
 
   //////////////////////////////////////// для админа
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)

@@ -30,22 +30,50 @@ import RoomIcon from "@mui/icons-material/Room";
 // import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
 import HistoryIcon from "@mui/icons-material/History";
 
+import time from "../assets/images/back-in-time.png";
+import calendare from "../assets/images/calendar.png";
+import prod from "../assets/images/web-settings.png";
+import end from "../assets/images/good-signal.png";
+import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
+import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+
 export const objStatusOrders = {
   0: {
-    text: "Редактировать",
-    img: <CreateOutlinedIcon sx={{ color: "#3788d8" }} />,
+    text: "Заявка подана",
+    img: calendare,
+    color: "#2196f3",
+    class: "edit",
+    icon: <InventoryOutlinedIcon />,
   },
   "-2": {
     text: "Идёт подготовка к производству, редактирование невозможно!",
-    img: <HourglassEmptyIcon sx={{ color: "#222" }} />,
+    img: time,
+    color: "#e7515a",
+    class: "noEdit",
+    icon: <InventoryOutlinedIcon />,
   },
   1: {
     text: "Заявка уже в производстве",
-    img: <PendingActionsIcon sx={{ color: "#222" }} />,
+    img: prod,
+    color: "#4361ee",
+    class: "prod",
+    icon: <AccessTimeOutlinedIcon />,
   },
   2: {
     text: "Товары на складе и готовы к отгрузке",
-    img: <DoneOutlinedIcon sx={{ color: "#1b5f20" }} />,
+    img: end,
+    color: "#00ab55",
+    class: "sgp",
+    icon: <CheckCircleOutlinedIcon />,
+  },
+  3: {
+    text: "Товары на складе и готовы к отгрузке",
+    img: end,
+    color: "#00ab55",
+    class: "sgp",
+    icon: <CheckCircleOutlinedIcon />,
   },
 };
 

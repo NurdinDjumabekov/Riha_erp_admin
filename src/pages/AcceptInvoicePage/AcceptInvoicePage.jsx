@@ -10,7 +10,6 @@ import { historyAcceptInvoice } from "../../store/reducers/invoiceSlice";
 import ArrowNav from "@mui/icons-material/ArrowForwardIosSharp";
 
 ////// helpers
-import { listAcceptInvoiceTem } from "../../helpers/objs";
 import { roundingNum } from "../../helpers/totals";
 
 ////// style
@@ -20,6 +19,9 @@ const AcceptInvoicePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { dataSave } = useSelector((state) => state.saveDataSlice);
+  const { listHistoryAcceptInvoice } = useSelector(
+    (state) => state.invoiceSlice
+  );
 
   useEffect(() => {
     // История принятых накладных ТА в виде PDF
@@ -31,9 +33,17 @@ const AcceptInvoicePage = () => {
     navigate(`/view/${encodedFile}`);
   };
 
+  if (listHistoryAcceptInvoice?.length == 0) {
+    return (
+      <div className="emptyData">
+        <p>Список пустой</p>
+      </div>
+    );
+  }
+
   return (
     <div className="acceptInvoicePage">
-      {listAcceptInvoiceTem?.map((item) => (
+      {listHistoryAcceptInvoice?.map((item) => (
         <button
           key={item?.codeid}
           className="invoiceParent"

@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import "./style.scss";
 import { styled } from "@mui/styles";
 
-/////// icons
+/////// img
 
 ////// components
 import { Tooltip, tooltipClasses } from "@mui/material";
@@ -21,8 +21,16 @@ import { setCheckInvoice } from "../../../store/reducers/mainSlice";
 import { getListProdsInInvoice } from "../../../store/reducers/mainSlice";
 
 ////// icons
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import UserIcon from "@mui/icons-material/AccountCircle";
+import PaidIcon from "@mui/icons-material/PaymentsOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+
+////// imgs
+import imgInfo from "../../../assets/images/design-process.png";
+import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
+import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 
 const EveryDataHour = ({ content }) => {
   const { status, agent, invoice_guid } = content?.event?._def?.extendedProps;
@@ -45,31 +53,41 @@ const EveryDataHour = ({ content }) => {
   };
 
   return (
-    <div className="everyOrder" onClick={editEveryInvoice}>
-      <div className="everyOrder__inner">
+    <div
+      className={`everyOrder ${status == 3 ? "deActive" : ""}`}
+      onClick={editEveryInvoice}
+    >
+      <div className="everyOrder__inner hourTitle">
         <h6>№ {codeid}</h6>
-        <h5>{agent}</h5>
-        <p className="name">{total_price} с</p>
-        {/* <div className="status">
-          <Tooltip
-            title={objStatusOrders?.[status]?.text || "Заявка будет обработана"}
-            placement="top"
-            arrow
-            disableInteractive
-            slotProps={{
-              popper: {
-                modifiers: [{ name: "offset", options: { offset: [0, -1] } }],
-              },
-            }}
-          >
-            <div className="status__inner">
-              {objStatusOrders?.[+status]?.img || (
-                <HelpOutlineIcon sx={{ color: "#222" }} />
-              )}
-            </div>
-            <p></p>
-          </Tooltip>
-        </div> */}
+        <h5 className="titleHour">
+          <UserIcon />
+          {agent}
+          <div className="status">
+            <Tooltip
+              title={
+                objStatusOrders?.[status]?.text ||
+                "Заявка скоро будет обработана"
+              }
+              placement="top"
+              arrow
+              disableInteractive
+              slotProps={{
+                popper: {
+                  modifiers: [{ name: "offset", options: { offset: [0, -1] } }],
+                },
+              }}
+            >
+              <div className="status__inner">
+                {objStatusOrders?.[status]?.icon}
+              </div>
+              <p></p>
+            </Tooltip>
+          </div>
+        </h5>
+        <p className="name">
+          <PaidIcon />
+          {total_price} с
+        </p>
       </div>
     </div>
   );

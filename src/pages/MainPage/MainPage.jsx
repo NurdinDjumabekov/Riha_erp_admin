@@ -219,6 +219,20 @@ const MainPage = () => {
             eventResizableFromStart={false} // Отключаю возможность изменения размера с начала
             eventDurationEditable={false}
           />
+          {/* <div className="listInfo">
+            <div className="infoBlue">
+              <p>Заявка подана</p>
+            </div>
+            <div className="infoPink">
+              <p>Идёт подготовка к производству!</p>
+            </div>
+            <div className="infoViolet">
+              <p>В производстве</p>
+            </div>
+            <div className="infoGreen">
+              <p>Товары на складе и готовы к отгрузке</p>
+            </div>
+          </div> */}
         </div>
       </div>
       <GraphicsEveryTA />

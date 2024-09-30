@@ -91,6 +91,8 @@ const MapsPage = () => {
     ),
   };
 
+  console.log(activeRouteList);
+
   return (
     <>
       <div className="map2Gis">

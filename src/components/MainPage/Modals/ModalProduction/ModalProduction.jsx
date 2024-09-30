@@ -1,5 +1,5 @@
 ////// hooks
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -44,8 +44,12 @@ const ModalProduction = () => {
   const dispatch = useDispatch();
 
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
-  const { listProduction } = useSelector((state) => state.productionSlice);
+  const { listProduction, listProductionInvoice } = useSelector(
+    (state) => state.productionSlice
+  );
   const { listTA, activeDate } = useSelector((state) => state.mainSlice);
+
+  const [activeInvoice, setActiveInvoice] = useState({});
 
   const handleClose = () => {
     const obj = { guid: "", action: 0, listInvoice: [] };
@@ -86,15 +90,30 @@ const ModalProduction = () => {
       workshop_price: price,
     }));
 
-    const data = { products, invoice_guid: listProduction?.[0]?.invoice_guid };
-    dispatch(sendInWareHomeFN({ data, listTA, activeDate }));
+    const data = { products, invoice_guid: activeInvoice?.invoice_guid };
+    dispatch(sendInWareHomeFN({ data, listTA, activeDate, setActiveInvoice }));
     ///  отправка товаров на склад через функцию
+
+    if (listProductionInvoice?.length === 1) {
+      const obj = { guid: "", action: 0, listInvoice: [], setActiveInvoice };
+      dispatch(setInvoiceInfo(obj));
+      /// для закрытия модалки только когда отправляется послдений список
+    }
+  };
+
+  const clickInvoice = (item) => {
+    setActiveInvoice(item);
+    const list = item?.products?.map((i) => ({
+      ...i,
+      countOld: i.count,
+    }));
+    dispatch(setListProduction(list));
   };
 
   useEffect(() => {
     if (invoiceInfo?.action == 4) {
-      dispatch(getListProdProduction());
-      //// get товары в производстве
+      const obj = { date_from: "", date_to: "", setActiveInvoice };
+      dispatch(getListProdProduction(obj));
     } else {
       dispatch(setListProduction([]));
       dispatch(clearSelects());
@@ -141,88 +160,112 @@ const ModalProduction = () => {
           </button>
         </div>
 
-        <div className="modalProduction__invoice">
-          <TableContainer
-            component={Paper}
-            sx={{ maxHeight: "100%" }}
-            className="scroll_table standartTable"
-          >
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center" style={{ width: "5%" }}>
-                    №
-                  </TableCell>
-                  <TableCell style={{ width: "53%" }}>Продукт</TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Цена
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Количество
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Разница
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "12%" }}>
-                    Дата изготовления
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {listProduction?.map((row, index) => (
-                  <TableRow key={row?.product_guid}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ width: "5%" }}
-                      align="center"
-                    >
-                      {index + 1}
+        <div className="modalProduction__data">
+          <div className="invoices">
+            {listProductionInvoice?.map((item) => (
+              <div
+                className="invoices__every"
+                onClick={() => clickInvoice(item)}
+              >
+                <div className="checkboxTable">
+                  <input
+                    type="checkbox"
+                    name="check"
+                    checked={item?.invoice_guid == activeInvoice?.invoice_guid}
+                  />
+                </div>
+                <div>
+                  <h6>Дата создания: {item?.date_from}</h6>
+                  <p>{item?.comment}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="prods">
+            <TableContainer
+              component={Paper}
+              sx={{ maxHeight: "100%" }}
+              className="scroll_table standartTable"
+            >
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" style={{ width: "5%" }}>
+                      №
                     </TableCell>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ width: "53%" }}
-                    >
-                      {row?.product_name}
+                    <TableCell style={{ width: "53%" }}>Продукт</TableCell>
+                    <TableCell align="left" style={{ width: "10%" }}>
+                      Цена
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
-                      {row?.price} сом
-                    </TableCell>
-
-                    <TableCell align="left" style={{ width: "10%" }}>
-                      {row?.countOld}
+                      Количество
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
-                      <div className="countsBlock">
-                        <input
-                          type="text"
-                          onChange={(e) => onChangeCount(e, row)}
-                          value={row?.count}
-                          maxLength={10}
-                          className="counts"
-                          // readOnly={!checkInvoice}
-                        />
-                        <div>
-                          {row?.count != row?.countOld && (
-                            <Tooltip
-                              title={"Кол-во не сходится"}
-                              placement="right-start"
-                            >
-                              <ErrorOutlineIcon
-                                sx={{ color: "rgba(228, 30, 30, 0.719)" }}
-                              />
-                            </Tooltip>
-                          )}
-                        </div>
-                      </div>
+                      Разница
                     </TableCell>
                     <TableCell align="left" style={{ width: "12%" }}>
-                      {formatDateOnly(row?.date)}
+                      Дата начала изготовления
                     </TableCell>
                   </TableRow>
-                ))}
-                <TableRow>
+                </TableHead>
+                <TableBody>
+                  {listProduction?.map((row, index) => (
+                    <TableRow key={row?.product_guid}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{ width: "5%" }}
+                        align="center"
+                      >
+                        {index + 1}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{ width: "53%" }}
+                      >
+                        {row?.product_name}
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "10%" }}>
+                        {row?.price} сом
+                      </TableCell>
+
+                      <TableCell align="left" style={{ width: "10%" }}>
+                        {row?.countOld}
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "10%" }}>
+                        <div className="countsBlock">
+                          <input
+                            type="text"
+                            onChange={(e) => onChangeCount(e, row)}
+                            value={row?.count}
+                            maxLength={10}
+                            className="counts"
+                            // readOnly={!checkInvoice}
+                          />
+                          <div>
+                            {row?.count != row?.countOld && (
+                              <Tooltip
+                                title={"Кол-во не сходится"}
+                                placement="right-start"
+                              >
+                                <ErrorOutlineIcon
+                                  sx={{ color: "rgba(228, 30, 30, 0.719)" }}
+                                />
+                              </Tooltip>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "12%" }}>
+                        {activeInvoice?.date_from}
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "12%" }}>
+                        {formatDateOnly(row?.date)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {/* <TableRow>
                   <TableCell colSpan={2} align="left" className="footerTable">
                     Итого
                   </TableCell>
@@ -236,10 +279,11 @@ const ModalProduction = () => {
                   >
                     {sumCountsFN(listProduction, "count")} шт (кг)
                   </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableRow> */}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
         </div>
       </div>
     </Dialog>
