@@ -2,15 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { myAlert } from "../../helpers/MyAlert";
 import axiosInstance from "../../axiosInstance";
-import { getListOrders, setInvoiceInfo } from "./mainSlice";
+import { getListOrders } from "./mainSlice";
 import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
+import { transformActionDate } from "../../helpers/transformDate";
 
 const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   listProduction: [], /// список товаров в производстве
+  listHistoryProduction: [], /// список историй товаров в производстве
   listProductionInvoice: [], /// список накладных в производстве
-  activeDate: "2024-09-14",
+  activeDate: transformActionDate(new Date()),
 };
 
 ////// getListProdProduction - get список товаров производства
@@ -47,7 +49,6 @@ export const sendInWareHomeFN = createAsyncThunk(
         myAlert("Список товаров отправлен на склад");
         const obj = { date_from: "", date_to: "", setActiveInvoice };
         dispatch(getListProdProduction(obj));
-        console.log("asdasd");
         //// для обновление списка товаров произ-ва
 
         const agents_guid = searchActiveOrdersTA(listTA);
@@ -63,57 +64,6 @@ export const sendInWareHomeFN = createAsyncThunk(
     }
   }
 );
-
-////// getListWorkShop - get список цехов
-// export const getListWorkShop = createAsyncThunk(
-//   "getListWorkShop",
-//   async function (props, { dispatch, rejectWithValue }) {
-//     const url = `${REACT_APP_API_URL}/ta/get_workshop`;
-//     try {
-//       const response = await axios(url);
-//       if (response.status >= 200 && response.status < 300) {
-//         const obj = response?.data?.[0];
-//         dispatch(getListCategs(obj)); /// для получение категорий
-
-//         const objSort = { value: obj?.guid, label: obj.name };
-//         dispatch(setActiveWorkShop({ ...obj, ...objSort }));
-//         ///// подставляю активныый селект в state
-//         return response?.data;
-//       } else {
-//         throw Error(`Error: ${response.status}`);
-//       }
-//     } catch (error) {
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
-
-// ////// getListCategs - get список категорий
-// export const getListCategs = createAsyncThunk(
-//   "getListCategs",
-//   async function ({ guid }, { dispatch, rejectWithValue }) {
-//     const url = `${REACT_APP_API_URL}/ta/get_category?workshop_guid=${guid}`;
-//     try {
-//       const response = await axiosInstance(url);
-//       if (response.status >= 200 && response.status < 300) {
-//         const obj = response?.data?.[0];
-//         dispatch(getListProds({ guid, guidCateg: obj?.category_guid }));
-//         /// для получение товаров
-//         const objSort = {
-//           value: obj?.category_guid,
-//           label: obj?.category_name,
-//         };
-//         dispatch(setActiveCategs({ ...obj, ...objSort }));
-//         ///// подставляю активный селект в state
-//         return response?.data;
-//       } else {
-//         throw Error(`Error: ${response.status}`);
-//       }
-//     } catch (error) {
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
 
 const productionSlice = createSlice({
   name: "productionSlice",
@@ -133,6 +83,10 @@ const productionSlice = createSlice({
       state.listProduction = state.listProduction?.map((i) =>
         i?.product_guid === product_guid ? { ...i, count } : i
       );
+    },
+
+    setActiveDate: (state, action) => {
+      state.activeDate = action.payload;
     },
   },
 
@@ -159,6 +113,7 @@ export const {
   setListProductionInvoice,
   setListProduction,
   changeCountProduction,
+  setActiveDate,
 } = productionSlice.actions;
 
 export default productionSlice.reducer;

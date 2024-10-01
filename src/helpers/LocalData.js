@@ -2,6 +2,10 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import SendIcon from "@mui/icons-material/SendToMobile";
 import PaymentsIcon from "@mui/icons-material/Payments";
 
+import HistoryIcon from "@mui/icons-material/History";
+import ChecklistIcon from "@mui/icons-material/Checklist";
+import AddHomeWorkIcon from "@mui/icons-material/AddHomeWork";
+
 let eventGuid = 0;
 let todayStr = new Date().toISOString().replace(/T.*$/, ""); // YYYY-MM-DD of today
 
@@ -297,3 +301,36 @@ export const listHistory = [
     seller_photo: "",
   },
 ];
+
+export const menuProduction = [
+  {
+    id: 1,
+    name: "Производство",
+    icons: <ChecklistIcon sx={{ color: "#fff" }} />,
+  },
+  {
+    id: 2,
+    name: "Реестр производства",
+    icons: <HistoryIcon sx={{ color: "#fff" }} />,
+  },
+];
+
+export const menuSGP = [
+  //// склад готовой прожукции
+  {
+    id: 1,
+    name: "Cклад",
+    icons: <AddHomeWorkIcon sx={{ color: "#fff", width: 18 }} />,
+  },
+  {
+    id: 2,
+    name: "Реестр накладных",
+    icons: <HistoryIcon sx={{ color: "#fff", width: 18 }} />,
+  },
+];
+
+export const objStatusInvoice = {
+  0: { text: "В ожидании", color: "red" },
+  1: { text: "Подтверждён админом", color: "#299b31" },
+  2: { text: "Подтверждён ТА", color: "#299b31" },
+};

@@ -12,8 +12,8 @@ import ModalOrderCRUD from "../../components/MainPage/Modals/ModalOrderCRUD/Moda
 import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
 import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/ModaIngridients";
 import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
-import ModalProduction from "../../components/MainPage/Modals/ModalProduction/ModalProduction";
-import ModalWareHome from "../../components/MainPage/Modals/ModalWareHome/ModalWareHome";
+import ModalProduction from "../../Modals/MainPage/ModalProduction/ModalProduction";
+import ModalWareHome from "../../Modals/MainPage/ModalWareHome/ModalWareHome";
 import GraphicsEveryTA from "../../components/MainPage/Modals/GraphicsEveryTA/GraphicsEveryTA";
 import ViewRouter from "../../Modals/ViewRouter/ViewRouter";
 

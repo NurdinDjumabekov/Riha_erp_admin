@@ -8,15 +8,15 @@ import Dialog from "@mui/material/Dialog";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-import ListsWareHome from "../../WareHome/ListsWareHome";
-import ListsSendTA from "../../WareHome/ListsSendTA";
+import ListsWareHome from "../../../components/MainPage/WareHome/ListsWareHome";
+import ListsSendTA from "../../../components/MainPage/WareHome/ListsSendTA";
 import Select from "react-select";
+import HistoryInvoice from "./HistoryInvoice/HistoryInvoice";
 
 ////// fns
-import { setInvoiceInfo } from "../../../../store/reducers/mainSlice";
+import { setInvoiceInfo } from "../../../store/reducers/mainSlice";
 import {
   addProdInInvoiceTA,
   clearAllWareHome,
@@ -26,21 +26,22 @@ import {
   getListCategsWH,
   getListProdsWH,
   getListWorkShopWH,
-} from "../../../../store/reducers/wareHouseSlice";
+} from "../../../store/reducers/wareHouseSlice";
 
-import { setActiveWorkShop } from "../../../../store/reducers/selectsSlice";
-import { setActiveTA } from "../../../../store/reducers/selectsSlice";
-import { setActiveCategs } from "../../../../store/reducers/selectsSlice";
+import { setActiveWorkShop } from "../../../store/reducers/selectsSlice";
+import { setActiveTA } from "../../../store/reducers/selectsSlice";
+import { setActiveCategs } from "../../../store/reducers/selectsSlice";
 
 ////// helpers
 import {
   chechEmptyCount,
   checkBoolFN,
   emptyCountCheck,
-} from "../../../../helpers/validations";
-import { myAlert } from "../../../../helpers/MyAlert";
-import { transformListsWH } from "../../../../helpers/transformLists";
-import { transformLists } from "../../../../helpers/transformLists";
+} from "../../../helpers/validations";
+import { myAlert } from "../../../helpers/MyAlert";
+import { transformListsWH } from "../../../helpers/transformLists";
+import { transformLists } from "../../../helpers/transformLists";
+import { menuSGP } from "../../../helpers/LocalData";
 
 ////// style
 import "./style.scss";
@@ -48,6 +49,7 @@ import "./style.scss";
 ////// icons
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -55,6 +57,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ModalWareHome = () => {
   const dispatch = useDispatch();
+
+  const [active, setActive] = useState(1);
 
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
   const { activeWorkShop } = useSelector((state) => state.selectsSlice);
@@ -159,8 +163,15 @@ const ModalWareHome = () => {
       user_type: 2, // 1 agent 2 admin
       user_type1: 2, // 1 agent 2 admin
     };
+
     dispatch(sendInvoiceTAsale({ data }));
     ///// добавление и редактирование товаров в заявке
+  };
+
+  const clickPdf = () => {
+    const url =
+      "https://riha-production.333.kg/files/invoice/Otpusk-nakladnaya-5-2024-10-01(18:21:33).pdf";
+    window.open(url, "_blank");
   };
 
   useEffect(() => {
@@ -182,13 +193,25 @@ const ModalWareHome = () => {
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <div className="modalwareHome">
+      <div
+        className={`modalwareHome ${
+          active === 1 ? "" : "modalwareHomeHistory"
+        }`}
+      >
         <div className="modalwareHome__inner">
           <AppBar sx={{ position: "relative" }}>
             <Toolbar>
-              <Typography sx={{ flex: 1 }} variant="h6" component="div">
-                Склад готовой продукции
-              </Typography>
+              <div className="menu">
+                {menuSGP?.map((i) => (
+                  <button
+                    className={i?.id == active ? "active" : ""}
+                    onClick={() => setActive(i.id)}
+                  >
+                    {i?.icons}
+                    <p>{i?.name}</p>
+                  </button>
+                ))}
+              </div>
               <span>
                 <IconButton
                   edge="start"
@@ -203,62 +226,73 @@ const ModalWareHome = () => {
           </AppBar>
         </div>
 
-        <div className="modalwareHome__sortDate">
-          <div className="sortActions">
-            <div className="sortActions__inner">
-              <div className="myInputs">
-                <h6>Цех</h6>
-                <Select
-                  options={workShop}
-                  className="select"
-                  onChange={onChangeWS}
-                  value={activeWorkShop}
-                />
+        {active === 1 && (
+          <div className="modalwareHome__sortDate">
+            <div className="sortActions">
+              <div className="sortActions__inner">
+                <div className="myInputs">
+                  <h6>Торговые Агенты</h6>
+                  <Select
+                    options={sortListTA}
+                    className="select"
+                    onChange={onChangeAgents}
+                    value={activeTA}
+                  />
+                </div>
+                <div className="myInputs">
+                  <h6>Цех</h6>
+                  <Select
+                    options={workShop}
+                    className="select"
+                    onChange={onChangeWS}
+                    value={activeWorkShop}
+                  />
+                </div>
+                <div className="myInputs">
+                  <h6>Категории</h6>
+                  <Select
+                    options={categs}
+                    className="select"
+                    onChange={onChangeCateg}
+                    value={activeCategs}
+                  />
+                </div>
               </div>
-              <div className="myInputs">
-                <h6>Категории</h6>
-                <Select
-                  options={categs}
-                  className="select"
-                  onChange={onChangeCateg}
-                  value={activeCategs}
-                />
-              </div>
+              <button
+                className="saveAction"
+                onClick={actionsProdInInvoice}
+                // disabled={!checkInvoice}
+              >
+                <LibraryAddIcon sx={{ width: 16, height: 16 }} />
+                <p>Добавить</p>
+              </button>
             </div>
-            <button
-              className="saveAction"
-              onClick={actionsProdInInvoice}
-              // disabled={!checkInvoice}
-            >
-              <LibraryAddIcon sx={{ width: 16, height: 16 }} />
-              <p>Добавить товар в накладную</p>
-            </button>
-          </div>
-          <div className="sendActions">
-            <div className="myInputs">
-              <h6>Торговые Агенты</h6>
-              <Select
-                options={sortListTA}
-                className="select"
-                onChange={onChangeAgents}
-                value={activeTA}
-              />
-            </div>
-            <button
-              className="saveAction"
-              onClick={sendInvoiceTA}
-              // disabled={!checkInvoice}
-            >
-              <NoteAddIcon sx={{ width: 16, height: 16 }} />
-              <p>Отпустить товар </p>
-            </button>
-          </div>
-        </div>
+            <div className="sendActions">
+              <button className="saveAction generatePdf" onClick={clickPdf}>
+                <FileCopyIcon sx={{ width: 16, height: 16 }} />
+                <p>Сгенерировать документ</p>
+              </button>
 
-        <div className="modalwareHome__invoice">
-          <ListsWareHome />
-          <ListsSendTA />
-        </div>
+              <button
+                className="saveAction"
+                onClick={sendInvoiceTA}
+                // disabled={!checkInvoice}
+              >
+                <NoteAddIcon sx={{ width: 16, height: 16 }} />
+                <p>Отпустить товар </p>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {active === 1 ? (
+          <div className="modalwareHome__invoice">
+            <ListsWareHome />
+            <ListsSendTA />
+          </div>
+        ) : (
+          <HistoryInvoice />
+        )}
       </div>
     </Dialog>
   );

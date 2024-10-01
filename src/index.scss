@@ -92,6 +92,35 @@ button {
   }
 }
 
+.scroll_table_hover {
+  &:hover {
+    &::-webkit-scrollbar {
+      min-width: 7px;
+      max-width: 7px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+      min-width: 8px;
+      max-width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      cursor: pointer;
+      max-height: 135px;
+      min-height: 135px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: #fffefe;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #c1c1c19b;
+    }
+  }
+}
+
 .standartTable {
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.144) !important;
   border-radius: 0px 0px 5px 5px !important;
@@ -136,7 +165,7 @@ button {
           }
 
           .counts {
-            width: 100px;
+            width: 60px;
             background: #fff;
             border-radius: 3px;
             border: 1px solid #cbcbcb;
@@ -243,6 +272,18 @@ button {
 
 .emptyData {
   height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    text-align: center;
+    font-size: 22px;
+  }
+}
+
+.emptyDataInner {
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

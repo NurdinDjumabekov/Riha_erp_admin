@@ -82,7 +82,7 @@ const ListProdsSI = () => {
                   {row?.price} сом
                 </TableCell>
                 <TableCell align="left" style={{ width: "15%" }}>
-                  {row?.amount} {row?.unit}
+                  {row?.amount} кг
                 </TableCell>
                 <TableCell align="left" style={{ width: "10%" }}>
                   <input

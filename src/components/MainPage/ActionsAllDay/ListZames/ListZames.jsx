@@ -29,45 +29,6 @@ const ListZames = () => {
       mixTime: "25 минут",
       restTime: "24 часа",
     },
-    {
-      name: "Производство копченой колбасы",
-      ingredients: [
-        { name: "Свинина", quantity: "800 г" },
-        { name: "Говядина", quantity: "400 г" },
-        { name: "Сало", quantity: "200 г" },
-        { name: "Чеснок", quantity: "4 зубчика" },
-        { name: "Соль", quantity: "25 г" },
-        { name: "Перец черный молотый", quantity: "7 г" },
-      ],
-      mixTime: "25 минут",
-      restTime: "24 часа",
-    },
-    {
-      name: "Производство копченой колбасы",
-      ingredients: [
-        { name: "Свинина", quantity: "800 г" },
-        { name: "Говядина", quantity: "400 г" },
-        { name: "Сало", quantity: "200 г" },
-        { name: "Чеснок", quantity: "4 зубчика" },
-        { name: "Соль", quantity: "25 г" },
-        { name: "Перец черный молотый", quantity: "7 г" },
-      ],
-      mixTime: "25 минут",
-      restTime: "24 часа",
-    },
-    {
-      name: "Производство копченой колбасы",
-      ingredients: [
-        { name: "Свинина", quantity: "800 г" },
-        { name: "Говядина", quantity: "400 г" },
-        { name: "Сало", quantity: "200 г" },
-        { name: "Чеснок", quantity: "4 зубчика" },
-        { name: "Соль", quantity: "25 г" },
-        { name: "Перец черный молотый", quantity: "7 г" },
-      ],
-      mixTime: "25 минут",
-      restTime: "24 часа",
-    },
   ];
 
   return (

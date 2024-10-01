@@ -8,7 +8,6 @@ import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 ////// helpers
-import { validNums } from "../../../helpers/validations";
 import { sumCountsFN, totalSum } from "../../../helpers/totals";
 
 ////// icons
@@ -16,7 +15,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 /////// fns
 import { editProdInInvoiceTA } from "../../../store/reducers/wareHouseSlice";
-import { changeCountListInvoiceTA } from "../../../store/reducers/wareHouseSlice";
 
 const ListsSendTA = () => {
   const dispatch = useDispatch();
@@ -25,23 +23,11 @@ const ListsSendTA = () => {
   const { activeWorkShop } = useSelector((state) => state.selectsSlice);
   const { activeCategs, activeTA } = useSelector((state) => state.selectsSlice);
 
-  const onChangeCount = (e, { product_guid }) => {
-    const count = e?.target?.value?.replace(",", ".");
-
-    if (validNums(count)) {
-      //// валидцаия на числа
-      return;
-    }
-    /////изменение ключа count в списке товаров производства
-
-    dispatch(changeCountListInvoiceTA({ product_guid, count }));
-  };
-
   const delProd = ({ product_guid, invoice_guid, price, count }) => {
     const products = [{ product_guid, count, workshop_price: price }];
-    const data = { invoice_guid, comment: "", status: -1, products };
+    const data = { comment: "", status: -1, products, invoice_guid };
     const obj = { ...activeCategs, ...activeWorkShop };
-    dispatch(editProdInInvoiceTA({ data, activeTA, ...obj }));
+    dispatch(editProdInInvoiceTA({ activeTA, ...obj, data }));
     /// удаление твоара с накладной ТА через запрос (status: -1)
   };
 
@@ -59,11 +45,11 @@ const ListsSendTA = () => {
                 <TableCell align="center" style={{ width: "5%" }}>
                   №
                 </TableCell>
-                <TableCell style={{ width: "60%" }}>Продукт</TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
+                <TableCell style={{ width: "50%" }}>Продукт</TableCell>
+                <TableCell align="left" style={{ width: "20%" }}>
                   Цена
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
+                <TableCell align="left" style={{ width: "15%" }}>
                   Кол-во
                 </TableCell>
                 <TableCell
@@ -89,24 +75,15 @@ const ListsSendTA = () => {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ width: "60%" }}
+                    style={{ width: "50%" }}
                   >
                     {row?.product_name}
                   </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
+                  <TableCell align="left" style={{ width: "20%" }}>
                     {row?.price} сом
                   </TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    {row?.count}
-                    {/* <input
-                      type="text"
-                      onChange={(e) => onChangeCount(e, row)}
-                      name="counts"
-                      value={row?.count}
-                      maxLength={10}
-                      className="counts"
-                      // readOnly={!checkInvoice}
-                    /> */}
+                  <TableCell align="left" style={{ width: "15%" }}>
+                    {row?.count} кг
                   </TableCell>
                   <TableCell align="center" style={{ width: "10%" }}>
                     <Tooltip
@@ -143,7 +120,7 @@ const ListsSendTA = () => {
                   align="left"
                   style={{ fontWeight: "bold" }}
                 >
-                  {sumCountsFN(listWHProdTA, "count")} шт
+                  {sumCountsFN(listWHProdTA, "count")} кг
                 </TableCell>
               </TableRow>
             </TableBody>

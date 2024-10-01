@@ -19,8 +19,8 @@ const ListIngredients = ({ list }) => {
             <TableCell style={{ width: "3%" }} align="center">
               №
             </TableCell>
-            <TableCell style={{ width: "72%" }}>Продукт</TableCell>
-            <TableCell align="left" style={{ width: "10%" }}>
+            <TableCell style={{ width: "67%" }}>Продукт</TableCell>
+            <TableCell align="left" style={{ width: "15%" }}>
               Кол-во/вес
             </TableCell>
             <TableCell align="left" style={{ width: "15%" }}>
@@ -39,10 +39,10 @@ const ListIngredients = ({ list }) => {
               >
                 {index + 1}
               </TableCell>
-              <TableCell component="th" scope="row" style={{ width: "72%" }}>
+              <TableCell component="th" scope="row" style={{ width: "67%" }}>
                 {row?.name}
               </TableCell>
-              <TableCell align="left" style={{ width: "10%" }}>
+              <TableCell align="left" style={{ width: "15%" }}>
                 {row?.amount}
               </TableCell>
               <TableCell align="left" style={{ width: "15%" }}>
@@ -50,7 +50,7 @@ const ListIngredients = ({ list }) => {
               </TableCell>
             </TableRow>
           ))}
-          <TableRow>
+          {/* <TableRow>
             <TableCell colSpan={2} align="left" className="footerTable">
               Итого
             </TableCell>
@@ -58,10 +58,10 @@ const ListIngredients = ({ list }) => {
               {sumCountsFN(list, "amount")} сом
             </TableCell>
             <TableCell colSpan={2} align="left" style={{ fontWeight: "bold" }}>
-              {/* {sumCountsFN(list, "count")} {row?.unit_name} */}
+              {sumCountsFN(list, "count")} {row?.unit_name}
               100 шт
             </TableCell>
-          </TableRow>
+          </TableRow> */}
         </TableBody>
       </Table>
     </TableContainer>

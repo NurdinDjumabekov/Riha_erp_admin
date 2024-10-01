@@ -194,7 +194,7 @@ const AddProdInDay = () => {
                 Цена
               </TableCell>
               <TableCell align="left" style={{ width: "20%" }}>
-                Кол-во
+                Кол-во (кг)
               </TableCell>
             </TableRow>
           </TableHead>

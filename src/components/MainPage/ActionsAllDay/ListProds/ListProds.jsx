@@ -7,6 +7,8 @@ import { TableRow, Paper } from "@mui/material";
 import { sumCountsFN, totalSum } from "../../../../helpers/totals";
 
 const ListProds = ({ list }) => {
+  console.log(list, "list");
+
   return (
     <TableContainer
       component={Paper}
@@ -46,7 +48,7 @@ const ListProds = ({ list }) => {
                 {row?.total_price} сом
               </TableCell>
               <TableCell align="left" style={{ width: "23%" }}>
-                {row?.total_count}
+                {row?.total_count} кг
               </TableCell>
             </TableRow>
           ))}
@@ -58,7 +60,7 @@ const ListProds = ({ list }) => {
               {totalSum(list, "total_count", "total_price")} сом
             </TableCell>
             <TableCell colSpan={2} align="left" style={{ fontWeight: "bold" }}>
-              {sumCountsFN(list, "total_count")} шт
+              {/* {sumCountsFN(list, "total_count")} шт */}
             </TableCell>
           </TableRow>
         </TableBody>

@@ -66,17 +66,23 @@ const ListsWareHome = () => {
                 <TableCell align="center" style={{ width: "5%" }}>
                   №
                 </TableCell>
-                <TableCell style={{ width: "55%" }}>Продукт</TableCell>
-                <TableCell align="left" style={{ width: "12%" }}>
+                <TableCell style={{ width: "35%" }}>Продукт</TableCell>
+                <TableCell align="left" style={{ width: "15%" }}>
                   Цена
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
-                  Кол-во
+                <TableCell align="left" style={{ width: "15%" }}>
+                  Кол-во в заявках
                 </TableCell>
+                <TableCell align="left" style={{ width: "10%" }}>
+                  Выпущено
+                </TableCell>
+                {/* <TableCell align="left" style={{ width: "10%" }}>
+                  Резервный товар
+                </TableCell> */}
                 <TableCell align="left" style={{ width: "10%" }}>
                   *
                 </TableCell>
-                <TableCell align="left" style={{ width: "8%" }}>
+                <TableCell align="left" style={{ width: "5%" }}>
                   *
                 </TableCell>
               </TableRow>
@@ -95,16 +101,25 @@ const ListsWareHome = () => {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ width: "55%" }}
+                    style={{ width: "35%" }}
                   >
                     {row?.product_name}
                   </TableCell>
-                  <TableCell align="left" style={{ width: "12%" }}>
+                  <TableCell align="left" style={{ width: "15%" }}>
                     {row?.price} сом
                   </TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    {row?.countOld}
+                  <TableCell align="left" style={{ width: "15%" }}>
+                    {row?.made} кг
                   </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{ width: "10%", color: "#299b31" }}
+                  >
+                    {row?.amount} кг
+                  </TableCell>
+                  {/* <TableCell align="left" style={{ width: "10%" }}>
+                    {row?.available} {row?.unit}
+                  </TableCell> */}
                   <TableCell align="left" style={{ width: "10%" }}>
                     <div className="countsBlock">
                       <input
@@ -117,7 +132,7 @@ const ListsWareHome = () => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
+                  <TableCell align="left" style={{ width: "5%" }}>
                     <div className="checkboxTable">
                       <input
                         type="checkbox"
@@ -138,12 +153,13 @@ const ListsWareHome = () => {
                 <TableCell align="left" className="footerTable">
                   {totalSum(allProdsWH, "count", "price")} сом
                 </TableCell>
+                <TableCell colSpan={1} align="left"></TableCell>
                 <TableCell
                   colSpan={3}
                   align="left"
                   style={{ fontWeight: "bold" }}
                 >
-                  {sumCountsFN(allProdsWH, "count")} шт (кг)
+                  {sumCountsFN(allProdsWH, "count")} кг
                 </TableCell>
               </TableRow>
             </TableBody>

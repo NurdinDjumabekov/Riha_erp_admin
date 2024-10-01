@@ -9,6 +9,44 @@
     left: 0;
     top: 0;
     width: 100%;
+
+    .menu {
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+
+      button {
+        align-items: center;
+        background: #0000;
+        border: 1px solid #d5d2d2;
+        border-radius: 5px;
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        padding: 4px 10px;
+
+        p {
+          color: #fff;
+          font-size: 13px;
+          font-weight: 500;
+        }
+      }
+
+      .active {
+        background: #fff;
+
+        p {
+          color: #1976d2;
+        }
+
+        svg {
+          color: #1976d2;
+        }
+      }
+    }
   }
 
   &__sortDate {
@@ -23,17 +61,18 @@
     z-index: 10;
 
     .sortActions {
-      width: 50%;
+      width: 60%;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
       padding: 0 5px 0 0;
+      gap: 20px;
 
       &__inner {
         display: flex;
         align-items: flex-end;
         gap: 10px;
-        width: 50%;
+        width: 100%;
 
         .myInputs {
           width: 50% !important;
@@ -42,7 +81,7 @@
     }
 
     .sendActions {
-      width: 50%;
+      width: 40%;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -121,6 +160,10 @@
         font-weight: 500;
       }
     }
+
+    .generatePdf {
+      background: #1976d2;
+    }
   }
 
   &__invoice {
@@ -128,8 +171,20 @@
     display: flex;
     gap: 10px;
 
-    > div {
-      width: 50%;
+    // > div {
+    //   width: 50%;
+    // }
+
+    > div:nth-child(1) {
+      width: 60%;
+    }
+
+    > div:nth-child(2) {
+      width: 40%;
     }
   }
+}
+
+.modalwareHomeHistory {
+  padding: 75px 20px 10px;
 }

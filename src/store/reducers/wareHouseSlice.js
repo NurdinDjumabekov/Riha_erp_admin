@@ -14,6 +14,7 @@ const initialState = {
   listWHProdTA: [],
   listTA: [],
   invoiceGuid: "", /// guid накладной отпуска для ТА
+  listHistoryInvoice: [],
 };
 
 //// getListWorkShopWH - get список цехов
@@ -232,6 +233,25 @@ export const sendInvoiceTAsale = createAsyncThunk(
   }
 );
 
+////// getHistoryInvoice - get историю отпущенный накладных
+export const getHistoryInvoice = createAsyncThunk(
+  "getHistoryInvoice",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { activeDate, agent_guid } = props;
+    const url = `${REACT_APP_API_URL}/ta/get_invoices?reciever_type=1&date=${activeDate}&reciever_guid=${agent_guid}`;
+    try {
+      const response = await axiosInstance(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const wareHouseSlice = createSlice({
   name: "wareHouseSlice",
   initialState,
@@ -337,6 +357,19 @@ const wareHouseSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getPastProdsTa.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///////////////// getHistoryInvoice
+    builder.addCase(getHistoryInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listHistoryInvoice = action.payload;
+    });
+    builder.addCase(getHistoryInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getHistoryInvoice.pending, (state, action) => {
       state.preloader = true;
     });
   },

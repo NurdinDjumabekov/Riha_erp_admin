@@ -133,7 +133,7 @@ const EveryInvoiceModal = () => {
                       {row?.price} сом
                     </TableCell>
                     <TableCell align="left" style={{ width: "20%" }}>
-                      {row?.count} {row?.unit}
+                      {row?.count} кг
                     </TableCell>
                   </TableRow>
                 ))}
