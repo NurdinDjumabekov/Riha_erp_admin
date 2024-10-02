@@ -1,6 +1,7 @@
 /////// hooks
 import { useDispatch, useSelector } from "react-redux";
 import React, { useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 ////// components
 import FullCalendar from "@fullcalendar/react";
@@ -38,9 +39,11 @@ import UserIcon from "@mui/icons-material/AccountCircle";
 
 /////// style
 import "./style.scss";
+import ModalPayTA from "../../Modals/MainPage/ModalPayTA/ModalPayTA";
 
 const MainPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const calendarRef = useRef(null);
 
@@ -152,32 +155,25 @@ const MainPage = () => {
     dispatch(editInvoice({ data, agents_guid, activeDate })); // Редактирование заявок
   };
 
-  const openGraphicsWorkPlan = () => {
-    dispatch(getWorkPlanEveryTA({ guid }));
-    dispatch(
-      setListWorkPlan([
-        { name: "Осталось выполнить", value: 80 },
-        { name: "Выполнено", value: 20 },
-      ])
-    ); //// check
-    ///// для отправки запроса и получения графика плана работы каждого ТА
-    ///// так же открываю модалку
-  };
-
   const objType = { 2: <MenuLeft /> }; //// только для админа
-
-  return (
-    <div className="mainCalendare">
-      <div className="plan">
+  const objMenu = {
+    1: (
+      <div className="plan__header">
         <div className="userInfo">
           <UserIcon sx={{ color: "#2c3e50" }} />
           <h1>{fio}</h1>
         </div>
-        <button onClick={openGraphicsWorkPlan}>
+        {/* <button onClick={() => navigate("/settings")}>
           <ChecklistIcon sx={{ color: "#2c3e50" }} />
           <p>План</p>
-        </button>
+        </button> */}
       </div>
+    ),
+  }; //// только для агента
+
+  return (
+    <div className="mainCalendare">
+      {objMenu?.[user_type]}
       <div className="mainPage">
         {objType?.[user_type]}
         <div className="mainPage__inner">
@@ -235,11 +231,11 @@ const MainPage = () => {
           </div> */}
         </div>
       </div>
-      <GraphicsEveryTA />
       <ModalOrderCRUD />
       <ModaIngridients />
       <ModalProduction />
       <ModalWareHome />
+      <ModalPayTA />
       <ViewRouter />
     </div>
   );

@@ -38,6 +38,7 @@ import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import PaymentsIcon from "@mui/icons-material/Payments";
 
 export const objStatusOrders = {
   0: {
@@ -134,6 +135,12 @@ export const listMenu = [
     id: 6,
     title: "Маршруты ТА",
     icon: <TaxiAlertIcon sx={{ color: "#fff" }} />,
+    link: "/all_agents",
+  },
+  {
+    id: 7,
+    title: "Долги и оплаты ТА",
+    icon: <PaymentsIcon sx={{ color: "#fff" }} />,
     link: "/all_agents",
   },
   {

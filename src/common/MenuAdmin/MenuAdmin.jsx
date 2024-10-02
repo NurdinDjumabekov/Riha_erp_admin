@@ -1,7 +1,7 @@
 ///// hooks
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 ////// style
 import "./style.scss";
@@ -18,7 +18,6 @@ import { setInvoiceInfo } from "../../store/reducers/mainSlice";
 
 const MenuAdmin = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
 
   const [active, setActive] = useState("/");

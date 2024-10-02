@@ -12,6 +12,7 @@ import SettingsIcon from "@mui/icons-material/ManageAccounts";
 import Calendare from "@mui/icons-material/EventNote";
 import MapIcon from "@mui/icons-material/Room";
 import PayIcon from "@mui/icons-material/PlaylistAddCheckCircle";
+import PaymentsIcon from "@mui/icons-material/Payments";
 
 const MenuAgents = () => {
   const location = useLocation();
@@ -23,7 +24,12 @@ const MenuAgents = () => {
     // { id: 2, text: "Камера", icons: <CameraIcon />, link: "/camera" },
     { id: 3, text: "Маршруты", icons: <MapIcon />, link: "/maps" },
     // { id: 5, text: "Отпуск ТТ", icons: <PayIcon />, link: "/send_app" },
-    { id: 6, text: "Настройки", icons: <SettingsIcon />, link: "/settings" },
+    {
+      id: 6,
+      text: "Оплаты",
+      icons: <PaymentsIcon />,
+      link: "/settings",
+    },
   ];
 
   useEffect(() => {

@@ -7,66 +7,6 @@
     padding: 3px;
   }
 
-  .plan {
-    min-width: 100%;
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    z-index: 99;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 1px 3px 0 rgba(38, 38, 38, 0.5);
-    padding: 5px 5px;
-
-    .userInfo {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-
-      h1 {
-        font-size: 12px;
-        font-weight: 600;
-        border-radius: 5px;
-        color: #2c3e50;
-        max-height: 30px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 75%;
-      }
-
-      svg {
-        width: 35px;
-        height: 35px;
-      }
-    }
-
-    > button {
-      width: 90px;
-      height: 30px;
-      background: #fff;
-      display: flex;
-      box-shadow: 0 1px 3px 0 rgba(38, 38, 38, 0.5);
-      border-radius: 3px;
-      align-items: center;
-      justify-content: center;
-      padding: 0px 5px;
-      gap: 5px;
-
-      p {
-        font-size: 14px;
-        font-weight: 600;
-        border-radius: 5px;
-        color: #2c3e50;
-      }
-
-      > svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
-
   .mainPage {
     width: 100%;
     margin: 0 auto;
@@ -265,6 +205,67 @@
       //     }
       //   }
       // }
+    }
+  }
+}
+
+.plan__header {
+  min-width: 100%;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  z-index: 99;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px 0 rgba(38, 38, 38, 0.5);
+  padding: 5px 5px;
+  background: #f3f3f3;
+
+  .userInfo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    h1 {
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 5px;
+      color: #2c3e50;
+      max-height: 30px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 75%;
+    }
+
+    svg {
+      width: 35px;
+      height: 35px;
+    }
+  }
+
+  > button {
+    width: 90px;
+    height: 30px;
+    background: #fff;
+    display: flex;
+    box-shadow: 0 1px 3px 0 rgba(38, 38, 38, 0.5);
+    border-radius: 3px;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 5px;
+    gap: 5px;
+
+    p {
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 5px;
+      color: #2c3e50;
+    }
+
+    > svg {
+      width: 20px;
+      height: 20px;
     }
   }
 }

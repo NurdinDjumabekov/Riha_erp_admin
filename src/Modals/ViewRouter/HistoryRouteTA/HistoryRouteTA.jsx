@@ -12,10 +12,10 @@ import { getListTA } from "../../../store/reducers/mainSlice";
 import { setActiveTA } from "../../../store/reducers/selectsSlice";
 import { clearSelects } from "../../../store/reducers/selectsSlice";
 import { getListRoutes_TA } from "../../../store/reducers/mapSlice";
+import { setListPhotos } from "../../../store/reducers/photoSlice";
 
 ////// style
 import "./style.scss";
-import { setListPhotos } from "../../../store/reducers/photoSlice";
 
 const HistoryRouteTA = () => {
   const dispatch = useDispatch();
@@ -41,11 +41,9 @@ const HistoryRouteTA = () => {
   }, []);
 
   return (
-    <>
-      <div className="historyRouteTA">
-        <MapHistory />
-      </div>
-    </>
+    <div className="historyRouteTA">
+      <MapHistory />
+    </div>
   );
 };
 

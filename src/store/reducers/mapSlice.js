@@ -21,7 +21,7 @@ const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   mapGeo: { latitude: "", longitude: "" },
-  key: "4b360754-94b6-4399-9a7b-35811336eb5f",
+  key: "55b8e108-a5ba-4c19-867c-ca553419ddeb",
 
   //////////////////////////////////////// для админа
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)
@@ -527,9 +527,11 @@ const mapSlice = createSlice({
       const firstObj = action.payload?.list?.[0];
       const myData = {
         ...firstObj,
-        lat: user_type == 1 ? lat : firstObj?.lat, //// delete 42.8572672
-        lon: user_type == 1 ? lon : firstObj?.lon, //// delete 74.6258432
-        start_time: "28.09.2024",
+        lat:
+          user_type == 1 ? lat || "42.8572672" : firstObj?.lat || "42.8572672", //// delete 42.8572672
+        lon:
+          user_type == 1 ? lon || "74.6258432" : firstObj?.lon || "74.6258432", //// delete 74.6258432
+        start_time: "02.10.2024",
         ...pastGeoData,
       };
       state.everyRoutes_TA = [myData, ...list];

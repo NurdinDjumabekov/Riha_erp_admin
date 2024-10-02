@@ -11,10 +11,7 @@ import { TableRow, Paper } from "@mui/material";
 import ReactDatePicker from "react-datepicker";
 
 ////// fns
-import {
-  setActiveDate,
-  setListProduction,
-} from "../../../../store/reducers/productionSlice";
+import { setActiveDate } from "../../../../store/reducers/productionSlice";
 import { getListTA } from "../../../../store/reducers/mainSlice";
 import { getHistoryInvoice } from "../../../../store/reducers/wareHouseSlice";
 import user from "../../../../assets/images/iAm.jpg";
@@ -29,7 +26,7 @@ import FileIcon from "@mui/icons-material/Description";
 ////// helpers
 import { transformActionDate } from "../../../../helpers/transformDate";
 import { reverseTransformActionDate } from "../../../../helpers/transformDate";
-import { objStatusInvoice } from "../../../../helpers/LocalData";
+import { objStatusInvoice, styleTooltip } from "../../../../helpers/LocalData";
 
 const HistoryInvoice = () => {
   const dispatch = useDispatch();
@@ -51,6 +48,12 @@ const HistoryInvoice = () => {
     dispatch(getHistoryInvoice({ activeDate, agent_guid }));
   };
 
+  const clickPdf = () => {
+    const url =
+      "https://riha-production.333.kg/files/invoice/Otpusk-nakladnaya-5-2024-10-01(18:21:33).pdf";
+    window.open(url, "_blank");
+  };
+
   const getData = async () => {
     try {
       await dispatch(getListTA({ first: false })).unwrap();
@@ -66,17 +69,33 @@ const HistoryInvoice = () => {
 
   return (
     <div className="historyInvoice">
-      <div className="historyInvoice__agents scroll_table">
-        {listTA?.map((i) => (
-          <button
-            key={i?.guid}
-            onClick={() => clickAgent(i?.guid)}
-            className={active == i?.guid ? "active" : ""}
-          >
-            {/* <img src={i?.photo || user} alt="" /> */}
-            <p>{i?.fio}</p>
-          </button>
-        ))}
+      <div className="listAgentsInfo">
+        <h6>Торговые агенты</h6>
+        <div className="listAgentsInfo__inner">
+          {listTA?.map((i) => (
+            <button
+              key={i?.guid}
+              onClick={() => clickAgent(i?.guid)}
+              className={active == i?.guid ? "active" : ""}
+            >
+              <div className="logo">
+                <Tooltip
+                  title={
+                    <div style={{ borderRadius: "50%" }}>
+                      <img src={user} alt="user" style={styleTooltip} />
+                    </div>
+                  }
+                  placement="right"
+                  disableInteractive
+                >
+                  <img src={i?.photo || user} alt="" />
+                </Tooltip>
+              </div>
+
+              <p>{i?.fio}</p>
+            </button>
+          ))}
+        </div>
       </div>
       <div className="historyInvoice__data">
         <div className="historyInvoice__data__inner">
@@ -95,10 +114,10 @@ const HistoryInvoice = () => {
                   maxDate={new Date()}
                 />
               </div>
-              {/* <button onClick={() => {}} className="sendData generatePdf">
+              <button onClick={clickPdf} className="sendData generatePdf">
                 <FileCopyIcon sx={{ width: 16 }} />
                 <p>Сгенерировать документ</p>
-              </button> */}
+              </button>
             </div>
             <TableContainer
               component={Paper}

@@ -255,7 +255,7 @@ export const sendInvoiceForTT = createAsyncThunk(
 export const getMyInvoice = createAsyncThunk(
   "getMyInvoice",
   async function (guid, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_invoices?date=0&user_guid=${guid}`;
+    const url = `${REACT_APP_API_URL}/ta/get_invoices?date=0&reciever_guid=${guid}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
@@ -314,7 +314,7 @@ export const acceptInvoice = createAsyncThunk(
 export const historyAcceptInvoice = createAsyncThunk(
   "historyAcceptInvoice",
   async function ({ agent_guid }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_invoice_files?agent_guid=${agent_guid}`;
+    const url = `${REACT_APP_API_URL}/ta/get_invoice_files?reciever_guid=${agent_guid}`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {

@@ -334,3 +334,5 @@ export const objStatusInvoice = {
   1: { text: "Подтверждён админом", color: "#299b31" },
   2: { text: "Подтверждён ТА", color: "#299b31" },
 };
+
+export const styleTooltip = { width: 140, height: 140, borderRadius: "50%" };

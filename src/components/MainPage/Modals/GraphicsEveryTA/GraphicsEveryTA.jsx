@@ -3,13 +3,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
-import Dialog from "@mui/material/Dialog";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
-import Slide from "@mui/material/Slide";
+
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 ////// style
@@ -20,49 +14,21 @@ import { setListWorkPlan } from "../../../../store/reducers/mainSlice";
 
 ////// icons
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 const GraphicsEveryTA = () => {
   const dispatch = useDispatch();
 
   const { listWorkPlan } = useSelector((state) => state.mainSlice);
 
-  const handleClose = () => dispatch(setListWorkPlan([])); /// очищаю для закрытия модалки
-
-  const COLORS = ["#808080", "#43e843"];
+  const COLORS = ["rgb(216, 56, 56)", "#43e843"];
 
   // Функция для отображения процентов
   const renderLabel = ({ percent }) => `${(percent * 100).toFixed(0)}%`;
 
   return (
-    <Dialog
-      fullScreen
-      open={listWorkPlan?.length !== 0}
-      onClose={handleClose}
-      TransitionComponent={Transition}
-    >
-      <div className="graphicsEveryTA">
-        <div className="mainOrders__inner">
-          <AppBar sx={{ position: "relative" }}>
-            <Toolbar>
-              <Typography sx={{ flex: 1 }} variant="h6" component="div">
-                План работы
-              </Typography>
-              <IconButton
-                edge="start"
-                color="inherit"
-                onClick={handleClose}
-                aria-label="close"
-              >
-                <CloseIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-        </div>
+    <div className="graphicsEveryTA">
+      <div className="graphicsEveryTA__inner">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart width={360} height={360}>
+          <PieChart width={200} height={200}>
             <Pie
               data={listWorkPlan}
               cy={250} // Центрирование по горизонтали
@@ -94,13 +60,13 @@ const GraphicsEveryTA = () => {
               </p>
             </div>
           ))}
-          <div>
+          {/* <div>
             <div style={{ background: "#d91313" }}></div>
             <p style={{ color: "#d91313" }}>Общий план:</p>
-          </div>
+          </div> */}
         </div>
       </div>
-    </Dialog>
+    </div>
   );
 };
 

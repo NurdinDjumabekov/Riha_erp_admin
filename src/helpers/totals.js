@@ -8,6 +8,12 @@ export const sumCountsFN = (list, keyCount) => {
   return list?.reduce((prev, item) => +prev + +item?.[keyCount], 0);
 };
 
+export const sumByKey = (list, key) => {
+  return list?.reduce((total, item) => {
+    return +total + +item?.[key];
+  }, 0);
+}
+
 export const roundingNum = (count) => {
   ///// округления числа
   /// если больше 0, то округлять до 1го числа, а если его нет, то выводится просто целое число без 0

@@ -58,10 +58,10 @@ const EveryDataHour = ({ content }) => {
       onClick={editEveryInvoice}
     >
       <div className="everyOrder__inner hourTitle">
-        <h6>№ {codeid}</h6>
+        {/* <h6>№ {codeid}</h6> */}
         <h5 className="titleHour">
           <UserIcon />
-          {agent}
+          <p>{agent}</p>
           <div className="status">
             <Tooltip
               title={

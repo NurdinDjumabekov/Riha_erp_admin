@@ -37,37 +37,33 @@ const MainRoutes = () => {
   const { mapGeo, listRouteAllTA } = useSelector((state) => state.mapSlice);
 
   return (
-    <>
-      <Routes>
-        {/* {false ? ( */}
-        {!!!dataSave?.guid ? (
-          <Route path="/" element={<LoginPage />} />
-        ) : (
-          <>
-            <Route element={<MainLayouts />}>
-              <Route path="/" element={<MainPage />} />
-              {/* ///// agentPages */}
-              <Route path="/my_invoice" element={<MyInvoicePage />} />
-              <Route path="/accept_invoice" element={<AcceptInvoicePage />} />
-              <Route path="/view/:url" element={<LookPdfPage />} />
-              <Route path="/camera" element={<CameraPage />} />
-              <Route path="/maps" element={<MapsPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-            </Route>
-            <Route
-              path="/send_app/:route_guid/:guid_point"
-              element={<SendInvoicePage />}
-            />
-            <Route
-              path="/maps_camera/:route_guid/:guid_point"
-              element={<CameraPage />}
-            />
-          </>
-        )}
-        {/* <Route path="*" element={<NotFoundPage />} /> */}
-      </Routes>
-      {/*<Preloader  /> */}
-    </>
+    <Routes>
+      {!!!dataSave?.guid ? (
+        <Route path="/" element={<LoginPage />} />
+      ) : (
+        <>
+          <Route element={<MainLayouts />}>
+            <Route path="/" element={<MainPage />} />
+            {/* ///// agentPages */}
+            <Route path="/my_invoice" element={<MyInvoicePage />} />
+            <Route path="/accept_invoice" element={<AcceptInvoicePage />} />
+            <Route path="/view/:url" element={<LookPdfPage />} />
+            <Route path="/camera" element={<CameraPage />} />
+            <Route path="/maps" element={<MapsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+          </Route>
+          <Route
+            path="/send_app/:route_guid/:guid_point"
+            element={<SendInvoicePage />}
+          />
+          <Route
+            path="/maps_camera/:route_guid/:guid_point"
+            element={<CameraPage />}
+          />
+        </>
+      )}
+      {/* <Route path="*" element={<NotFoundPage />} /> */}
+    </Routes>
   );
 };
 

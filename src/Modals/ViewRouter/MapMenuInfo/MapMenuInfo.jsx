@@ -14,6 +14,7 @@ import ArrowIcon from "@mui/icons-material/ArrowForward";
 import ListIcon from "@mui/icons-material/Checklist";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import TimeIcon from "@mui/icons-material/AccessTime";
+import CarCrashIcon from "@mui/icons-material/CarCrash";
 
 ///// fns
 import { getListPhotos } from "../../../store/reducers/photoSlice";
@@ -52,10 +53,10 @@ const MapMenuInfo = () => {
     arrows: listPhotos.length > 1,
   };
 
-  console.log(pointInfo, "pointInfo");
-
   const link =
-    "http://mttp-renaissance.333.kg/files/5P4ZMTXT9RNEosDmFLCvXB60k.pdf";
+    "https://riha-production.333.kg/files/invoice/Otpusk-nakladnaya-18-2024-10-02(06:29:09).pdf";
+
+  console.log(pointInfo, "pointInfo");
 
   return (
     <div className="mapMenuInfo">
@@ -80,6 +81,10 @@ const MapMenuInfo = () => {
           <TimeIcon />
           Время прихода торгового агента:{" "}
           {pointInfo?.set_start_time || "отсутствует"}
+        </p>
+        <p className="time">
+          <CarCrashIcon />
+          Расход на топливо: 12 л. ({12 * 82} сом)
         </p>
       </div>
       {listPhotos?.length > 0 && (

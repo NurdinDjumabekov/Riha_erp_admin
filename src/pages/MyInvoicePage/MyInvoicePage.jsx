@@ -25,7 +25,7 @@ const MyInvoicePage = () => {
   const { listInvoice } = useSelector((state) => state.invoiceSlice);
 
   useEffect(() => {
-    dispatch(getMyInvoice(dataSave?.guid));
+    dispatch(getMyInvoice(dataSave?.guid)); /// run
   }, []);
 
   const clickSeller = ({ invoice_guid }, index) => {
