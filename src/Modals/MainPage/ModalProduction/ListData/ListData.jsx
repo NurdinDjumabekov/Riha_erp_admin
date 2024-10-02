@@ -27,7 +27,8 @@ import { myAlert } from "../../../../helpers/MyAlert";
 ////// icons
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
+
+import GeneratePdf from "../GeneratePdf/GeneratePdf";
 
 const ListData = () => {
   const dispatch = useDispatch();
@@ -93,12 +94,6 @@ const ListData = () => {
     }
   };
 
-  const clickPdf = () => {
-    const url =
-      "https://riha-production.333.kg/files/invoice/Otpusk-nakladnaya-5-2024-10-01(18:21:33).pdf";
-    window.open(url, "_blank");
-  };
-
   useEffect(() => {
     const obj = { date_from: "", date_to: "", setActiveInvoice };
     dispatch(getListProdProduction(obj));
@@ -136,15 +131,8 @@ const ListData = () => {
 
         <div className="prods">
           <div className="prods__sortDate">
-            <button onClick={clickPdf} className="sendData generatePdf">
-              <FileCopyIcon sx={{ width: 16 }} />
-              <p>Сгенерировать документ</p>
-            </button>
-            <button
-              onClick={sendInWareHome}
-              className="sendData"
-              //   disabled={!checkInvoice}
-            >
+            <GeneratePdf />
+            <button onClick={sendInWareHome} className="sendData">
               <AddBusinessIcon sx={{ width: 16 }} />
               <p>Отправить на склад</p>
             </button>

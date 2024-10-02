@@ -56,8 +56,6 @@ const MapMenuInfo = () => {
   const link =
     "https://riha-production.333.kg/files/invoice/Otpusk-nakladnaya-18-2024-10-02(06:29:09).pdf";
 
-  console.log(pointInfo, "pointInfo");
-
   return (
     <div className="mapMenuInfo">
       <div className="mapMenuInfo__title">
