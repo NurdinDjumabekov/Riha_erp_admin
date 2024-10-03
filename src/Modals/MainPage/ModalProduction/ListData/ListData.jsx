@@ -131,7 +131,7 @@ const ListData = () => {
 
         <div className="prods">
           <div className="prods__sortDate">
-            <GeneratePdf />
+            <GeneratePdf activeInvoice={activeInvoice} />
             <button onClick={sendInWareHome} className="sendData">
               <AddBusinessIcon sx={{ width: 16 }} />
               <p>Отправить на склад</p>

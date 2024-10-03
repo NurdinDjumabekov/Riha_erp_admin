@@ -11,10 +11,8 @@ import { TableRow, Paper } from "@mui/material";
 import DatePicker from "react-datepicker";
 
 ////// fns
-import {
-  setActiveDate,
-  setListProduction,
-} from "../../../../store/reducers/productionSlice";
+import { setListProduction } from "../../../../store/reducers/productionSlice";
+import { setActiveDate } from "../../../../store/reducers/productionSlice";
 import { getListProdProduction } from "../../../../store/reducers/productionSlice";
 
 ////// style
@@ -25,7 +23,7 @@ import { transformActionDate } from "../../../../helpers/transformDate";
 import { reverseTransformActionDate } from "../../../../helpers/transformDate";
 
 ////// icons
-import FileCopyIcon from "@mui/icons-material/FileCopy";
+import GeneratePdf from "../GeneratePdf/GeneratePdf";
 
 const HistoryData = () => {
   const dispatch = useDispatch();
@@ -56,12 +54,6 @@ const HistoryData = () => {
     const obj = { date_from: activeDate, date_to: "", setActiveInvoice };
     dispatch(getListProdProduction(obj));
   }, []);
-
-  const clickPdf = () => {
-    const url =
-      "https://riha-production.333.kg/files/invoice/Otpusk-nakladnaya-5-2024-10-01(18:21:33).pdf";
-    window.open(url, "_blank");
-  };
 
   return (
     <div div className="productionData productionHisotry">
@@ -94,6 +86,7 @@ const HistoryData = () => {
         </div>
         <div className="prods">
           <div className="prods__sortDate">
+            <GeneratePdf activeInvoice={activeInvoice} />
             <div className="date">
               <DatePicker
                 selected={reverseTransformActionDate(activeDate)}
@@ -107,10 +100,6 @@ const HistoryData = () => {
                 maxDate={new Date()}
               />
             </div>
-            <button onClick={clickPdf} className="sendData generatePdf">
-              <FileCopyIcon sx={{ width: 16 }} />
-              <p>Сгенерировать документ</p>
-            </button>
           </div>
           <TableContainer
             component={Paper}

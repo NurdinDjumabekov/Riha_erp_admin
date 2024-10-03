@@ -1,115 +1,148 @@
-import React, { useRef } from "react";
+/////// hooks
+import { useState } from "react";
+
+////// styles
+import { styles } from "./style";
+import "./style.scss";
+
+////// helpers
+import { transformActionDate } from "../../../../helpers/transformDate";
+import { formatDateMonth } from "../../../../helpers/transformDate";
+
+////// components
+import Modals from "../../../../components/Modals/Modals";
+import { Document, Page, Text } from "@react-pdf/renderer";
+import { View, PDFViewer } from "@react-pdf/renderer";
+
+////// icons
 import FileCopyIcon from "@mui/icons-material/FileCopy";
-import { useReactToPrint } from "react-to-print";
 
-// Обязательно прокидываем ref через forwardRef в основной div
-const OrderTable = React.forwardRef((props, ref) => (
-  <div ref={ref} style={{ fontFamily: "Arial, sans-serif", margin: "20px" }}>
-    <div
-      className="container"
-      style={{ width: "100%", maxWidth: "800px", margin: "0 auto" }}
-    >
-      <div className="header" style={{ marginBottom: "10px" }}>
-        <p style={{ margin: "2px 5px 0 0" }}>Отправитель:</p>
-        <p style={{ margin: "2px 5px 0 0" }}>
-          Отгрузка агенту №0000000020. Исаева Светлана - ТА, 27 августа 2024 г.
-        </p>
-      </div>
-      {/* Можно добавить дополнительные элементы таблицы или текста */}
-    </div>
-  </div>
-));
+const GeneratePdf = ({ activeInvoice }) => {
+  const { products } = activeInvoice;
+  const nowDate = transformActionDate(new Date());
 
-// Основной компонент для генерации PDF
-const GeneratePdf = () => {
-  const componentRef = useRef();
-
-  // Добавляем обработчик печати с использованием useReactToPrint
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current, // Передаем ref компонента
-    documentTitle: "order_form",
-    onAfterPrint: () => console.log("Печать завершена!"),
-    onBeforeGetContent: () => console.log("Начало подготовки к печати..."),
-    removeAfterPrint: true, // Удаляет содержимое после печати, если нужно
-  });
+  const [active, setActive] = useState(false);
 
   return (
-    <div>
-      <OrderTable ref={componentRef} />
-      <button onClick={handlePrint} className="sendData generatePdf">
-        <FileCopyIcon sx={{ width: 16 }} />
+    <div className="generateBlock">
+      <button className="activePdf" onClick={() => setActive(true)}>
+        <FileCopyIcon />
         <p>Сгенерировать документ</p>
       </button>
+      <Modals
+        openModal={active}
+        closeModal={() => setActive(false)}
+        title={`Производство / документ`}
+      >
+        <PDFViewer>
+          <Document>
+            <Page size="A4" style={styles.page}>
+              <View style={styles.section}>
+                <Text style={styles.header}>Отправитель:</Text>
+                <Text style={styles.header}>
+                  Отгрузка агенту № _____ , Исаева Светлана - ТА.{" "}
+                  {formatDateMonth(nowDate)}
+                </Text>
+              </View>
+
+              <View style={styles.table}>
+                <View style={styles.tableRow}>
+                  <View style={[styles.tableCol, styles.numsTitle]}>
+                    <Text style={[styles.textTitle, styles.nums]}>№</Text>
+                  </View>
+                  <View style={[styles.tableCol, styles.names]}>
+                    <Text style={styles.textTitle}>Наименование</Text>
+                  </View>
+                  <View style={[styles.tableCol, styles.headersOther]}>
+                    <Text style={styles.textTitle}>Заказано</Text>
+                  </View>
+                  <View style={[styles.tableCol, styles.headersOther]}>
+                    <Text style={styles.textTitle}>Кол-во кг</Text>
+                  </View>
+                  <View style={[styles.tableCol, styles.headersOther]}>
+                    <Text style={styles.textTitle}>Кол-во шт</Text>
+                  </View>
+                  <View style={[styles.tableCol, styles.headersOther]}>
+                    <Text style={styles.textTitle}>Расчётное кол-во</Text>
+                  </View>
+                  <View style={[styles.tableCol, styles.headersOther]}>
+                    <Text style={styles.textTitle}>Цена</Text>
+                  </View>
+                  <View style={[styles.tableCol, styles.headersOther]}>
+                    <Text style={styles.textTitle}>Сумма</Text>
+                  </View>
+                  <View style={[styles.tableCol, styles.headersOther]}>
+                    <Text style={styles.textTitle}>Тара</Text>
+                  </View>
+                </View>
+
+                {products?.map((i, index) => (
+                  <View style={styles.tableRow}>
+                    <View style={[styles.tableCol, styles.numsMain]}>
+                      <Text style={styles.tableCell}>{index + 1}</Text>
+                    </View>
+                    <View style={[styles.tableCol, styles.namesInner]}>
+                      <Text style={[styles.tableCell, styles.numsInnerText]}>
+                        {i?.product_name}
+                      </Text>
+                    </View>
+                    <View style={[styles.tableCol, styles.headersOther]}>
+                      <Text style={styles.tableCell}>100 сом</Text>
+                    </View>
+                    <View style={[styles.tableCol, styles.headersOther]}>
+                      <Text style={styles.tableCell}>1000 сом</Text>
+                    </View>
+                    <View style={[styles.tableCol, styles.headersOther]}>
+                      <Text style={styles.tableCell}>1000 сом</Text>
+                    </View>
+                    <View style={[styles.tableCol, styles.headersOther]}>
+                      <Text style={styles.tableCell}>1000 сом</Text>
+                    </View>
+                    <View style={[styles.tableCol, styles.headersOther]}>
+                      <Text style={styles.tableCell}>{i?.price}</Text>
+                    </View>
+                    <View style={[styles.tableCol, styles.headersOther]}>
+                      <Text style={styles.tableCell}>1000 сом</Text>
+                    </View>
+                    <View style={[styles.tableCol, styles.headersOther]}>
+                      <Text style={styles.tableCell}></Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+
+              <View style={styles.result}></View>
+
+              <View style={styles.footer}>
+                <View style={styles.accept}>
+                  <View style={styles.acceptSend}>
+                    <View style={styles.acceptText}>
+                      <Text style={styles.linetext}>Отпустил</Text>
+                      <Text style={styles.line}></Text>
+                    </View>
+                  </View>
+                  <View style={styles.acceptSend}>
+                    <View style={styles.acceptText}>
+                      <Text style={styles.linetext}>Получил</Text>
+                      <Text style={styles.line}></Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.acceptText}>
+                  <Text style={styles.linetext}>Для доставки принял</Text>
+                  <Text style={styles.line}></Text>
+                </View>
+                <View style={[styles.acceptText, styles.acceptTextMore]}>
+                  <Text style={styles.linetext}>Комментарий</Text>
+                  <Text style={styles.line}></Text>
+                </View>
+              </View>
+            </Page>
+          </Document>
+        </PDFViewer>
+      </Modals>
     </div>
   );
 };
 
 export default GeneratePdf;
-
-{
-  /* <table
-        style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}
-        border="1"
-      >
-        <thead>
-          <tr>
-            <th style={{ padding: "2px 5px", fontSize: "10px", textAlign: "center" }}>
-              №
-            </th>
-            <th style={{ padding: "2px 5px", fontSize: "10px", textAlign: "left" }}>
-              Наименование
-            </th>
-            <th style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              Заказано
-            </th>
-            <th style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              Кол-во кг
-            </th>
-            <th style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              Кол-во шт
-            </th>
-            <th style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              Расчетное кол-во
-            </th>
-            <th style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              Цена
-            </th>
-            <th style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              Сумма
-            </th>
-            <th style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              Тара
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style={{ padding: "2px 5px", fontSize: "10px", textAlign: "center" }}>
-              1
-            </td>
-            <td style={{ padding: "2px 5px", fontSize: "10px", textAlign: "left" }}>
-              Деликатес Риха Грудак куриные
-            </td>
-            <td style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              0.37
-            </td>
-            <td style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              20
-            </td>
-            <td style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              5.37
-            </td>
-            <td style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              20
-            </td>
-            <td style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              200
-            </td>
-            <td style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}>
-              1 989
-            </td>
-            <td style={{ padding: "2px 5px", fontSize: "10px", textAlign: "right" }}></td>
-          </tr>
-        </tbody>
-      </table> */
-}
