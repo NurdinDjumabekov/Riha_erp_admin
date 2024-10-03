@@ -198,6 +198,8 @@ const MapHistory = ({}) => {
 
   const list_TA = transformLists(listTA, "guid", "fio");
 
+  console.log(everyRoutes_TA, "everyRoutes_TA");
+
   return (
     <div className="mapHistory">
       <div className="mapHistory__header">
@@ -239,7 +241,7 @@ const MapHistory = ({}) => {
       </div>
 
       <div id="mapContainerHistory" className="map-container"></div>
-      <MapMenuInfo />
+      <MapMenuInfo list={everyRoutes_TA} />
     </div>
   );
 };

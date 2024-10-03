@@ -335,4 +335,12 @@ export const objStatusInvoice = {
   2: { text: "Подтверждён ТА", color: "#299b31" },
 };
 
+export const listStatus = [
+  {
+    id: 1,
+    text: "",
+    icon: "",
+  },
+];
+
 export const styleTooltip = { width: 140, height: 140, borderRadius: "50%" };

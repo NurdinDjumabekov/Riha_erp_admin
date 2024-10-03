@@ -24,13 +24,13 @@ import { getListProdsInInvoice } from "../../../store/reducers/mainSlice";
 import UserIcon from "@mui/icons-material/AccountCircle";
 import PaidIcon from "@mui/icons-material/PaymentsOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-
-////// imgs
-import imgInfo from "../../../assets/images/design-process.png";
 import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+
+////// imgs
+import imgInfo from "../../../assets/images/design-process.png";
 
 const EveryDataHour = ({ content }) => {
   const { status, agent, invoice_guid } = content?.event?._def?.extendedProps;

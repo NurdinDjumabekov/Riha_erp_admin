@@ -186,6 +186,8 @@ const ModalWareHome = () => {
     }
   }, [invoiceInfo?.action]);
 
+  const check = active === 1 ? "" : "modalwareHomeHistory";
+
   return (
     <Dialog
       fullScreen
@@ -193,11 +195,7 @@ const ModalWareHome = () => {
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <div
-        className={`modalwareHome ${
-          active === 1 ? "" : "modalwareHomeHistory"
-        }`}
-      >
+      <div className={`modalwareHome ${check}`}>
         <div className="modalwareHome__inner">
           <AppBar sx={{ position: "relative" }}>
             <Toolbar>

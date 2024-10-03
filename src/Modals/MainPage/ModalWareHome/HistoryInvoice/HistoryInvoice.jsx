@@ -20,8 +20,8 @@ import user from "../../../../assets/images/iAm.jpg";
 import "./style.scss";
 
 ////// icons
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import FileIcon from "@mui/icons-material/Description";
+import EventIcon from "@mui/icons-material/EventNoteTwoTone";
 
 ////// helpers
 import { transformActionDate } from "../../../../helpers/transformDate";
@@ -46,12 +46,6 @@ const HistoryInvoice = () => {
   const clickAgent = (agent_guid) => {
     setActive(agent_guid);
     dispatch(getHistoryInvoice({ activeDate, agent_guid }));
-  };
-
-  const clickPdf = () => {
-    const url =
-      "https://riha-production.333.kg/files/invoice/Otpusk-nakladnaya-5-2024-10-01(18:21:33).pdf";
-    window.open(url, "_blank");
   };
 
   const getData = async () => {
@@ -92,7 +86,10 @@ const HistoryInvoice = () => {
                 </Tooltip>
               </div>
 
-              <p>{i?.fio}</p>
+              <div>
+                <p>{i?.fio}</p>
+                <span>{i?.phone || "0700754454"} </span>
+              </div>
             </button>
           ))}
         </div>
@@ -113,11 +110,8 @@ const HistoryInvoice = () => {
                   locale={ru}
                   maxDate={new Date()}
                 />
+                <EventIcon />
               </div>
-              <button onClick={clickPdf} className="sendData generatePdf">
-                <FileCopyIcon sx={{ width: 16 }} />
-                <p>Сгенерировать документ</p>
-              </button>
             </div>
             <TableContainer
               component={Paper}

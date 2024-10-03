@@ -122,8 +122,18 @@
         }
 
         .date {
-          width: 170px;
+          width: 150px;
           z-index: 10;
+          position: relative;
+          height: 30px;
+
+          .react-datepicker-wrapper {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 3;
+            background: transparent;
+          }
 
           input:last-child {
             height: 30px;
@@ -131,7 +141,8 @@
             border: 1px solid #e1dede !important;
             padding: 2px 10px;
             width: 100%;
-            font-size: 12px;
+            font-size: 14px;
+            background: transparent;
 
             &::placeholder {
               color: #6b72809e;
@@ -141,6 +152,16 @@
               border: 1px solid rgba(89, 89, 89, 0.529);
               outline: none;
             }
+          }
+
+          svg {
+            width: 19px;
+            height: 19px;
+            position: absolute;
+            top: 6px;
+            right: 10px;
+            color: #2222228a;
+            z-index: 1;
           }
         }
 
@@ -162,9 +183,9 @@
 
 .listAgentsInfo {
   height: 100%;
-  width: 300px;
-  max-width: 300px;
-  min-width: 300px;
+  width: 330px;
+  max-width: 330px;
+  min-width: 330px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -182,9 +203,9 @@
 
   &__inner {
     height: 96%;
-    width: 270px;
-    max-width: 270px;
-    min-width: 270px;
+    width: 300px;
+    max-width: 300px;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
     border: 1px solid #e0e6ed;
@@ -196,18 +217,10 @@
       max-width: 0px;
     }
 
-    // button:first-child {
-    //   border-radius: 5px 5px 0 0;
-    // }
-
-    // button:last-child {
-    //   border-radius: 5px 5px 0 0;
-    // }
-
     button {
       text-align: left;
       border-bottom: 1px solid #e0e6ed;
-      padding: 8px 14px;
+      padding: 8px;
       background: #fff;
       display: flex;
       justify-content: flex-start;
@@ -215,12 +228,17 @@
       gap: 10px;
 
       p {
-        font-size: 14px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      span {
+        font-size: 11px;
       }
 
       img {
-        width: 20px;
-        height: 20px;
+        width: 35px;
+        height: 35px;
         border-radius: 50%;
       }
     }
@@ -228,7 +246,8 @@
     .active {
       background: #1976d2;
 
-      p {
+      p,
+      span {
         color: #fff;
       }
     }

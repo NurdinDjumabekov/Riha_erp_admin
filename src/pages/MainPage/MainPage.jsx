@@ -15,8 +15,8 @@ import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/Mo
 import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
 import ModalProduction from "../../Modals/MainPage/ModalProduction/ModalProduction";
 import ModalWareHome from "../../Modals/MainPage/ModalWareHome/ModalWareHome";
-import GraphicsEveryTA from "../../components/MainPage/Modals/GraphicsEveryTA/GraphicsEveryTA";
 import ViewRouter from "../../Modals/ViewRouter/ViewRouter";
+import ModalPayTA from "../../Modals/MainPage/ModalPayTA/ModalPayTA";
 
 ////// helpers
 import { confirmAllDay } from "../../helpers/LocalData";
@@ -27,19 +27,16 @@ import { getMonthRange, getMyWeek } from "../../helpers/weeks";
 
 ////// fns
 import { editInvoice, setInvoiceInfo } from "../../store/reducers/mainSlice";
-import { getWorkPlanEveryTA } from "../../store/reducers/mainSlice";
 import { setActiveDate } from "../../store/reducers/mainSlice";
-import { setListWorkPlan } from "../../store/reducers/mainSlice";
 import { getListOrders } from "../../store/reducers/mainSlice";
 import { createInvoice } from "../../store/reducers/mainSlice";
 
 ////// icons
-import ChecklistIcon from "@mui/icons-material/BarChart";
 import UserIcon from "@mui/icons-material/AccountCircle";
 
 /////// style
 import "./style.scss";
-import ModalPayTA from "../../Modals/MainPage/ModalPayTA/ModalPayTA";
+import { listStatusOrders } from "../../helpers/objs";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -47,7 +44,7 @@ const MainPage = () => {
 
   const calendarRef = useRef(null);
 
-  const { user_type, fio, guid } = useSelector(
+  const { user_type, fio } = useSelector(
     (state) => state.saveDataSlice?.dataSave
   );
   const { listOrders, activeDate } = useSelector((state) => state.mainSlice);
@@ -171,6 +168,18 @@ const MainPage = () => {
     ),
   }; //// только для агента
 
+  const objStatus = {
+    2: (
+      <div className="listInfo">
+        {listStatusOrders?.map((i) => (
+          <div className="listInfo__every">
+            <>{i?.icon}</> - <p>{i?.text}</p>
+          </div>
+        ))}
+      </div>
+    ),
+  }; //// только для админа
+
   return (
     <div className="mainCalendare">
       {objMenu?.[user_type]}
@@ -215,20 +224,7 @@ const MainPage = () => {
             eventResizableFromStart={false} // Отключаю возможность изменения размера с начала
             eventDurationEditable={false}
           />
-          {/* <div className="listInfo">
-            <div className="infoBlue">
-              <p>Заявка подана</p>
-            </div>
-            <div className="infoPink">
-              <p>Идёт подготовка к производству!</p>
-            </div>
-            <div className="infoViolet">
-              <p>В производстве</p>
-            </div>
-            <div className="infoGreen">
-              <p>Товары на складе и готовы к отгрузке</p>
-            </div>
-          </div> */}
+          {objStatus?.[user_type]}
         </div>
       </div>
       <ModalOrderCRUD />

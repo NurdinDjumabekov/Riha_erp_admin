@@ -78,6 +78,44 @@ export const objStatusOrders = {
   },
 };
 
+export const listStatusOrders = [
+  {
+    text: "Заявка подана",
+    img: calendare,
+    color: "#2196f3",
+    class: "edit",
+    icon: <InventoryOutlinedIcon />,
+  },
+  // {
+  //   text: "Идёт подготовка к производству, редактирование невозможно!",
+  //   img: time,
+  //   color: "#e7515a",
+  //   class: "noEdit",
+  //   icon: <InventoryOutlinedIcon />,
+  // },
+  {
+    text: "Заявка уже в производстве",
+    img: prod,
+    color: "#4361ee",
+    class: "prod",
+    icon: <AccessTimeOutlinedIcon />,
+  },
+  {
+    text: "Товары на складе и готовы к отгрузке",
+    img: end,
+    color: "#00ab55",
+    class: "sgp",
+    icon: <CheckCircleOutlinedIcon />,
+  },
+  // {
+  //   text: "Товары на складе и готовы к отгрузке",
+  //   img: end,
+  //   color: "#00ab55",
+  //   class: "sgp",
+  //   icon: <CheckCircleOutlinedIcon />,
+  // },
+];
+
 export const objActionInvoice = {
   1: {
     text: "Сохранить",

@@ -24,13 +24,14 @@ import Slider from "react-slick";
 import { checkIsFile } from "../../../helpers/validations";
 import { useRef } from "react";
 
-const MapMenuInfo = () => {
+const MapMenuInfo = ({ list }) => {
   const dispatch = useDispatch();
   let sliderRef = useRef(null);
 
   const { activeTA } = useSelector((state) => state.selectsSlice);
   const { listPhotos } = useSelector((state) => state.photoSlice);
   const { pointInfo } = useSelector((state) => state.mapSlice);
+  const { everyRoutes_TA } = useSelector((state) => state.mapSlice);
 
   useEffect(() => {
     if (pointInfo?.guid) {
@@ -39,6 +40,7 @@ const MapMenuInfo = () => {
         guid_point: pointInfo?.point_guid,
         route_guid: pointInfo?.guid,
       };
+      /// get фото сделанные ТА возле точки
       dispatch(getListPhotos(obj));
     }
   }, [pointInfo]);
@@ -53,74 +55,90 @@ const MapMenuInfo = () => {
     arrows: listPhotos.length > 1,
   };
 
+  console.log(everyRoutes_TA, "everyRoutes_TA");
+
   const link =
     "https://riha-production.333.kg/files/invoice/Otpusk-nakladnaya-18-2024-10-02(06:29:09).pdf";
 
   return (
-    <div className="mapMenuInfo">
-      <div className="mapMenuInfo__title">
-        <h5>
-          <StorefrontIcon />
-          {pointInfo?.point}
-        </h5>
-        <div className="userSeller">
-          <div className="logo">
-            <img src={pointInfo?.seller_photo || logoSeller} alt="" />
-          </div>
-          <div className="seller">
-            <p>{pointInfo?.seller_fio}</p>
-            <div className="seller__inner">
-              <PhoneIcon />
-              <p>+996{pointInfo?.seller_number}</p>
-            </div>
-          </div>
-        </div>
-        <p className="time">
-          <TimeIcon />
-          Время прихода торгового агента:{" "}
-          {pointInfo?.set_start_time || "отсутствует"}
-        </p>
-        <p className="time">
-          <CarCrashIcon />
-          Расход на топливо: 12 л. ({12 * 82} сом)
-        </p>
-      </div>
-      {listPhotos?.length > 0 && (
-        <div className="mapMenuInfo__slider">
-          <Slider
-            ref={(slider) => {
-              sliderRef = slider;
-            }}
-            {...settings}
-          >
-            {listPhotos?.map((i, index) => (
-              <div className="everySlide" key={index}>
-                {checkIsFile(i?.file_path) === "image" ? (
-                  <img src={i?.file_path} alt="###" />
-                ) : (
-                  <div className="videoBlock">
-                    <video controls>
-                      <source src={i?.file_path} type="video/mp4" />
-                    </video>
-                  </div>
-                )}
+    <div className="mapMenuInfo__parent scroll_table">
+      {[
+        ...everyRoutes_TA,
+        ...everyRoutes_TA,
+        ...everyRoutes_TA,
+        ...everyRoutes_TA,
+        ...everyRoutes_TA,
+        ...everyRoutes_TA,
+        ...everyRoutes_TA,
+        ...everyRoutes_TA,
+        ...everyRoutes_TA,
+      ]?.map((i) => (
+        <div className="mapMenuInfo">
+          <div className="mapMenuInfo__title">
+            <h5>
+              <StorefrontIcon />
+              {pointInfo?.point}
+            </h5>
+            <div className="userSeller">
+              <div className="logo">
+                <img src={pointInfo?.seller_photo || logoSeller} alt="" />
               </div>
-            ))}
-          </Slider>
-          <button className="prev" onClick={() => sliderRef.slickPrev()}>
-            <ArrowIcon />
-          </button>
-          <button className="next" onClick={() => sliderRef.slickNext()}>
-            <ArrowIcon />
-          </button>
+              <div className="seller">
+                <p>{pointInfo?.seller_fio}</p>
+                <div className="seller__inner">
+                  <PhoneIcon />
+                  <p>+996{pointInfo?.seller_number}</p>
+                </div>
+              </div>
+            </div>
+            <p className="time">
+              <TimeIcon />
+              Время прихода торгового агента:{" "}
+              {pointInfo?.set_start_time || "отсутствует"}
+            </p>
+            <p className="time">
+              <CarCrashIcon />
+              Расход на топливо: 12 л. ({12 * 82} сом)
+            </p>
+          </div>
+          {listPhotos?.length > 0 && (
+            <div className="mapMenuInfo__slider">
+              <Slider
+                ref={(slider) => {
+                  sliderRef = slider;
+                }}
+                {...settings}
+              >
+                {listPhotos?.map((i, index) => (
+                  <div className="everySlide" key={index}>
+                    {checkIsFile(i?.file_path) === "image" ? (
+                      <img src={i?.file_path} alt="###" />
+                    ) : (
+                      <div className="videoBlock">
+                        <video controls>
+                          <source src={i?.file_path} type="video/mp4" />
+                        </video>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </Slider>
+              <button className="prev" onClick={() => sliderRef.slickPrev()}>
+                <ArrowIcon />
+              </button>
+              <button className="next" onClick={() => sliderRef.slickNext()}>
+                <ArrowIcon />
+              </button>
+            </div>
+          )}
+          {!!link && (
+            <a href={link} className="invoice" target="_blank">
+              <ListIcon />
+              <span>Посмотреть накладную</span>
+            </a>
+          )}
         </div>
-      )}
-      {!!link && (
-        <a href={link} className="invoice" target="_blank">
-          <ListIcon />
-          <span>Посмотреть накладную</span>
-        </a>
-      )}
+      ))}
     </div>
   );
 };
