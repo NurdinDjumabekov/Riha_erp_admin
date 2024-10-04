@@ -18,7 +18,6 @@ import { View, PDFViewer } from "@react-pdf/renderer";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 
 const GeneratePdf = ({ activeInvoice }) => {
-  const { products } = activeInvoice;
   const nowDate = transformActionDate(new Date());
 
   const [active, setActive] = useState(false);
@@ -76,7 +75,7 @@ const GeneratePdf = ({ activeInvoice }) => {
                   </View>
                 </View>
 
-                {products?.map((i, index) => (
+                {activeInvoice?.products?.map((i, index) => (
                   <View style={styles.tableRow}>
                     <View style={[styles.tableCol, styles.numsMain]}>
                       <Text style={styles.tableCell}>{index + 1}</Text>

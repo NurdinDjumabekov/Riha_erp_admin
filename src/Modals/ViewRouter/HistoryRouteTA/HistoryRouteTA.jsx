@@ -48,22 +48,3 @@ const HistoryRouteTA = () => {
 };
 
 export default HistoryRouteTA;
-
-// const handleFileChange = async (e) => {
-//   const files = e?.target?.files;
-
-//   if (files && files.length > 0) {
-//     const formData = new FormData();
-//     formData.append("agent_guid", dataSave?.guid);
-//     formData.append("point_guid", guid_point);
-//     formData.append("route_guid", route_guid);
-//     formData.append("file", files[0]);
-//     try {
-//       await dispatch(sendPhotos({ data: formData })).unwrap();
-//       console.log("File uploaded successfully");
-//       e.target.value = null;
-//     } catch (error) {
-//       console.error("Error uploading file:", error);
-//     }
-//   }
-// };

@@ -37,6 +37,7 @@ import UserIcon from "@mui/icons-material/AccountCircle";
 /////// style
 import "./style.scss";
 import { listStatusOrders } from "../../helpers/objs";
+import ModalAppTA from "../../Modals/MainPage/ModalAppTA/ModalAppTA";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -227,6 +228,7 @@ const MainPage = () => {
           {objStatus?.[user_type]}
         </div>
       </div>
+      <ModalAppTA />
       <ModalOrderCRUD />
       <ModaIngridients />
       <ModalProduction />

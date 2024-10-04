@@ -7,7 +7,10 @@ import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
 import { setActiveCategs, setActiveWorkShop } from "./selectsSlice";
 import { transformListsProdsEdit } from "../../helpers/transformLists";
 import { transformListsProds } from "../../helpers/transformLists";
-import { generateNowWeek } from "../../helpers/transformDate";
+import {
+  generateNowWeek,
+  transformActionDate,
+} from "../../helpers/transformDate";
 import { objStatusText } from "../../helpers/objs";
 
 const { REACT_APP_API_URL } = process.env;
@@ -28,6 +31,8 @@ const initialState = {
   // Состояние для диапазона активной недели
   checkInvoice: true, //// можно ли редактировать накладную
   listWorkPlan: [], //// данные для графиков плана работы
+  activeDateHistory: transformActionDate(new Date()), /// активная дата для историй заявок
+  activeInvoiceHistory: "", /// активная накладная для историй заявок
 };
 
 ////// logInAccount - логинизация
@@ -457,6 +462,27 @@ export const getWorkPlanEveryTA = createAsyncThunk(
   }
 );
 
+////// getHistoryInvoice - get список историй заявок
+export const getHistoryInvoice = createAsyncThunk(
+  "getHistoryInvoice",
+  async function (data, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_applications`;
+    try {
+      const response = await axiosInstance.post(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        const firstGuid = response?.data?.[0]?.invoice_guid;
+        dispatch(getListProdsInInvoice(firstGuid)); //// для получения товаров
+        dispatch(setActiveInvoiceHistory(firstGuid)); /// для активной накладной
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const mainSlice = createSlice({
   name: "mainSlice",
   initialState,
@@ -478,6 +504,11 @@ const mainSlice = createSlice({
     ///// очищаю временный список для отправки создания заказа от ТА
     clearListOrders: (state, action) => {
       state.listSendOrders = [];
+    },
+
+    ///// очищаю список заказа от ТА
+    clearOrders: (state, action) => {
+      state.listOrders = [];
     },
 
     setListProds: (state, action) => {
@@ -541,6 +572,16 @@ const mainSlice = createSlice({
 
     setListWorkPlan: (state, action) => {
       state.listWorkPlan = action.payload;
+    },
+
+    /////  активная дата для историй заявок
+    setActiveDateHistory: (state, action) => {
+      state.activeDateHistory = action.payload;
+    },
+
+    /////  активная накладная для историй заявок
+    setActiveInvoiceHistory: (state, action) => {
+      state.activeInvoiceHistory = action.payload;
     },
   },
 
@@ -696,6 +737,7 @@ const mainSlice = createSlice({
     builder.addCase(getListProdsInInvoice.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
+      state.listSendOrders = [];
     });
     builder.addCase(getListProdsInInvoice.pending, (state, action) => {
       state.preloader = true;
@@ -711,6 +753,20 @@ const mainSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getWorkPlanEveryTA.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ////////////// getHistoryInvoice
+    builder.addCase(getHistoryInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listOrders = action.payload;
+    });
+    builder.addCase(getHistoryInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      state.listOrders = [];
+    });
+    builder.addCase(getHistoryInvoice.pending, (state, action) => {
       state.preloader = true;
     });
   },
@@ -730,6 +786,9 @@ export const {
   setCheckInvoice,
   getDefaultList,
   setListWorkPlan,
+  clearOrders,
+  setActiveDateHistory,
+  setActiveInvoiceHistory,
 } = mainSlice.actions;
 
 export default mainSlice.reducer;

@@ -29,6 +29,7 @@ import TaxiAlertIcon from "@mui/icons-material/TaxiAlert";
 import RoomIcon from "@mui/icons-material/Room";
 // import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
 import HistoryIcon from "@mui/icons-material/History";
+import AddHomeIcon from "@mui/icons-material/AddBusiness";
 
 import time from "../assets/images/back-in-time.png";
 import calendare from "../assets/images/calendar.png";
@@ -39,6 +40,8 @@ import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import PaymentsIcon from "@mui/icons-material/Payments";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import NearMeIcon from "@mui/icons-material/NearMe";
 
 export const objStatusOrders = {
   0: {
@@ -70,12 +73,20 @@ export const objStatusOrders = {
     icon: <CheckCircleOutlinedIcon />,
   },
   3: {
-    text: "Товары на складе и готовы к отгрузке",
+    text: "Отгружено торговому агенту",
     img: end,
     color: "#00ab55",
     class: "sgp",
     icon: <CheckCircleOutlinedIcon />,
   },
+};
+
+export const objStatusOrdersMini = {
+  0: "Заявка подана",
+  "-2": "Подготовка к производству",
+  1: "В производстве",
+  2: "Товары на складе",
+  3: "Отгружено торговому агенту",
 };
 
 export const listStatusOrders = [
@@ -156,6 +167,13 @@ export const objStatusText = {
 };
 
 export const listMenu = [
+  {
+    id: 1,
+    title: "Реестр заявок",
+    icon: <ReceiptLongIcon sx={{ color: "#fff" }} />,
+    iconActive: <ReceiptLongIcon sx={{ color: "#988c7d" }} />,
+    link: "/",
+  },
   {
     id: 4,
     title: "Производство",
@@ -258,5 +276,22 @@ export const listAcceptInvoiceTem = [
     date_create: "22-10-2024 19:00",
     file: "http://mttp-renaissance.333.kg/files/5P4ZMTXT9RNEosDmFLCvXB60k.pdf",
     sender: "админ",
+  },
+];
+
+export const listActionsMap = [
+  {
+    id: 1,
+    name: "Добавить новую торговую точку",
+    color: "#4361ee",
+    icon: <AddHomeIcon />,
+    link: "/add_points",
+  },
+  {
+    id: 2,
+    name: "Добавить точку в маршрут",
+    color: "#805dca",
+    icon: <NearMeIcon />,
+    link: "",
   },
 ];

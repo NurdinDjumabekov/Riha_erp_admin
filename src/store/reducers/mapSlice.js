@@ -63,7 +63,6 @@ const initialState = {
   activeActions_TA: { guid_point: "", point: "", actionType: 0 },
   // 1 - модалка для  действий (сфотать, отпустить накладную и т.д.)
   listHistoryRoute: [], //// история списка маршрутов ТА
-  pointInfo: {}, /// для историй маршрутов (храню данные точки на которую нажимают на карте)
   listTA_RouteNoPlan: [], //// список коориднат по которым ехал Та(типо сам, не по плану)
 };
 
@@ -331,7 +330,6 @@ export const getEveryRoutes_TA = createAsyncThunk(
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(setPointInfo(response.data?.[0]));
         return { list: response.data, user_type };
       } else {
         throw Error(`Error: ${response.status}`);
@@ -382,9 +380,6 @@ const mapSlice = createSlice({
     },
     setActiveActions_TA: (state, action) => {
       state.activeActions_TA = action?.payload;
-    },
-    setPointInfo: (state, action) => {
-      state.pointInfo = action?.payload;
     },
   },
 
@@ -527,10 +522,8 @@ const mapSlice = createSlice({
       const firstObj = action.payload?.list?.[0];
       const myData = {
         ...firstObj,
-        lat:
-          user_type == 1 ? lat || "42.8572672" : firstObj?.lat || "42.8572672", //// delete 42.8572672
-        lon:
-          user_type == 1 ? lon || "74.6258432" : firstObj?.lon || "74.6258432", //// delete 74.6258432
+        lat: user_type == 1 ? lat : firstObj?.lat, //// delete 42.8572672
+        lon: user_type == 1 ? lon : firstObj?.lon, //// delete 74.6258432
         start_time: "02.10.2024",
         ...pastGeoData,
       };
@@ -560,7 +553,6 @@ export const {
   clearEveryListRouteCRUD,
   setActiveViewMap,
   setActiveActions_TA,
-  setPointInfo,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

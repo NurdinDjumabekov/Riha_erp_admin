@@ -23,7 +23,6 @@ import MapMenuInfo from "../MapMenuInfo/MapMenuInfo";
 ////// fns
 import { setActiveTA } from "../../../store/reducers/selectsSlice";
 import { setActiveDate } from "../../../store/reducers/selectsSlice";
-import { setPointInfo } from "../../../store/reducers/mapSlice";
 import { getListRoutes_TA } from "../../../store/reducers/mapSlice";
 
 const MapHistory = ({}) => {
@@ -35,9 +34,8 @@ const MapHistory = ({}) => {
   const [secondRoute, setSecondRoute] = useState(null); // Состояние для второго маршрута
 
   const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
-  const { mapGeo, everyRoutes_TA, listTA_RouteNoPlan, key } = useSelector(
-    (state) => state.mapSlice
-  );
+  const { mapGeo, everyRoutes_TA, listTA_RouteNoPlan, key, listPointsEveryTA } =
+    useSelector((state) => state.mapSlice);
 
   const { activeTA, activeDate } = useSelector((state) => state.selectsSlice);
   const { listTA } = useSelector((state) => state.mainSlice);
@@ -50,7 +48,11 @@ const MapHistory = ({}) => {
 
   const onChangeDate = (item) => {
     dispatch(setActiveDate(transformActionDate(item)));
-    const obj = { agent_guid: activeTA?.value, user_type, activeDate: item };
+    const obj = {
+      agent_guid: activeTA?.value,
+      user_type,
+      activeDate: transformActionDate(item),
+    };
     dispatch(getListRoutes_TA(obj));
   };
 
@@ -126,7 +128,6 @@ const MapHistory = ({}) => {
 
         customMarker.addEventListener("click", () => {
           if (index !== 0) {
-            clickPoint(point);
           }
         });
 
@@ -144,61 +145,57 @@ const MapHistory = ({}) => {
     }
   }, [map, everyRoutes_TA, directions, mapGeo]);
 
-  // useEffect(() => {
-  //   if (map && listTA_RouteNoPlan?.length > 0) {
-  //     if (secondRoute) {
-  //       secondRoute.clear();
-  //     }
+  useEffect(() => {
+    if (map && listTA_RouteNoPlan?.length > 0) {
+      if (secondRoute) {
+        secondRoute.clear();
+      }
 
-  //     const routePointsNoPlan = listTA_RouteNoPlan?.map((point) => [
-  //       parseFloat(point.lon),
-  //       parseFloat(point.lat),
-  //     ]);
+      const routePointsNoPlan = listTA_RouteNoPlan?.map((point) => [
+        parseFloat(point.lon),
+        parseFloat(point.lat),
+      ]);
 
-  //     const newDirectionsInstance = new Directions(map, {
-  //       directionsApiKey: key,
-  //     });
+      const newDirectionsInstance = new Directions(map, {
+        directionsApiKey: key,
+      });
 
-  //     setSecondRoute(newDirectionsInstance);
+      setSecondRoute(newDirectionsInstance);
 
-  //     // Создаем маркеры только для первой и последней точек маршрута
-  //     const startPoint = routePointsNoPlan[0];
-  //     const endPoint = routePointsNoPlan[routePointsNoPlan.length - 1];
+      // Создаем маркеры только для первой и последней точек маршрута
+      const startPoint = routePointsNoPlan[0];
+      const endPoint = routePointsNoPlan[routePointsNoPlan.length - 1];
 
-  //     // Создаем и добавляем маркер для первой точки
-  //     const startMarker = new map.mapgl.HtmlMarker(map, {
-  //       coordinates: startPoint,
-  //       type: "html",
-  //       html: `<div class="customMarker__start">Старт</div>`,
-  //       anchor: [0.5, 1],
-  //     });
+      // Создаем и добавляем маркер для первой точки
+      const startMarker = new map.mapgl.HtmlMarker(map, {
+        coordinates: startPoint,
+        type: "html",
+        html: `<div class="customMarker__start">Старт</div>`,
+        anchor: [0.5, 1],
+      });
 
-  //     // Создаем и добавляем маркер для последней точки
-  //     const endMarker = new map.mapgl.HtmlMarker(map, {
-  //       coordinates: endPoint,
-  //       type: "html",
-  //       html: `<div class="customMarker__end">Финиш</div>`,
-  //       anchor: [0.5, 1],
-  //     });
+      // Создаем и добавляем маркер для последней точки
+      const endMarker = new map.mapgl.HtmlMarker(map, {
+        coordinates: endPoint,
+        type: "html",
+        html: `<div class="customMarker__end">Финиш</div>`,
+        anchor: [0.5, 1],
+      });
 
-  //     // Добавляем маркеры на карту
-  //     setMarkers((prev) => [...prev, startMarker, endMarker]);
+      // Добавляем маркеры на карту
+      setMarkers((prev) => [...prev, startMarker, endMarker]);
 
-  //     // Прокладываем маршрут только если есть хотя бы две точки
-  //     if (routePointsNoPlan.length >= 2) {
-  //       newDirectionsInstance.carRoute({
-  //         points: routePointsNoPlan,
-  //         style: styleRoutesNoPlan, // Используем стиль для фактического маршрута
-  //       });
-  //     }
-  //   }
-  // }, [map, listTA_RouteNoPlan]);
-
-  const clickPoint = (point) => dispatch(setPointInfo(point));
+      // Прокладываем маршрут только если есть хотя бы две точки
+      if (routePointsNoPlan.length >= 2) {
+        newDirectionsInstance.carRoute({
+          points: routePointsNoPlan,
+          style: styleRoutesNoPlan, // Используем стиль для фактического маршрута
+        });
+      }
+    }
+  }, [map, listTA_RouteNoPlan]);
 
   const list_TA = transformLists(listTA, "guid", "fio");
-
-  console.log(everyRoutes_TA, "everyRoutes_TA");
 
   return (
     <div className="mapHistory">
@@ -240,8 +237,8 @@ const MapHistory = ({}) => {
         </div>
       </div>
 
-      <div id="mapContainerHistory" className="map-container"></div>
-      <MapMenuInfo list={everyRoutes_TA} />
+      {/* <div id="mapContainerHistory" className="map-container"></div> */}
+      <MapMenuInfo />
     </div>
   );
 };

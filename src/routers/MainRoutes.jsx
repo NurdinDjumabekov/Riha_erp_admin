@@ -23,6 +23,7 @@ import AllAgentsPage from "../pages/AllAgentsPage/AllAgentsPage";
 import MyInvoicePage from "../pages/MyInvoicePage/MyInvoicePage";
 import AcceptInvoicePage from "../pages/AcceptInvoicePage/AcceptInvoicePage";
 import LookPdfPage from "../pages/LookPdfPage/LookPdfPage";
+import AddPointsPage from "../pages/AddPointsPage/AddPointsPage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ const MainRoutes = () => {
             <Route path="/view/:url" element={<LookPdfPage />} />
             <Route path="/camera" element={<CameraPage />} />
             <Route path="/maps" element={<MapsPage />} />
+            <Route path="/add_points" element={<AddPointsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
           <Route

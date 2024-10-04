@@ -33,7 +33,7 @@ export const checkEditInputs = (list) => {
 
 export const checkIsFile = (fileUrl) => {
   // Извлекаем расширение файла из URL
-  const extension = fileUrl.split(".").pop().toLowerCase();
+  const extension = fileUrl?.split(".")?.pop()?.toLowerCase();
 
   // Массив расширений для фотофайлов
   const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
