@@ -21,6 +21,7 @@ const selectsSlice = createSlice({
     setActiveTA: (state, action) => {
       state.activeTA = action.payload;
     },
+
     setActiveDate: (state, action) => {
       state.activeDate = action.payload;
     },

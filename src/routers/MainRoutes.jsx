@@ -19,11 +19,11 @@ import SettingsPage from "../pages/SettingsPage/SettingsPage";
 import MapsPage from "../pages/MapsPage/MapsPage";
 import CameraPage from "../pages/CameraPage/CameraPage";
 import SendInvoicePage from "../pages/SendInvoicePage/SendInvoicePage";
-import AllAgentsPage from "../pages/AllAgentsPage/AllAgentsPage";
 import MyInvoicePage from "../pages/MyInvoicePage/MyInvoicePage";
 import AcceptInvoicePage from "../pages/AcceptInvoicePage/AcceptInvoicePage";
 import LookPdfPage from "../pages/LookPdfPage/LookPdfPage";
 import AddPointsPage from "../pages/AddPointsPage/AddPointsPage";
+import AddPointInRoutePage from "../pages/AddPointInRoutePage/AddPointInRoutePage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -51,7 +51,8 @@ const MainRoutes = () => {
             <Route path="/view/:url" element={<LookPdfPage />} />
             <Route path="/camera" element={<CameraPage />} />
             <Route path="/maps" element={<MapsPage />} />
-            <Route path="/add_points" element={<AddPointsPage />} />
+            <Route path="/create_points" element={<AddPointsPage />} />
+            <Route path="/add_points_route" element={<AddPointInRoutePage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
           <Route

@@ -1,17 +1,16 @@
 /////// hooks
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 ////// components
 import { BottomSheet } from "react-spring-bottom-sheet";
-import { NavLink, useNavigate } from "react-router-dom";
 
 ////// imgs
 import CheckIcon from "@mui/icons-material/Check";
 import AddIcon from "../../../assets/MyIcons/AddIcon";
 import MenuIcon from "@mui/icons-material/Menu";
 import iconNav from "../../../assets/icons/arrowMapNav.svg";
-import AddHomeIcon from "@mui/icons-material/AddBusiness";
 
 ////// helpers
 import { myAlert } from "../../../helpers/MyAlert";
@@ -70,8 +69,8 @@ const ActionsMapStatus = ({ startEndListRoute, setCloseRoute, searchMeFN }) => {
       <BottomSheet
         open={look}
         onDismiss={() => setLook(false)}
-        defaultSnap={({ maxHeight }) => maxHeight * 0.8}
-        snapPoints={({ maxHeight }) => maxHeight * 0.8}
+        defaultSnap={({ maxHeight }) => maxHeight * 0.6}
+        snapPoints={({ maxHeight }) => maxHeight * 0.6}
       >
         <div className="actionsMapMenu">
           {listActionsMap?.map((i) => (

@@ -500,8 +500,7 @@ const mapSlice = createSlice({
     //////////////// getListRoutes_TA
     builder.addCase(getListRoutes_TA.fulfilled, (state, action) => {
       state.preloader = false;
-      // state.listTA_RouteNoPlan = action.payload;
-      state.listTA_RouteNoPlan = listHistory;
+      state.listTA_RouteNoPlan = action.payload;
     });
     builder.addCase(getListRoutes_TA.rejected, (state, action) => {
       state.error = action.payload;

@@ -22,6 +22,7 @@ import mapSlice from "./reducers/mapSlice";
 import photoSlice from "./reducers/photoSlice";
 import invoiceSlice from "./reducers/invoiceSlice";
 import paySlice from "./reducers/paySlice";
+import pointsSlice from "./reducers/pointsSlice";
 
 const reducer = combineReducers({
   mainSlice,
@@ -34,6 +35,7 @@ const reducer = combineReducers({
   photoSlice,
   invoiceSlice,
   paySlice,
+  pointsSlice,
 });
 
 const persistConfig = {

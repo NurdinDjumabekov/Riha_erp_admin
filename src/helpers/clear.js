@@ -29,3 +29,23 @@ export const clearActiveMap = {
   actionType: 0,
   listRoute: [],
 };
+
+export const clearAddPoints = {
+  lat: "",
+  lon: "",
+  codeid: 0,
+  name: "",
+  address: "",
+  phone: "",
+  inn: "",
+  ittn: "",
+  name_owner: "",
+  number_owner: "",
+};
+
+export const clearPositionPoints = {
+  point: { label: "", value: "" },
+  comment: "",
+  route_sheet_guid: "",
+  queue: { label: "", value: "" },
+};

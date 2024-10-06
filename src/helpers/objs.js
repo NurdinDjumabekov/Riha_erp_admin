@@ -285,13 +285,13 @@ export const listActionsMap = [
     name: "Добавить новую торговую точку",
     color: "#4361ee",
     icon: <AddHomeIcon />,
-    link: "/add_points",
+    link: "/create_points",
   },
   {
     id: 2,
     name: "Добавить точку в маршрут",
     color: "#805dca",
     icon: <NearMeIcon />,
-    link: "",
+    link: "/add_points_route",
   },
 ];

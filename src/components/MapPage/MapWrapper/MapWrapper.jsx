@@ -103,7 +103,8 @@ const MapWrapper = ({ searchMe }) => {
         });
       }
     }
-  }, [map, everyRoutes_TA, directions, mapGeo]);
+  }, [map, everyRoutes_TA, directions]);
+  // }, [map, everyRoutes_TA, directions, mapGeo]);
 
   const searchMeFN = () => {
     if (navigator.geolocation) {

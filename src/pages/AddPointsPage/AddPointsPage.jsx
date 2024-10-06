@@ -1,18 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import { load } from "@2gis/mapgl";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getAddres } from "../../store/reducers/pointsSlice";
+import ModalAddPoints from "../../Modals/AddPointsPage/ModalAddPoints/ModalAddPoints";
 
 const AddPointsPage = () => {
+  const dispatch = useDispatch();
   const mapRef = useRef(null); // Ref для хранения экземпляра карты
   const [selectedIds, setSelectedIds] = useState([]);
   const { mapGeo, key } = useSelector((state) => state.mapSlice);
+  const { infoNewPoint } = useSelector((state) => state.pointsSlice);
 
   useEffect(() => {
     // Загружаем карту только один раз
     if (!mapRef.current) {
       load().then((mapgl) => {
         mapRef.current = new mapgl.Map("mapContainer", {
-          center: [mapGeo?.longitude || 55.308, mapGeo?.latitude || 25.237],
+          center: [
+            mapGeo?.longitude || 74.6283202,
+            mapGeo?.latitude || 42.8540827,
+          ],
           zoom: 18,
           key,
         });
@@ -29,16 +36,19 @@ const AddPointsPage = () => {
         mapRef.current = null;
       }
     };
-  }, [mapGeo, key]); // Перезагрузка карты только при изменении ключа или центра
+  }, [key]);
 
-  // Обработчик клика по карте
   const handleMapClick = (e) => {
     if (!e.target) return;
+    const id = e.target?.id;
 
-    const { id } = e.target;
-    setSelectedIds((prevSelectedIds) => {
-      const newSelectedIds = prevSelectedIds.includes(id)
-        ? prevSelectedIds.filter((i) => i !== id)
+    const lat = e?.lngLat?.[0];
+    const lon = e?.lngLat?.[1];
+    dispatch(getAddres({ ...infoNewPoint, lat, lon, codeid: id }));
+
+    setSelectedIds((prev) => {
+      const newSelectedIds = prev?.includes(id)
+        ? prev?.filter((i) => i !== id)
         : [id];
 
       mapRef.current?.setSelectedObjects(newSelectedIds);
@@ -46,7 +56,13 @@ const AddPointsPage = () => {
     });
   };
 
-  return <div id="mapContainer" style={{ width: "100%", height: "100vh" }} />;
+  return (
+    <>
+      <div id="mapContainer" style={{ width: "100%", height: "100vh" }} />
+      <ModalAddPoints />
+      {/* //// добавление точки от имени ТА (регистрация тоски) */}
+    </>
+  );
 };
 
 export default AddPointsPage;

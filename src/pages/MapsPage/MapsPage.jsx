@@ -75,7 +75,7 @@ const MapsPage = () => {
           setCloseRoute={setCloseRoute}
           searchMeFN={searchMeFN}
         />
-        {/* <MapWrapper searchMe={searchMe} /> */}
+        <MapWrapper searchMe={searchMe} />
         <ActionsRouteTA />
       </div>
       <ConfirmModal
