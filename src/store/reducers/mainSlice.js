@@ -764,7 +764,7 @@ const mainSlice = createSlice({
     builder.addCase(getHistoryInvoice.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
-      state.listOrders = [];
+      // state.listOrders = [];
     });
     builder.addCase(getHistoryInvoice.pending, (state, action) => {
       state.preloader = true;

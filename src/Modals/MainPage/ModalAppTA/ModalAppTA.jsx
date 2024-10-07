@@ -20,13 +20,14 @@ import "./style.scss";
 import user from "../../../assets/images/iAm.jpg";
 
 ////// fns
-import { clearOrders } from "../../../store/reducers/mainSlice";
+import { clearOrders, getListOrders } from "../../../store/reducers/mainSlice";
 import { clearListOrders } from "../../../store/reducers/mainSlice";
 import { getHistoryInvoice } from "../../../store/reducers/mainSlice";
 import { getListTA, setInvoiceInfo } from "../../../store/reducers/mainSlice";
 
 ////// helpers
 import { styleTooltip } from "../../../helpers/LocalData";
+import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -37,10 +38,10 @@ const ModalAppTA = () => {
 
   const [active, setActive] = useState("");
 
+  const { listTA, activeDate } = useSelector((state) => state.mainSlice);
   const { invoiceInfo, activeDateHistory } = useSelector(
     (state) => state.mainSlice
   );
-  const { listTA } = useSelector((state) => state.mainSlice);
 
   const clickAgent = (agent_guid) => {
     setActive(agent_guid);
@@ -63,8 +64,8 @@ const ModalAppTA = () => {
     if (invoiceInfo?.action == 1) {
       getData();
     } else {
-      dispatch(clearOrders()); //// очищаю список заказа от ТА
-      dispatch(clearListOrders()); ///// очищаю временный список для отправки создания заказа от ТА
+      // dispatch(clearOrders()); //// очищаю список заказа от ТА
+      // dispatch(clearListOrders()); ///// очищаю временный список для отправки создания заказа от ТА
       //// при закрытии модалки очищаю заявки каждого агента
     }
   }, [invoiceInfo?.action]);
@@ -72,8 +73,11 @@ const ModalAppTA = () => {
   const handleClose = () => {
     const obj = { guid: "", action: 0, listInvoice: [] };
     dispatch(setInvoiceInfo(obj));
-    dispatch(clearOrders()); //// очищаю список заказа от ТА
-    dispatch(clearListOrders()); ///// очищаю временный список для отправки создания заказа от ТА
+    // dispatch(clearOrders()); //// очищаю список заказа от ТА
+    // dispatch(clearListOrders()); ///// очищаю временный список для отправки создания заказа от ТА
+    const agents_guid = searchActiveOrdersTA(listTA);
+    dispatch(getListOrders({ ...activeDate, agents_guid }));
+    //// когда будет меняться диапозон надо get заявки с обновленным диапозоном
   };
 
   return (

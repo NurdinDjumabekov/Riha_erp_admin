@@ -99,7 +99,7 @@ const ListInvoiceSI = () => {
   };
 
   const actionsProdInInvoice = () => {
-    ///// создание и редактирование твоаров в заявке
+    ///// создание и редактирование т0варов в заявке
     if (checkBoolFN(listProdsSI)) {
       myAlert("Выберите товар", "error");
       return;

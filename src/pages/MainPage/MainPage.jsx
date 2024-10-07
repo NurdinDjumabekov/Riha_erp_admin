@@ -25,6 +25,7 @@ import { addToDateFN, transformDateTime } from "../../helpers/transformDate";
 import { myAlert } from "../../helpers/MyAlert";
 import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
 import { getMonthRange, getMyWeek } from "../../helpers/weeks";
+import { listStatusOrders } from "../../helpers/objs";
 
 ////// fns
 import { editInvoice, setInvoiceInfo } from "../../store/reducers/mainSlice";
@@ -37,7 +38,6 @@ import UserIcon from "@mui/icons-material/AccountCircle";
 
 /////// style
 import "./style.scss";
-import { listStatusOrders } from "../../helpers/objs";
 
 const MainPage = () => {
   const dispatch = useDispatch();
