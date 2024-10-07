@@ -239,10 +239,10 @@ export const pastGeoData = {
   set_start_time: null,
   set_end_time: null,
   point_guid: "",
-  point: "",
   route_sheet_guid: "",
   guid: "",
   myGeo: true,
+  point: "Стартовая точка",
 };
 
 export const listHistory = [

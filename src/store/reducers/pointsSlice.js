@@ -24,7 +24,7 @@ const initialState = {
     point: { label: "", value: "" },
     comment: "",
     route_sheet_guid: "",
-    queue: { label: "", value: "" },
+    position: { label: "", value: "" },
   }, //// для добавление в маршрут новой точки от имени ТА
 };
 

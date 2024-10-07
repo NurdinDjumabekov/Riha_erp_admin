@@ -21,7 +21,7 @@ const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   mapGeo: { latitude: "", longitude: "" },
-  key: "55b8e108-a5ba-4c19-867c-ca553419ddeb",
+  key: "",
 
   //////////////////////////////////////// для админа
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)
@@ -523,10 +523,15 @@ const mapSlice = createSlice({
         ...firstObj,
         lat: user_type == 1 ? lat : firstObj?.lat, //// delete 42.8572672
         lon: user_type == 1 ? lon : firstObj?.lon, //// delete 74.6258432
+        // lat: "42.87584486129684",
+        // lon: "74.59743100461655",
         start_time: "02.10.2024",
         ...pastGeoData,
       };
-      state.everyRoutes_TA = [myData, ...list];
+      const sortList = list?.slice(1);
+      state.everyRoutes_TA = [myData, ...sortList];
+      // state.everyRoutes_TA = [myData, ...list];
+      // state.everyRoutes_TA = list;
     });
     builder.addCase(getEveryRoutes_TA.rejected, (state, action) => {
       state.error = action.payload;

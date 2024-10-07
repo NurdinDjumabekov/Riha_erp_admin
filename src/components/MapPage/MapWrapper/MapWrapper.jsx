@@ -1,3 +1,6 @@
+////// helpers
+import { styleRoutes } from "../../../helpers/objs";
+
 /////// hooks
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -5,9 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 ////// maps
 import { load } from "@2gis/mapgl";
 import { Directions } from "@2gis/mapgl-directions";
-
-////// helpers
-import { styleRoutes } from "../../../helpers/objs";
 
 ////// styles
 import "./style.scss";
@@ -18,6 +18,8 @@ import { setActiveActions_TA } from "../../../store/reducers/mapSlice";
 import { getMyGeo } from "../../../helpers/transformDate";
 
 const MapWrapper = ({ searchMe }) => {
+  const { REACT_APP_MAP_KEY } = process.env;
+
   const dispatch = useDispatch();
   const { mapGeo, everyRoutes_TA } = useSelector((state) => state.mapSlice);
   const { key } = useSelector((state) => state.mapSlice);
@@ -35,7 +37,7 @@ const MapWrapper = ({ searchMe }) => {
           mapGeo?.latitude || 42.8508686,
         ],
         zoom: 13,
-        key: key,
+        key: REACT_APP_MAP_KEY,
       });
 
       setMap(initializedMap);
@@ -71,7 +73,7 @@ const MapWrapper = ({ searchMe }) => {
         parseFloat(point.lat),
       ]);
 
-      const newMarkers = everyRoutes_TA.map((point, index) => {
+      const newMarkers = everyRoutes_TA?.map((point, index) => {
         const customMarker = document.createElement("div");
         customMarker.className = "customMarker";
         customMarker.innerHTML = `${
@@ -155,6 +157,8 @@ const MapWrapper = ({ searchMe }) => {
     //  модалка для  действий (сфотать, отпустить накладную и т.д.)
     dispatch(setActiveActions_TA(obj));
   };
+
+  console.log(everyRoutes_TA, "everyRoutes_TA");
 
   return (
     <div className="mapBlock">

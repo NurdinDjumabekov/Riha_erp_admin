@@ -6,6 +6,9 @@ import { Directions } from "@2gis/mapgl-directions";
 import "./style.scss";
 import { styleRoutes } from "../../../helpers/objs";
 
+////// helpers
+const { REACT_APP_MAP_KEY } = process.env;
+
 const MapForChoicePoints = () => {
   const [map, setMap] = useState(null);
   const [directions, setDirections] = useState(null);
@@ -21,13 +24,13 @@ const MapForChoicePoints = () => {
           mapGeo?.latitude || 42.8508686,
         ],
         zoom: 13,
-        key,
+        key: REACT_APP_MAP_KEY,
       });
 
       setMap(initializedMap);
 
       const directionsInstance = new Directions(initializedMap, {
-        directionsApiKey: key,
+        directionsApiKey: REACT_APP_MAP_KEY,
       });
       setDirections(directionsInstance);
 

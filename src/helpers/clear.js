@@ -47,5 +47,5 @@ export const clearPositionPoints = {
   point: { label: "", value: "" },
   comment: "",
   route_sheet_guid: "",
-  queue: { label: "", value: "" },
+  position: { label: "", value: "" },
 };

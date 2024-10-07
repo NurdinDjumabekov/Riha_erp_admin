@@ -3,6 +3,7 @@ import { load } from "@2gis/mapgl";
 import { useDispatch, useSelector } from "react-redux";
 import { getAddres } from "../../store/reducers/pointsSlice";
 import ModalAddPoints from "../../Modals/AddPointsPage/ModalAddPoints/ModalAddPoints";
+const { REACT_APP_MAP_KEY } = process.env;
 
 const AddPointsPage = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const AddPointsPage = () => {
             mapGeo?.latitude || 42.8540827,
           ],
           zoom: 18,
-          key,
+          key: REACT_APP_MAP_KEY,
         });
 
         // Установка обработчика клика на карту

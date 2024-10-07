@@ -25,6 +25,10 @@ import { setActiveTA } from "../../../store/reducers/selectsSlice";
 import { setActiveDate } from "../../../store/reducers/selectsSlice";
 import { getListRoutes_TA } from "../../../store/reducers/mapSlice";
 
+///// helpers
+const { REACT_APP_MAP_KEY } = process.env;
+
+
 const MapHistory = ({}) => {
   const dispatch = useDispatch();
 
@@ -64,13 +68,13 @@ const MapHistory = ({}) => {
           mapGeo?.latitude || 42.8508686,
         ],
         zoom: 13,
-        key: key,
+        key: REACT_APP_MAP_KEY,
       });
 
       setMap(initializedMap);
 
       const directionsInstance = new Directions(initializedMap, {
-        directionsApiKey: key,
+        directionsApiKey: REACT_APP_MAP_KEY,
       });
       setDirections(directionsInstance);
 
@@ -157,7 +161,7 @@ const MapHistory = ({}) => {
       ]);
 
       const newDirectionsInstance = new Directions(map, {
-        directionsApiKey: key,
+        directionsApiKey: REACT_APP_MAP_KEY,
       });
 
       setSecondRoute(newDirectionsInstance);

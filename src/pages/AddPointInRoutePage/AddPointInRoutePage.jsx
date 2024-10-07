@@ -68,7 +68,7 @@ const AddPointInRoutePage = () => {
       return;
     }
 
-    if (!!!infoNextpoint?.queue?.value) {
+    if (!!!infoNextpoint?.position?.value) {
       myAlert("Заполните 'Выберите очередь для новой точки'", "error");
       return;
     }
@@ -76,7 +76,7 @@ const AddPointInRoutePage = () => {
     const data = {
       point_guid: infoNextpoint?.point?.value,
       comment: infoNextpoint?.comment,
-      queue: infoNextpoint?.queue?.value,
+      position: infoNextpoint?.position?.value,
       route_sheet_guid: activeRouteList?.guid,
       navigate,
     };
@@ -103,8 +103,8 @@ const AddPointInRoutePage = () => {
           options={listRoute}
           className="select"
           onChange={onChange}
-          name="queue"
-          value={infoNextpoint?.queue}
+          name="position"
+          value={infoNextpoint?.position}
         />
       </div>
 
