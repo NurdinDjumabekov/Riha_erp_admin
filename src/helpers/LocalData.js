@@ -324,7 +324,7 @@ export const menuSGP = [
   },
   {
     id: 2,
-    name: "Реестр накладных",
+    name: "Реестр отпускных накладных",
     icons: <HistoryIcon sx={{ color: "#fff", width: 18 }} />,
   },
 ];

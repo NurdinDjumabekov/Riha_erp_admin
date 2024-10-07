@@ -19,15 +19,27 @@ import CarCrashIcon from "@mui/icons-material/CarCrash";
 ////// components
 import EverySlide from "../EverySlide/EverySlide";
 
-const MapMenuInfo = () => {
+const MapMenuInfo = ({ totalDistance }) => {
   const dispatch = useDispatch();
 
   const { everyRoutes_TA } = useSelector((state) => state.mapSlice);
+  const { activeRouteList } = useSelector((state) => state.photoSlice);
 
   const list = everyRoutes_TA?.slice(1);
 
+  console.log(list, "list");
+
+  // const litr = 72;
+  // const rashod = 72;
+
+  // const priceCar = totalDistance?.toFixed(2);
+
   return (
     <div className="mapMenuInfo__parent scroll_table">
+      {/* <p className="time car">
+        <CarCrashIcon />
+        Расход на топливо: 12 л. ({totalDistance?.toFixed(2) * 82} сом)
+      </p> */}
       {list?.map((i) => (
         <div className="mapMenuInfo">
           <div className="mapMenuInfo__title">
@@ -52,10 +64,10 @@ const MapMenuInfo = () => {
               Время прихода торгового агента:{" "}
               {i?.set_start_time || "отсутствует"}
             </p>
-            <p className="time">
-              <CarCrashIcon />
-              Расход на топливо: 12 л. ({12 * 82} сом)
-            </p>
+            <div className="camon">
+              <input type="checkbox" checked={!!i?.set_start_time} />
+              <p>Посетил точку </p>
+            </div>
           </div>
           <EverySlide i={i} />
           {/* {!!link && (

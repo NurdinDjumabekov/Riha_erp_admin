@@ -15,13 +15,13 @@ import {
 } from "../../helpers/clear";
 import { listHistory, pastGeoData } from "../../helpers/LocalData";
 
-const { REACT_APP_API_URL } = process.env;
+const { REACT_APP_API_URL, REACT_APP_MAP_KEY } = process.env;
 
 /// actionType - 1 создание, 2 - редактирование, 3 - удаление
 
 const initialState = {
   mapGeo: { latitude: "", longitude: "" },
-  key: "",
+  key: REACT_APP_MAP_KEY,
 
   //////////////////////////////////////// для админа
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)

@@ -28,7 +28,7 @@ const MainLayouts = () => {
     dispatch(getListWorkShop());
     dispatch(getListTA({ first: true }));
     dispatch(getPointsRouteAgent({ guid, first: true }));
-    dispatch(getActiveRouteList(guid));
+    dispatch(getActiveRouteList(guid)); /// только для ТА
     //// отправляю запрос для получения точек каждого агента
   }, []);
 

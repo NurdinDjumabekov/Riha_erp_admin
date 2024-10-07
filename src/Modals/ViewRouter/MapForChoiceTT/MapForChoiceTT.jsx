@@ -10,15 +10,12 @@ import "./style.scss";
 import DeleteIcon from "../../../assets/MyIcons/DeleteIcon";
 import AddIcon from "../../../assets/MyIcons/AddIcon";
 
-////// helpers
-const { REACT_APP_MAP_KEY } = process.env;
-import { clearActiveMap } from "../../../helpers/clear";
-
 ////// fns
-import {
-  editCoordsPoint,
-  setActiveViewMap,
-} from "../../../store/reducers/mapSlice";
+import { setActiveViewMap } from "../../../store/reducers/mapSlice";
+import { editCoordsPoint } from "../../../store/reducers/mapSlice";
+
+///// helpers
+import { clearActiveMap } from "../../../helpers/clear";
 
 const MapForChoiceTT = () => {
   const dispatch = useDispatch();
@@ -38,7 +35,7 @@ const MapForChoiceTT = () => {
           mapGeo?.latitude || 42.8508686,
         ],
         zoom: 13,
-        key: REACT_APP_MAP_KEY,
+        key,
       });
 
       setMap(initializedMap);

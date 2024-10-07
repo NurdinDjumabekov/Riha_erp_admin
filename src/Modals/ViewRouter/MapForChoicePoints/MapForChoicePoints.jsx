@@ -4,10 +4,9 @@ import { useSelector } from "react-redux";
 import { Directions } from "@2gis/mapgl-directions";
 
 import "./style.scss";
-import { styleRoutes } from "../../../helpers/objs";
 
 ////// helpers
-const { REACT_APP_MAP_KEY } = process.env;
+import { styleRoutes } from "../../../helpers/objs";
 
 const MapForChoicePoints = () => {
   const [map, setMap] = useState(null);
@@ -24,13 +23,13 @@ const MapForChoicePoints = () => {
           mapGeo?.latitude || 42.8508686,
         ],
         zoom: 13,
-        key: REACT_APP_MAP_KEY,
+        key,
       });
 
       setMap(initializedMap);
 
       const directionsInstance = new Directions(initializedMap, {
-        directionsApiKey: REACT_APP_MAP_KEY,
+        directionsApiKey: key,
       });
       setDirections(directionsInstance);
 

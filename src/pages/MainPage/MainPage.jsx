@@ -17,6 +17,7 @@ import ModalProduction from "../../Modals/MainPage/ModalProduction/ModalProducti
 import ModalWareHome from "../../Modals/MainPage/ModalWareHome/ModalWareHome";
 import ViewRouter from "../../Modals/ViewRouter/ViewRouter";
 import ModalPayTA from "../../Modals/MainPage/ModalPayTA/ModalPayTA";
+import ModalAppTA from "../../Modals/MainPage/ModalAppTA/ModalAppTA";
 
 ////// helpers
 import { confirmAllDay } from "../../helpers/LocalData";
@@ -37,7 +38,6 @@ import UserIcon from "@mui/icons-material/AccountCircle";
 /////// style
 import "./style.scss";
 import { listStatusOrders } from "../../helpers/objs";
-import ModalAppTA from "../../Modals/MainPage/ModalAppTA/ModalAppTA";
 
 const MainPage = () => {
   const dispatch = useDispatch();

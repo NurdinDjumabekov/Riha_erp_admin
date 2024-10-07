@@ -11,8 +11,8 @@ import "./style.scss";
 /////// helpers
 import { styleRoutes, styleRoutesNoPlan } from "../../../helpers/objs";
 import { transformLists } from "../../../helpers/transformLists";
-import { transformActionDate } from "../../../helpers/transformDate";
 import { reverseTransformActionDate } from "../../../helpers/transformDate";
+import { transformActionDate } from "../../../helpers/transformDate";
 
 /////// components
 import { Directions } from "@2gis/mapgl-directions";
@@ -21,13 +21,11 @@ import Select from "react-select";
 import MapMenuInfo from "../MapMenuInfo/MapMenuInfo";
 
 ////// fns
-import { setActiveTA } from "../../../store/reducers/selectsSlice";
 import { setActiveDate } from "../../../store/reducers/selectsSlice";
+import { setActiveTA } from "../../../store/reducers/selectsSlice";
 import { getListRoutes_TA } from "../../../store/reducers/mapSlice";
-
-///// helpers
-const { REACT_APP_MAP_KEY } = process.env;
-
+import { getDistance } from "../../../helpers/totals";
+import { getActiveRouteList } from "../../../store/reducers/photoSlice";
 
 const MapHistory = ({}) => {
   const dispatch = useDispatch();
@@ -36,6 +34,7 @@ const MapHistory = ({}) => {
   const [directions, setDirections] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [secondRoute, setSecondRoute] = useState(null); // Состояние для второго маршрута
+  const [totalDistance, setTotalDistance] = useState(0); // Состояние для общего расстояния
 
   const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
   const { mapGeo, everyRoutes_TA, listTA_RouteNoPlan, key, listPointsEveryTA } =
@@ -46,18 +45,20 @@ const MapHistory = ({}) => {
 
   const onChange = (item) => {
     const obj = { agent_guid: item?.value, user_type, activeDate };
-    dispatch(getListRoutes_TA(obj));
-    dispatch(setActiveTA(item));
+    dispatch(getListRoutes_TA(obj)); /// get данных координат точек определенного агента
+    dispatch(setActiveTA(item)); /// активный state для селекта ТА
+    dispatch(getActiveRouteList(item?.value));
+    //// отправляю запрос для получения точек каждого агента
   };
 
   const onChangeDate = (item) => {
-    dispatch(setActiveDate(transformActionDate(item)));
+    dispatch(setActiveDate(transformActionDate(item))); /// активный state для селекта даты
     const obj = {
       agent_guid: activeTA?.value,
       user_type,
       activeDate: transformActionDate(item),
     };
-    dispatch(getListRoutes_TA(obj));
+    dispatch(getListRoutes_TA(obj)); /// get данных координат точек определенного агента
   };
 
   useEffect(() => {
@@ -68,13 +69,13 @@ const MapHistory = ({}) => {
           mapGeo?.latitude || 42.8508686,
         ],
         zoom: 13,
-        key: REACT_APP_MAP_KEY,
+        key: key,
       });
 
       setMap(initializedMap);
 
       const directionsInstance = new Directions(initializedMap, {
-        directionsApiKey: REACT_APP_MAP_KEY,
+        directionsApiKey: key,
       });
       setDirections(directionsInstance);
 
@@ -97,12 +98,26 @@ const MapHistory = ({}) => {
         directions.clear();
       }
 
-      const routePoints = everyRoutes_TA?.map((point) => [
+      const routePoints = everyRoutes_TA.map((point) => [
         parseFloat(point.lon),
         parseFloat(point.lat),
       ]);
 
-      const newMarkers = everyRoutes_TA?.map((point, index) => {
+      // Вычисление общего расстояния
+      let distance = 0;
+      for (let i = 0; i < everyRoutes_TA.length - 1; i++) {
+        const point1 = everyRoutes_TA?.[i];
+        const point2 = everyRoutes_TA?.[i + 1];
+        distance += getDistance(
+          parseFloat(point1.lat),
+          parseFloat(point1.lon),
+          parseFloat(point2.lat),
+          parseFloat(point2.lon)
+        );
+      }
+      setTotalDistance(distance);
+
+      const newMarkers = everyRoutes_TA.map((point, index) => {
         const checkTA = !!point?.set_start_time; // если время есть, то ТА посетил точку
         const checkTIndex = index === 0; // если это первая точка
 
@@ -132,6 +147,7 @@ const MapHistory = ({}) => {
 
         customMarker.addEventListener("click", () => {
           if (index !== 0) {
+            // Действия при клике на маркер (если нужно)
           }
         });
 
@@ -149,55 +165,55 @@ const MapHistory = ({}) => {
     }
   }, [map, everyRoutes_TA, directions, mapGeo]);
 
-  useEffect(() => {
-    if (map && listTA_RouteNoPlan?.length > 0) {
-      if (secondRoute) {
-        secondRoute.clear();
-      }
+  // useEffect(() => {
+  //   if (map && listTA_RouteNoPlan?.length > 0) {
+  //     if (secondRoute) {
+  //       secondRoute.clear();
+  //     }
 
-      const routePointsNoPlan = listTA_RouteNoPlan?.map((point) => [
-        parseFloat(point.lon),
-        parseFloat(point.lat),
-      ]);
+  //     const routePointsNoPlan = listTA_RouteNoPlan.map((point) => [
+  //       parseFloat(point.lon),
+  //       parseFloat(point.lat),
+  //     ]);
 
-      const newDirectionsInstance = new Directions(map, {
-        directionsApiKey: REACT_APP_MAP_KEY,
-      });
+  //     const newDirectionsInstance = new Directions(map, {
+  //       directionsApiKey: key,
+  //     });
 
-      setSecondRoute(newDirectionsInstance);
+  //     setSecondRoute(newDirectionsInstance);
 
-      // Создаем маркеры только для первой и последней точек маршрута
-      const startPoint = routePointsNoPlan[0];
-      const endPoint = routePointsNoPlan[routePointsNoPlan.length - 1];
+  //     // Создаем маркеры только для первой и последней точек маршрута
+  //     const startPoint = routePointsNoPlan[0];
+  //     const endPoint = routePointsNoPlan[routePointsNoPlan.length - 1];
 
-      // Создаем и добавляем маркер для первой точки
-      const startMarker = new map.mapgl.HtmlMarker(map, {
-        coordinates: startPoint,
-        type: "html",
-        html: `<div class="customMarker__start">Старт</div>`,
-        anchor: [0.5, 1],
-      });
+  //     // Создаем и добавляем маркер для первой точки
+  //     const startMarker = new map.mapgl.HtmlMarker(map, {
+  //       coordinates: startPoint,
+  //       type: "html",
+  //       html: `<div class="customMarker__start">Старт</div>`,
+  //       anchor: [0.5, 1],
+  //     });
 
-      // Создаем и добавляем маркер для последней точки
-      const endMarker = new map.mapgl.HtmlMarker(map, {
-        coordinates: endPoint,
-        type: "html",
-        html: `<div class="customMarker__end">Финиш</div>`,
-        anchor: [0.5, 1],
-      });
+  //     // Создаем и добавляем маркер для последней точки
+  //     const endMarker = new map.mapgl.HtmlMarker(map, {
+  //       coordinates: endPoint,
+  //       type: "html",
+  //       html: `<div class="customMarker__end">Финиш</div>`,
+  //       anchor: [0.5, 1],
+  //     });
 
-      // Добавляем маркеры на карту
-      setMarkers((prev) => [...prev, startMarker, endMarker]);
+  //     // Добавляем маркеры на карту
+  //     setMarkers((prev) => [...prev, startMarker, endMarker]);
 
-      // Прокладываем маршрут только если есть хотя бы две точки
-      if (routePointsNoPlan.length >= 2) {
-        newDirectionsInstance.carRoute({
-          points: routePointsNoPlan,
-          style: styleRoutesNoPlan, // Используем стиль для фактического маршрута
-        });
-      }
-    }
-  }, [map, listTA_RouteNoPlan]);
+  //     // Прокладываем маршрут только если есть хотя бы две точки
+  //     if (routePointsNoPlan.length >= 2) {
+  //       newDirectionsInstance.carRoute({
+  //         points: routePointsNoPlan,
+  //         style: styleRoutesNoPlan, // Используем стиль для фактического маршрута
+  //       });
+  //     }
+  //   }
+  // }, [map, listTA_RouteNoPlan]);
 
   const list_TA = transformLists(listTA, "guid", "fio");
 
@@ -213,6 +229,7 @@ const MapHistory = ({}) => {
             name="activeTA"
           />
         </div>
+
         <div className="date">
           <DatePicker
             selected={reverseTransformActionDate(activeDate)}
@@ -239,10 +256,14 @@ const MapHistory = ({}) => {
             <div className="bluetoute">Маршрут, по которому ТА поехал</div>
           </div>
         </div>
+
+        {/* <div className="distanceInfo">
+          <p>Общее расстояние маршрута: {totalDistance.toFixed(2)} км</p>
+        </div> */}
       </div>
 
-      {/* <div id="mapContainerHistory" className="map-container"></div> */}
-      <MapMenuInfo />
+      <div id="mapContainerHistory" className="map-container"></div>
+      <MapMenuInfo totalDistance={totalDistance} />
     </div>
   );
 };

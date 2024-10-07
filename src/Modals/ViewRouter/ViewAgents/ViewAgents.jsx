@@ -13,7 +13,6 @@ import { getAllRouteAgent } from "../../../store/reducers/mapSlice";
 
 ////// helpers
 import { formatName } from "../../../helpers/searchActiveOrdersTA";
-const { REACT_APP_MAP_KEY } = process.env;
 
 const ViewAgents = () => {
   const dispatch = useDispatch();
@@ -52,7 +51,7 @@ const ViewAgents = () => {
       map = new mapgl.Map("map-container-admin", {
         center: [mapGeo.longitude, mapGeo.latitude],
         zoom: 13,
-        key: REACT_APP_MAP_KEY,
+        key,
       });
       mapRef.current = map;
       setIsCheck(true); // Устанавливаем флаг, что карта загружена

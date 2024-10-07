@@ -1,6 +1,3 @@
-////// helpers
-import { styleRoutes } from "../../../helpers/objs";
-
 /////// hooks
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 ////// maps
 import { load } from "@2gis/mapgl";
 import { Directions } from "@2gis/mapgl-directions";
+
+////// helpers
+import { styleRoutes } from "../../../helpers/objs";
 
 ////// styles
 import "./style.scss";
@@ -18,8 +18,6 @@ import { setActiveActions_TA } from "../../../store/reducers/mapSlice";
 import { getMyGeo } from "../../../helpers/transformDate";
 
 const MapWrapper = ({ searchMe }) => {
-  const { REACT_APP_MAP_KEY } = process.env;
-
   const dispatch = useDispatch();
   const { mapGeo, everyRoutes_TA } = useSelector((state) => state.mapSlice);
   const { key } = useSelector((state) => state.mapSlice);
@@ -37,7 +35,7 @@ const MapWrapper = ({ searchMe }) => {
           mapGeo?.latitude || 42.8508686,
         ],
         zoom: 13,
-        key: REACT_APP_MAP_KEY,
+        key: key,
       });
 
       setMap(initializedMap);

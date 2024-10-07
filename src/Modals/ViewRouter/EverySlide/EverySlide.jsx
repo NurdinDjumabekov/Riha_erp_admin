@@ -39,12 +39,20 @@ const EverySlide = ({ i }) => {
           {i?.files?.map((photo, index) => (
             <div className="everySlide" key={index}>
               {checkIsFile(photo?.file_path) === "image" ? (
-                <img src={photo?.file_path} alt="###" />
+                <div className="photoBlock">
+                  <img src={photo?.file_path} alt="###" />
+                  <div className="dateTime">
+                    <p>{photo?.date}</p>
+                  </div>
+                </div>
               ) : (
                 <div className="videoBlock">
                   <video controls>
                     <source src={photo?.file_path} type="video/mp4" />
                   </video>
+                  <div className="dateTime">
+                    <p>{photo?.date}</p>
+                  </div>
                 </div>
               )}
             </div>
