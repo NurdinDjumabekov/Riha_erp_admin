@@ -143,6 +143,13 @@ const MainPage = () => {
       return;
     }
 
+    if (status == 3) {
+      const text = "Заявка уже была обработана, редактирование невозможно!";
+      myAlert(text, "error");
+      content.revert();
+      return;
+    }
+
     const date_from = transformDateTime(newStart); // Откуда взял
     const date_to = transformDateTime(oldStart); // Куда перетащил
 

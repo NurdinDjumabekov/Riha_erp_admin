@@ -15,12 +15,13 @@ import { changeCountOrders } from "../../../store/reducers/mainSlice";
 import "./style.scss";
 
 ////// helpers
-import { chechListOrders } from "../../../helpers/searchActiveOrdersTA";
 import { validNums } from "../../../helpers/validations";
 import { sumCountsFN, totalSum } from "../../../helpers/totals";
 
 ////// icons
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 const ListAcceptProd = () => {
   const dispatch = useDispatch();
@@ -34,11 +35,20 @@ const ListAcceptProd = () => {
     const count = e?.target?.value?.replace(",", ".");
 
     if (validNums(count)) {
-      //// валидцаия на числа
+      //// валидация на числа
       return;
     }
     dispatch(changeCountOrders({ ...item, count }));
-    /////изменение ключа count в списке товаров временной корзины
+  };
+
+  const incrementCount = (item) => {
+    const newCount = (parseFloat(item?.count) || 0) + 1;
+    dispatch(changeCountOrders({ ...item, count: newCount.toString() }));
+  };
+
+  const decrementCount = (item) => {
+    const newCount = Math.max((parseFloat(item?.count) || 0) - 1, 0); // Минимальное значение - 0
+    dispatch(changeCountOrders({ ...item, count: newCount.toString() }));
   };
 
   const delProd = ({ product_guid, invoice_guid, price, count }) => {
@@ -46,7 +56,6 @@ const ListAcceptProd = () => {
     const data = { invoice_guid, comment: "", status: -1, products };
     const obj = { listTA, activeDate, action: 3 };
     dispatch(delProdInInvoice({ data, ...obj, guid }));
-    ///// удаление твоара с накладной через запрос
   };
 
   return (
@@ -59,20 +68,20 @@ const ListAcceptProd = () => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: "5%" }} align="center">
+              <TableCell style={{ width: "8%" }} align="center">
                 №
               </TableCell>
-              <TableCell style={{ width: "60%" }}>Продукт</TableCell>
-              <TableCell align="left" style={{ width: "15%" }}>
-                Цена
-              </TableCell>
+              <TableCell style={{ width: "50%" }}>Продукт</TableCell>
               <TableCell align="left" style={{ width: "10%" }}>
                 Кол-во
+              </TableCell>
+              <TableCell align="left" style={{ width: "22%" }}>
+                Цена
               </TableCell>
               <TableCell
                 align="left"
                 style={{ width: "10%" }}
-                className="titleCheckbox "
+                className="titleCheckbox"
               >
                 *
               </TableCell>
@@ -85,26 +94,42 @@ const ListAcceptProd = () => {
                   component="th"
                   scope="row"
                   align="center"
-                  style={{ width: "5%" }}
+                  style={{ width: "8%" }}
+                  onClick={() => decrementCount(row)}
                 >
                   {index + 1}
                 </TableCell>
-                <TableCell component="th" scope="row" style={{ width: "60%" }}>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  style={{ width: "50%" }}
+                  onClick={() => decrementCount(row)}
+                >
                   {row?.product_name}
                 </TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
-                  {row?.price} сом
+                <TableCell
+                  align="left"
+                  style={{ width: "10%" }}
+                  className="counterRow"
+                >
+                  <div className="countInputContainer">
+                    <input
+                      type="text"
+                      onChange={(e) => onChangeCount(e, row)}
+                      name="counts"
+                      value={row?.count}
+                      maxLength={10}
+                      className="counts"
+                      readOnly={!checkInvoice}
+                    />
+                  </div>
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
-                  <input
-                    type="text"
-                    onChange={(e) => onChangeCount(e, row)}
-                    name="counts"
-                    value={row?.count}
-                    maxLength={10}
-                    className="counts"
-                    readOnly={!checkInvoice}
-                  />
+                <TableCell
+                  align="left"
+                  style={{ width: "20%" }}
+                  onClick={() => incrementCount(row)}
+                >
+                  {row?.price} сом
                 </TableCell>
                 <TableCell align="center" style={{ width: "10%" }}>
                   <Tooltip title={"Удалить"} placement="top" disableInteractive>

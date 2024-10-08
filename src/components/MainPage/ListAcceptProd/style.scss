@@ -16,4 +16,13 @@
   > div {
     max-height: 100%;
   }
+
+  .standartTable table tbody tr td .counts {
+    height: 24px;
+    font-weight: 500;
+  }
+
+  .counterRow {
+    padding: 4px !important;
+  }
 }

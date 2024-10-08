@@ -1,4 +1,3 @@
-////// hooks
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -26,13 +25,11 @@ const ListProds = () => {
   const onChangeCheck = (e, { product_guid }) => {
     const newList = listProds?.map((i) => {
       if (i?.product_guid === product_guid) {
-        return { ...i, is_checked: !i?.is_checked }; // Используем текущее значение из массива
+        return { ...i, is_checked: !i?.is_checked };
       } else {
         return i;
       }
     });
-
-    // Обновляем состояние с новым списком
     dispatch(setListProds(newList));
   };
 
@@ -40,12 +37,23 @@ const ListProds = () => {
     const count = e?.target?.value?.replace(",", ".");
 
     if (validNums(count)) {
-      //// валидцаия на числа
+      //// валидация на числа
       return;
     }
 
     dispatch(changeCountCheckedListProds({ ...item, count }));
-    /////изменение ключа count в списке товаров
+    ///// изменение ключа count в списке товаров
+  };
+
+  const handleIncrement = (item) => {
+    const count = parseFloat(item?.count || 0) + 1;
+    dispatch(changeCountCheckedListProds({ ...item, count }));
+  };
+
+  const handleDecrement = (item) => {
+    let count = parseFloat(item?.count || 0) - 1;
+    if (count < 0) count = 0;
+    dispatch(changeCountCheckedListProds({ ...item, count }));
   };
 
   return (
@@ -58,23 +66,23 @@ const ListProds = () => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell align="center" style={{ width: "5%" }}>
+              <TableCell align="center" style={{ width: "8%" }}>
                 №
               </TableCell>
-              <TableCell style={{ width: "60%" }}>Продукт</TableCell>
-              <TableCell align="left" style={{ width: "15%" }}>
-                Цена
-              </TableCell>
-              <TableCell align="left" style={{ width: "10%" }}>
+              <TableCell style={{ width: "58%" }}>Продукт</TableCell>
+              <TableCell align="left" style={{ width: "14%" }}>
                 Кол-во
               </TableCell>
-              <TableCell
+              <TableCell align="left" style={{ width: "20%" }}>
+                Цена
+              </TableCell>
+              {/* <TableCell
                 align="left"
                 style={{ width: "10%" }}
                 className="titleCheckbox"
               >
                 *
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -84,28 +92,60 @@ const ListProds = () => {
                   align="center"
                   component="th"
                   scope="row"
-                  style={{ width: "5%" }}
+                  style={{ width: "8%" }}
+                  onClick={() => handleDecrement(row)}
                 >
                   {index + 1}
                 </TableCell>
-                <TableCell component="th" scope="row" style={{ width: "60%" }}>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  style={{ width: "58%" }}
+                  onClick={() => handleDecrement(row)}
+                >
                   {row?.product_name}
                 </TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
+                <TableCell
+                  align="left"
+                  style={{ width: "14%", padding: 0 }}
+                  className="counterRow"
+                >
+                  <div className="counterContainer">
+                    {/* <button
+                      type="button"
+                      onClick={() => handleDecrement(row)}
+                      className="counterBtn"
+                      disabled={!checkInvoice}
+                    >
+                      -
+                    </button> */}
+                    <input
+                      type="text"
+                      onChange={(e) => onChangeCount(e, row)}
+                      name="counts"
+                      value={row?.count}
+                      maxLength={10}
+                      className="counts"
+                      readOnly={!checkInvoice}
+                    />
+                    {/* <button
+                      type="button"
+                      onClick={() => handleIncrement(row)}
+                      className="counterBtn"
+                      disabled={!checkInvoice}
+                    >
+                      +
+                    </button> */}
+                  </div>
+                </TableCell>
+                <TableCell
+                  align="left"
+                  style={{ width: "20%" }}
+                  onClick={() => handleIncrement(row)}
+                >
                   {row?.workshop_price} сом
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
-                  <input
-                    type="text"
-                    onChange={(e) => onChangeCount(e, row)}
-                    name="counts"
-                    value={row?.count}
-                    maxLength={10}
-                    className="counts"
-                    readOnly={!checkInvoice}
-                  />
-                </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
+                {/* <TableCell align="left" style={{ width: "10%" }}>
                   <div className="checkboxTable">
                     <input
                       type="checkbox"
@@ -115,7 +155,7 @@ const ListProds = () => {
                       disabled={!checkInvoice}
                     />
                   </div>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             ))}
           </TableBody>
