@@ -5,6 +5,7 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import HistoryIcon from "@mui/icons-material/History";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import AddHomeWorkIcon from "@mui/icons-material/AddHomeWork";
+import InsertCommentIcon from "@mui/icons-material/InsertComment";
 
 let eventGuid = 0;
 let todayStr = new Date().toISOString().replace(/T.*$/, ""); // YYYY-MM-DD of today
@@ -204,7 +205,14 @@ export const listActions_TA = [
     name: "Забрать деньги",
     icon: <PaymentsIcon />,
     color: "#805dca",
-    link: "",
+    link: "/take_money",
+  },
+  {
+    id: 4,
+    name: "Добавить комментарий",
+    icon: <InsertCommentIcon />,
+    color: "#e2a03f",
+    link: "/take_money",
   },
 ];
 
@@ -239,6 +247,7 @@ export const pastGeoData = {
   set_start_time: null,
   set_end_time: null,
   point_guid: "",
+  start_time: "02.10.2024",
   route_sheet_guid: "",
   guid: "",
   myGeo: true,

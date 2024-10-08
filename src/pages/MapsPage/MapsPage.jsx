@@ -5,10 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 /////// style
 import "./style.scss";
 
-////// imgs
-import iconNav from "../../assets/icons/arrowMapNav.svg";
-import AddIcon from "../../assets/MyIcons/AddIcon";
-
 ////// components
 import ActionsRouteTA from "../../Modals/ActionsRouteTA/ViewRouterTA";
 import MapWrapper from "../../components/MapPage/MapWrapper/MapWrapper";
@@ -17,7 +13,10 @@ import ActionsMapStatus from "../../components/MapPage/ActionsMapStatus/ActionsM
 
 /////// fns
 import { getListRoutes_TA } from "../../store/reducers/mapSlice";
-import { activeRouteListCRUD } from "../../store/reducers/photoSlice";
+import {
+  activeRouteListCRUD,
+  getActiveRouteList,
+} from "../../store/reducers/photoSlice";
 
 ////// helpers
 import { getMyGeo, transformDateTime } from "../../helpers/transformDate";
@@ -41,6 +40,9 @@ const MapsPage = () => {
     const obj = { agent_guid: dataSave?.guid, user_type, activeDate };
     dispatch(getListRoutes_TA(obj));
     ///  get данных координат точек для ТА
+
+    dispatch(getActiveRouteList(guid)); /// только для ТА
+    //// отправляю запрос для получения точек каждого агента
   }, []);
 
   const searchMeFN = () => setSearchMe(!searchMe);
@@ -62,10 +64,12 @@ const MapsPage = () => {
         lat,
         lon,
       };
-      dispatch(activeRouteListCRUD({ data, guid }));
+      dispatch(activeRouteListCRUD({ data, guid, user_type }));
       setCloseRoute(false);
     });
   };
+
+  // console.log(activeRouteList, "activeRouteList");
 
   return (
     <>

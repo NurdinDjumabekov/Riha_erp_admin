@@ -17,7 +17,7 @@ import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 ////// style
 import "./style.scss";
 
-const ListAcceptInvoiceSI = () => {
+const ListAcceptInvoiceSI = ({ route_guid, guid_point }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

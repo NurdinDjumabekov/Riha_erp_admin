@@ -1,18 +1,26 @@
+/////// hooks
 import React from "react";
-import Modals from "../../../components/Modals/Modals";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addNewPonts,
-  clearInfoNewPoint,
-  setInfoNewPoint,
-} from "../../../store/reducers/pointsSlice";
+
+////// fns
+import { addNewPonts } from "../../../store/reducers/pointsSlice";
+import { clearInfoNewPoint } from "../../../store/reducers/pointsSlice";
+import { setInfoNewPoint } from "../../../store/reducers/pointsSlice";
+
+////// components
+import Modals from "../../../components/Modals/Modals";
 import SendInput from "../../../common/SendInput/SendInput";
 import NumberInput from "../../../common/NumberInput/NumberInput";
+
+////// helpers
 import { myAlert } from "../../../helpers/MyAlert";
 import { checkNum } from "../../../helpers/validations";
 
 const ModalAddPoints = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { infoNewPoint } = useSelector((state) => state.pointsSlice);
 
   const onChange = ({ target: { name, value } }) => {
@@ -48,10 +56,8 @@ const ModalAddPoints = () => {
     //   return;
     // }
 
-    dispatch(addNewPonts(infoNewPoint));
+    dispatch(addNewPonts({ ...infoNewPoint, navigate }));
   };
-
-  console.log(infoNewPoint);
 
   const closeModal = () => dispatch(clearInfoNewPoint());
 

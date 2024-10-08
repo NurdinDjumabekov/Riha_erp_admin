@@ -24,6 +24,7 @@ import AcceptInvoicePage from "../pages/AcceptInvoicePage/AcceptInvoicePage";
 import LookPdfPage from "../pages/LookPdfPage/LookPdfPage";
 import AddPointsPage from "../pages/AddPointsPage/AddPointsPage";
 import AddPointInRoutePage from "../pages/AddPointInRoutePage/AddPointInRoutePage";
+import TakeMoneyPage from "../pages/TakeMoneyPage/TakeMoneyPage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -56,12 +57,16 @@ const MainRoutes = () => {
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
           <Route
-            path="/send_app/:route_guid/:guid_point"
+            path="/send_app/:route_guid/:guid_point/:type"
             element={<SendInvoicePage />}
           />
           <Route
-            path="/maps_camera/:route_guid/:guid_point"
+            path="/maps_camera/:route_guid/:guid_point/:type"
             element={<CameraPage />}
+          />
+          <Route
+            path="/take_money/:route_guid/:guid_point/:type"
+            element={<TakeMoneyPage />}
           />
         </>
       )}
@@ -72,7 +77,3 @@ const MainRoutes = () => {
 
 export default MainRoutes;
 /// user_type 2 - админ, 1 - агент
-
-// @media (max-width: 700px) {
-//   background: red;
-// }

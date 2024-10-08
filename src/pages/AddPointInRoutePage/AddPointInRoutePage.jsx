@@ -68,15 +68,15 @@ const AddPointInRoutePage = () => {
       return;
     }
 
-    if (!!!infoNextpoint?.position?.value) {
-      myAlert("Заполните 'Выберите очередь для новой точки'", "error");
-      return;
-    }
+    // if (!!!infoNextpoint?.position?.value) {
+    //   myAlert("Заполните 'Выберите очередь для новой точки'", "error");
+    //   return;
+    // }
 
     const data = {
       point_guid: infoNextpoint?.point?.value,
       comment: infoNextpoint?.comment,
-      position: infoNextpoint?.position?.value,
+      position: infoNextpoint?.position?.value || 1,
       route_sheet_guid: activeRouteList?.guid,
       navigate,
     };
@@ -113,7 +113,7 @@ const AddPointInRoutePage = () => {
         onChange={onChangeCom}
         value={infoNextpoint?.comment}
         name="comment"
-        placeholder="Комментарий"
+        placeholder="Комментарий (Описание для админа)"
       />
 
       <button className="sendData" onClick={addPointToday}>

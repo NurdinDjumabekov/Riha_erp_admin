@@ -64,6 +64,8 @@ const initialState = {
   // 1 - модалка для  действий (сфотать, отпустить накладную и т.д.)
   listHistoryRoute: [], //// история списка маршрутов ТА
   listTA_RouteNoPlan: [], //// список коориднат по которым ехал Та(типо сам, не по плану)
+  stateLoad: true, /// всегда меняю его с true на false и наоборот (нужен для перезагрузки карт)
+  //// check
 };
 
 ////// sendGeoUser - отправка геолокации пользователя(агента)
@@ -340,6 +342,27 @@ export const getEveryRoutes_TA = createAsyncThunk(
   }
 );
 
+////// sendCommentInRoute - отправка комментарий к отпредеденному маршруту от ТА
+export const sendCommentInRoute = createAsyncThunk(
+  "sendCommentInRoute",
+  async function (data, { dispatch, rejectWithValue }) {
+    const { prevNav } = data;
+    const url = `${REACT_APP_API_URL}/ta/set_route`;
+    try {
+      const response = await axios.put(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        myAlert("Комментарий успешно отправлен");
+        prevNav();
+        return response.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const mapSlice = createSlice({
   name: "mapSlice",
   initialState,
@@ -380,6 +403,10 @@ const mapSlice = createSlice({
     },
     setActiveActions_TA: (state, action) => {
       state.activeActions_TA = action?.payload;
+    },
+
+    setStateLoad: (state, action) => {
+      state.stateLoad = !state.stateLoad;
     },
   },
 
@@ -517,21 +544,20 @@ const mapSlice = createSlice({
       const list = action.payload?.list; /// geo TA
       const lat = state.mapGeo?.latitude; /// geo TA
       const lon = state.mapGeo?.longitude;
-      state.preloader = false;
       const firstObj = action.payload?.list?.[0];
-      const myData = {
-        ...firstObj,
-        lat: user_type == 1 ? lat : firstObj?.lat, //// delete 42.8572672
-        lon: user_type == 1 ? lon : firstObj?.lon, //// delete 74.6258432
-        // lat: "42.87584486129684",
-        // lon: "74.59743100461655",
-        start_time: "02.10.2024",
-        ...pastGeoData,
-      };
-      const sortList = list?.slice(1);
-      state.everyRoutes_TA = [myData, ...sortList];
-      // state.everyRoutes_TA = [myData, ...list];
-      // state.everyRoutes_TA = list;
+
+      const myData = { ...firstObj, lat, lon, ...pastGeoData };
+      const sortList = list?.slice(1); /// заменяю первый элемент массива на координату откуда должен начать путь ТА
+
+      const checkSides = list?.some((item) => item?.sides == true);
+      /// если уже есть стартовая точка
+
+      if (checkSides) {
+        state.everyRoutes_TA = list;
+      } else {
+        state.everyRoutes_TA = [myData, ...list];
+      }
+      state.preloader = false;
     });
     builder.addCase(getEveryRoutes_TA.rejected, (state, action) => {
       state.error = action.payload;
@@ -557,6 +583,7 @@ export const {
   clearEveryListRouteCRUD,
   setActiveViewMap,
   setActiveActions_TA,
+  setStateLoad,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

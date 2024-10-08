@@ -2,32 +2,32 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 ////// fns
 import { clearDataSave } from "../../store/reducers/saveDataSlice";
-
-////// components
-import GraphicsEveryTA from "../../components/MainPage/Modals/GraphicsEveryTA/GraphicsEveryTA";
-
-////// style
-import "./style.scss";
-import { useEffect } from "react";
-import {
-  getWorkPlanEveryTA,
-  setListWorkPlan,
-} from "../../store/reducers/mainSlice";
-
-////// icons
-import UserIcon from "@mui/icons-material/AccountCircle";
 import {
   clearDataPay,
   getEveryDebt,
   sendPayFN,
   setDataPay,
 } from "../../store/reducers/paySlice";
-import PaymentsIcon from "@mui/icons-material/Payments";
+import {
+  getWorkPlanEveryTA,
+  setListWorkPlan,
+} from "../../store/reducers/mainSlice";
+
+////// components
+import GraphicsEveryTA from "../../components/MainPage/Modals/GraphicsEveryTA/GraphicsEveryTA";
 import SendInput from "../../common/SendInput/SendInput";
 import Modals from "../../components/Modals/Modals";
+
+////// style
+import "./style.scss";
+
+////// icons
+import UserIcon from "@mui/icons-material/AccountCircle";
+import PaymentsIcon from "@mui/icons-material/Payments";
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const SettingsPage = () => {
       ...dataPay,
       user_type: "1",
       create_user_guid: "B85094A9-D70A-46AB-A724-5F3D7A506B37",
-      create_user_type: "2",
+      create_user_type: "2", /// данные админа
     };
     dispatch(sendPayFN(data));
   };
@@ -68,6 +68,7 @@ const SettingsPage = () => {
         { name: "Выполнено", value: 5 },
       ])
     ); //// check
+    dispatch(clearDataPay()); /// clear поля ввода данных для оплаты
   }, []);
 
   const length = debtEveryTA?.vozvrat?.length == 0;
@@ -138,6 +139,7 @@ const SettingsPage = () => {
             title={"Ваш комментарий"}
             name={"comment"}
             type="text"
+            typeInput="textarea"
           />
 
           <button className="sendData" onClick={sendPay}>

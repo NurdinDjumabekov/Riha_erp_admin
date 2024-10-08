@@ -3,6 +3,11 @@
 
   .customMarker {
     background: transparent;
+    width: 35px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 
     &::before {
       content: "";
@@ -21,9 +26,27 @@
     }
 
     &__name {
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 40px;
+
       p {
         font-size: 12px;
         font-weight: 500;
+      }
+    }
+
+    .startEnd {
+      background: #2196f3;
+      p {
+        color: #fff;
+      }
+    }
+
+    .wasTA {
+      background: #00ab55;
+      p {
+        color: #fff;
       }
     }
   }

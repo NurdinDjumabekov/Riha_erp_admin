@@ -169,18 +169,6 @@ const MainPage = () => {
     ),
   }; //// только для агента
 
-  const objStatus = {
-    2: (
-      <div className="listInfo">
-        {listStatusOrders?.map((i) => (
-          <div className="listInfo__every">
-            <>{i?.icon}</> - <p>{i?.text}</p>
-          </div>
-        ))}
-      </div>
-    ),
-  }; //// только для админа
-
   return (
     <div className="mainCalendare">
       {objMenu?.[user_type]}
@@ -225,7 +213,13 @@ const MainPage = () => {
             eventResizableFromStart={false} // Отключаю возможность изменения размера с начала
             eventDurationEditable={false}
           />
-          {objStatus?.[user_type]}
+          <div className="listInfo">
+            {listStatusOrders?.map((i) => (
+              <div className="listInfo__every">
+                <>{i?.icon}</> - <p>{i?.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <ModalAppTA />

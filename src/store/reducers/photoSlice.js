@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { transformActionDate } from "../../helpers/transformDate";
+import { getEveryRoutes_TA, setStateLoad } from "./mapSlice";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -69,12 +70,14 @@ export const getActiveRouteList = createAsyncThunk(
 ////// activeRouteListCRUD - изменение активного маршрутного листа, который выдается каждому агенту
 export const activeRouteListCRUD = createAsyncThunk(
   "activeRouteListCRUD",
-  async function ({ data, guid }, { dispatch, rejectWithValue }) {
+  async function ({ data, guid, user_type }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/set_route_sheet`;
     try {
       const response = await axios.put(url, data);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(getActiveRouteList(guid));
+        dispatch(getActiveRouteList(guid)); // get активного маршрутного листа, который выдается каждому агенту
+        const obj = { route_sheet_guid: data?.route_sheet_guid, user_type };
+        dispatch(getEveryRoutes_TA(obj)); //  get данных координат точек определенного агента
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);

@@ -32,7 +32,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ModalCreateInvoice = () => {
+const ModalCreateInvoice = ({ route_guid, guid_point }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -109,7 +109,14 @@ const ModalCreateInvoice = () => {
 
         {/* ///// для mobile */}
         <div className={`listsCRUD mobile`}>
-          {viewApp ? <ListInvoiceSI /> : <ListAcceptInvoiceSI />}
+          {viewApp ? (
+            <ListInvoiceSI route_guid={route_guid} guid_point={guid_point} />
+          ) : (
+            <ListAcceptInvoiceSI
+              route_guid={route_guid}
+              guid_point={guid_point}
+            />
+          )}
         </div>
       </div>
     </Dialog>

@@ -204,7 +204,8 @@ button {
     margin: 0 0 3px 0;
   }
 
-  input {
+  input,
+  textarea {
     border: 1px solid #e1e6ed;
     padding: 8px 8px;
     font-size: 15px;
@@ -220,6 +221,10 @@ button {
       border: 1px solid rgba(89, 89, 89, 0.529);
       outline: none;
     }
+  }
+
+  textarea {
+    height: 150px;
   }
 
   .css-hlgwow {

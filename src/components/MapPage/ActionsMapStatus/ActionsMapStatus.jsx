@@ -48,7 +48,12 @@ const ActionsMapStatus = ({ startEndListRoute, setCloseRoute, searchMeFN }) => {
     ),
   };
 
-  const clickAction = ({ link }) => {
+  const clickAction = ({ link, id }) => {
+    if (activeRouteList?.status == 2 && id == 2) {
+      /// нельзя добавить маршрут, если ТА уже завершил свой путь
+      myAlert("Вы обошли все точки на сегодня и закрыли маршрут!", "error");
+      return;
+    }
     navigate(link);
     setLook(false);
   };

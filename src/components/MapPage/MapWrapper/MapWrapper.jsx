@@ -8,6 +8,7 @@ import { Directions } from "@2gis/mapgl-directions";
 
 ////// helpers
 import { styleRoutes } from "../../../helpers/objs";
+import { myAlert } from "../../../helpers/MyAlert";
 
 ////// styles
 import "./style.scss";
@@ -15,11 +16,11 @@ import "./style.scss";
 ////// fns
 import { setMapGeo } from "../../../store/reducers/mapSlice";
 import { setActiveActions_TA } from "../../../store/reducers/mapSlice";
-import { getMyGeo } from "../../../helpers/transformDate";
 
 const MapWrapper = ({ searchMe }) => {
   const dispatch = useDispatch();
   const { mapGeo, everyRoutes_TA } = useSelector((state) => state.mapSlice);
+  const { stateLoad } = useSelector((state) => state.mapSlice);
   const { key } = useSelector((state) => state.mapSlice);
   const { activeRouteList } = useSelector((state) => state.photoSlice);
 
@@ -47,8 +48,6 @@ const MapWrapper = ({ searchMe }) => {
 
       initializedMap.mapgl = mapgl;
     });
-
-    // getMyGeo().then(({ lat, lon }) => {})}
 
     return () => {
       if (map) {
@@ -78,7 +77,13 @@ const MapWrapper = ({ searchMe }) => {
           !!point?.myGeo
             ? "<div class='customMarker__inner'><i></i></div>"
             : `<div class='customMarker__point'><i></i></div>
-            <div class='customMarker__name'><p><span class='customMarker__index'>${index}</span>. ${point.point}</p></div>`
+            <div class='customMarker__name ${
+              !!point?.sides ? "startEnd" : ""
+            } ${!!point?.set_start_time ? "wasTA" : ""}'><p> ${
+                !!!point?.sides
+                  ? `<span class="customMarker__index">${index}. </span>`
+                  : ""
+              } ${point.point}</p></div>`
         }
         `;
 
@@ -104,7 +109,6 @@ const MapWrapper = ({ searchMe }) => {
       }
     }
   }, [map, everyRoutes_TA, directions]);
-  // }, [map, everyRoutes_TA, directions, mapGeo]);
 
   const searchMeFN = () => {
     if (navigator.geolocation) {
@@ -139,24 +143,24 @@ const MapWrapper = ({ searchMe }) => {
   const clickPoint = (point) => {
     const obj = { ...point, actionType: 1, activeRouteList };
 
-    // console.log(activeRouteList, "activeRouteList");
+    console.log(activeRouteList, "activeRouteList");
 
-    // if (activeRouteList?.status == 0) {
-    //   myAlert("Начните свой маршрут!");
-    // }
+    if (activeRouteList?.status == 0) {
+      myAlert("Начните свой маршрут!");
+    }
 
-    // if (activeRouteList?.status == 2) {
-    //   myAlert("Вы обошли все точки на сегодня!");
-    // }
+    if (activeRouteList?.status == 2) {
+      myAlert("Вы обошли все точки на сегодня!");
+    }
 
-    // if (activeRouteList?.status == 1) {
-    // }
-    /// действия можно делать только когда маршрут стал активным
-    //  модалка для  действий (сфотать, отпустить накладную и т.д.)
-    dispatch(setActiveActions_TA(obj));
+    if (activeRouteList?.status == 1) {
+      /// действия можно делать только когда маршрут стал активным
+      //  модалка для  действий (сфотать, отпустить накладную и т.д.)
+      dispatch(setActiveActions_TA(obj));
+    }
   };
 
-  console.log(everyRoutes_TA, "everyRoutes_TA");
+  // console.log(everyRoutes_TA, "everyRoutes_TA");
 
   return (
     <div className="mapBlock">

@@ -33,7 +33,7 @@ const SendInvoicePage = () => {
     dispatch(createInvoiceSendTT({ data, seller_guid: guid_point }));
   }, [guid_point]);
 
-  return <ModalCreateInvoice />;
+  return <ModalCreateInvoice route_guid={route_guid} guid_point={guid_point} />;
 };
 
 export default SendInvoicePage;

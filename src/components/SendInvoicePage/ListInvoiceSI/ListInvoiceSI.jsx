@@ -28,7 +28,7 @@ import { searchListProds } from "../../../store/reducers/invoiceSlice";
 ////// icons
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 
-const ListInvoiceSI = () => {
+const ListInvoiceSI = ({ route_guid, guid_point }) => {
   const dispatch = useDispatch();
 
   const [search, setSearch] = useState("");
@@ -148,7 +148,7 @@ const ListInvoiceSI = () => {
                 value={activeCategs}
               />
             </div>
-            <div className="myInputs">
+            {/* <div className="myInputs">
               <h6>Поиск товаров </h6>
               <input
                 type="text"
@@ -156,8 +156,8 @@ const ListInvoiceSI = () => {
                 onChange={onChangeSearch}
                 value={search}
               />
-            </div>
-            <div className="myInputs">
+            </div> */}
+            <div className="myInputs comment">
               <h6>Комментарий</h6>
               <input
                 type="text"
@@ -179,7 +179,7 @@ const ListInvoiceSI = () => {
         </div>
       </div>
 
-      <ListProdsSI list={listProdsSI} />
+      <ListProdsSI />
     </div>
   );
 };

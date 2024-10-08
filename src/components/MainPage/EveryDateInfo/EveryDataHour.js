@@ -23,14 +23,6 @@ import { getListProdsInInvoice } from "../../../store/reducers/mainSlice";
 ////// icons
 import UserIcon from "@mui/icons-material/AccountCircle";
 import PaidIcon from "@mui/icons-material/PaymentsOutlined";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
-import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-
-////// imgs
-import imgInfo from "../../../assets/images/design-process.png";
 
 const EveryDataHour = ({ content }) => {
   const { status, agent, invoice_guid } = content?.event?._def?.extendedProps;
@@ -58,7 +50,6 @@ const EveryDataHour = ({ content }) => {
       onClick={editEveryInvoice}
     >
       <div className="everyOrder__inner hourTitle">
-        {/* <h6>№ {codeid}</h6> */}
         <h5 className="titleHour">
           <UserIcon />
           <p>{agent}</p>

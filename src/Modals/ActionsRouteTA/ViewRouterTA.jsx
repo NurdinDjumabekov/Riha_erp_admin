@@ -28,9 +28,9 @@ const ActionsRouteTA = () => {
     /// очишаю для закрытия модалки
   };
 
-  const clickCateg = ({ link }) => {
-    const linkNext = `/${activeActions_TA?.guid}/${activeActions_TA?.point_guid}`;
-    navigate(`${link}${linkNext}`);
+  const clickCateg = ({ link, id }) => {
+    let linkNext = `/${activeActions_TA?.guid}/${activeActions_TA?.point_guid}`;
+    navigate(`${link}${linkNext}/${id}`);
   };
 
   return (
@@ -54,8 +54,8 @@ const ActionsRouteTA = () => {
                 <span> +996{activeActions_TA?.seller_number}</span>
               </div>
             </div>
-            <p>Время прихода: {activeActions_TA?.start_time}</p>
-            <p>Время выхода: {activeActions_TA?.end_time}</p>
+            <p>Время прихода: {activeActions_TA?.set_start_time}</p>
+            {/* <p>Время выхода: {activeActions_TA?.end_time}</p> */}
           </div>
           <div className="listActions">
             {listActions_TA?.map((item) => (

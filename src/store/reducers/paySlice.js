@@ -27,7 +27,7 @@ export const getEveryDebt = createAsyncThunk(
   }
 );
 
-////// sendPayFN - оплата торг0вым агентом
+////// sendPayFN - оплата (для всех)
 export const sendPayFN = createAsyncThunk(
   "sendPayFN",
   async function (data, { dispatch, rejectWithValue }) {

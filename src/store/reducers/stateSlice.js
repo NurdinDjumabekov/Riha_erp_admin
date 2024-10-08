@@ -1,19 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  фывф: { latitude: "", longitude: "" },
+  stateLoad: true, /// всегда меняю его с true на false и наоборот (нужен для перезагрузки карт)
 };
 
 const stateSlice = createSlice({
   name: "stateSlice",
   initialState,
   reducers: {
-    фывыф: (state, action) => {
-      state.фывф = action?.payload;
+    asdas: (state, action) => {
+      state.stateLoad = action?.payload;
     },
   },
 });
 
-export const { фывыф } = stateSlice.actions;
+export const { asdas } = stateSlice.actions;
 
 export default stateSlice.reducer;
