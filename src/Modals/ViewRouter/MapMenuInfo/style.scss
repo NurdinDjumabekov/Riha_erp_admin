@@ -132,6 +132,23 @@
         color: #222;
       }
     }
+
+    .comment {
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      margin: 10px 0 0 0;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      p {
+        font-size: 13px;
+        text-align: left;
+      }
+    }
   }
 
   .car {

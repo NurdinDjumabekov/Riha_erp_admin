@@ -1,6 +1,6 @@
 /////// hooks
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// icons
@@ -22,17 +22,24 @@ import {
 
 ////// helpers
 import { getMyGeo } from "../../helpers/transformDate";
-import { sendCommentInRoute } from "../../store/reducers/mapSlice";
+import {
+  sendCommentInRoute,
+  setActiveActions_TA,
+} from "../../store/reducers/mapSlice";
 
 const TakeMoneyPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { route_guid, guid_point, type } = useParams(); //// в guid_point лежит guid продавца
+  const oldComment = location.state?.comment;
+  const guidRoute = location.state?.guid; // guid каждого маршрута
   ///// type - 3 для получения денег
   ///// type - 4 для отправки комментарий
 
   const { dataPay } = useSelector((state) => state.paySlice);
   const { dataSave } = useSelector((state) => state.saveDataSlice);
+  const { activeActions_TA } = useSelector((state) => state.mapSlice);
 
   const [comment, setComment] = useState("");
 
@@ -57,6 +64,7 @@ const TakeMoneyPage = () => {
 
   useEffect(() => {
     dispatch(clearDataPay()); /// clear поля ввода данных для оплаты
+    setComment(oldComment);
   }, []);
 
   // 3 для получения денег
@@ -98,7 +106,8 @@ const TakeMoneyPage = () => {
   const sendComment = () => {
     getMyGeo().then(({ lat, lon }) => {
       // dispatch(sendCommentInRoute({ comment, lat, lon, route_guid, prevNav }));
-      dispatch(sendCommentInRoute({ comment, route_guid, prevNav }));
+      dispatch(sendCommentInRoute({ comment, route_guid, prevNav })); /// добавляю коммент в маршрут
+      dispatch(setActiveActions_TA({ ...activeActions_TA, comment })); /// подсталвяю добавленный коммент в активный маршрут
     });
   };
 

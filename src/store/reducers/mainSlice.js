@@ -645,7 +645,7 @@ const mainSlice = createSlice({
     ////////////// searchListProds
     builder.addCase(searchListProds.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listProds = action.payload?.map((i) => ({ ...i, count: 1 }));
+      state.listProds = action.payload;
     });
     builder.addCase(searchListProds.rejected, (state, action) => {
       state.error = action.payload;

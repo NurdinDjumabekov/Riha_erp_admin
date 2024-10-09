@@ -13,6 +13,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import TimeIcon from "@mui/icons-material/AccessTime";
 import CarCrashIcon from "@mui/icons-material/CarCrash";
+import UserIcon from "@mui/icons-material/AccountCircle";
 
 ///// fns
 
@@ -25,22 +26,27 @@ const MapMenuInfo = ({ totalDistance }) => {
   const { everyRoutes_TA } = useSelector((state) => state.mapSlice);
   const { activeRouteList } = useSelector((state) => state.photoSlice);
 
-  const list = everyRoutes_TA?.slice(1);
+  const list = everyRoutes_TA?.slice(1); /// убираю добавленный мной  первый объект
 
-  console.log(list, "list");
+  const newList = list?.filter((i) => {
+    // Если point не равен ни "Стартовая точка", ни "Конечная точка"
+    if (i?.point !== "Стартовая точка" && i?.point !== "Конечная точка") {
+      return i;
+    }
+  });
 
   // const litr = 72;
-  // const rashod = 72;
+  // const rashod = 1.2;
 
-  // const priceCar = totalDistance?.toFixed(2);
+  const priceCar = totalDistance?.toFixed(2); //// км
 
   return (
     <div className="mapMenuInfo__parent scroll_table">
-      {/* <p className="time car">
+      <p className="time car">
         <CarCrashIcon />
-        Расход на топливо: 12 л. ({totalDistance?.toFixed(2) * 82} сом)
-      </p> */}
-      {list?.map((i) => (
+        Расход : {priceCar} км
+      </p>
+      {newList?.map((i) => (
         <div className="mapMenuInfo">
           <div className="mapMenuInfo__title">
             <h5>
@@ -68,6 +74,12 @@ const MapMenuInfo = ({ totalDistance }) => {
               <input type="checkbox" checked={!!i?.set_start_time} />
               <p>Посетил точку </p>
             </div>
+            {!!i?.comment && (
+              <div className="comment">
+                <UserIcon />
+                <p>{i?.comment}</p>
+              </div>
+            )}
           </div>
           <EverySlide i={i} />
           {/* {!!link && (

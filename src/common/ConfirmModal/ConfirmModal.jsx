@@ -44,7 +44,8 @@ const ConfirmModal = ({ state, yesFN, noFN, title }) => {
                   color: "white",
                   padding: "5px 7px",
                   borderRadius: 3,
-                  width: 70,
+                  width: 80,
+                  height: 35,
                 }}
               >
                 Да
@@ -57,7 +58,8 @@ const ConfirmModal = ({ state, yesFN, noFN, title }) => {
                   color: "white",
                   padding: "5px 7px",
                   borderRadius: 3,
-                  width: 70,
+                  width: 80,
+                  height: 35,
                 }}
               >
                 Нет

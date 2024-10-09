@@ -287,7 +287,7 @@ export const editCoordsPoint = createAsyncThunk(
     const { agent_guid } = data;
     const url = `${REACT_APP_API_URL}/ta/update_point`;
     try {
-      const response = await axios.put(url, data);
+      const response = await axiosInstance.put(url, data);
       if (response.status >= 200 && response.status < 300) {
         dispatch(getListRoute({ agent_guid }));
         dispatch(setActiveViewMap(clearActiveMap));

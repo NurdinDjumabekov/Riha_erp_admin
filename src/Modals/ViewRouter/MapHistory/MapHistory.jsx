@@ -119,7 +119,7 @@ const MapHistory = ({}) => {
 
       const newMarkers = everyRoutes_TA.map((point, index) => {
         const checkTA = !!point?.set_start_time; // если время есть, то ТА посетил точку
-        const checkTIndex = index === 0; // если это первая точка
+        const checkTIndex = !!point.sides; // если это начальный или конечный путь
 
         const markerNameClass = `customMarker__name ${
           checkTA ? "active" : ""

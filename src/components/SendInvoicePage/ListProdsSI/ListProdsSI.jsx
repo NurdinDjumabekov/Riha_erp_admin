@@ -35,20 +35,30 @@ const ListProdsSI = () => {
     dispatch(setListProdsSI(newList));
   };
 
-  const onChangeCount = (e, item) => {
-    const count = e?.target?.value?.replace(",", ".");
-
+  const onChangeCount = (count, item) => {
     if (validNums(count)) {
-      //// валидцаия на числа
-      return;
+      return; //// Валидация на числа
     }
 
-    if (item?.amount < count) {
-      return;
+    if (item?.amount < count || count < 0) {
+      return; //// Проверка, чтобы количество не превышало остаток и не было меньше нуля
     }
 
     dispatch(changeCountCheckedListProdsSI({ ...item, count }));
-    /////изменение ключа count в списке товаров
+  };
+
+  const increaseCount = (item) => {
+    const newCount = Number(item.count) + 1;
+    if (item?.amount >= newCount) {
+      onChangeCount(newCount, item);
+    }
+  };
+
+  const decreaseCount = (item) => {
+    const newCount = Number(item.count) - 1;
+    if (newCount >= 0) {
+      onChangeCount(newCount, item);
+    }
   };
 
   return (
@@ -63,39 +73,46 @@ const ListProdsSI = () => {
             <TableRow>
               <TableCell style={{ width: "50%" }}>Продукт</TableCell>
               <TableCell align="left" style={{ width: "15%" }}>
-                Цена
+                Остаток
               </TableCell>
-              <TableCell align="left" style={{ width: "15%" }}></TableCell>
               <TableCell align="left" style={{ width: "10%" }}>
                 Кол-во
               </TableCell>
-              <TableCell align="left" style={{ width: "10%" }}></TableCell>
+              <TableCell align="left" style={{ width: "15%" }}>
+                Цена
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {listProdsSI?.map((row, index) => (
+            {listProdsSI?.map((row) => (
               <TableRow key={row?.product_guid}>
-                <TableCell component="th" scope="row" style={{ width: "50%" }}>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  style={{ width: "50%" }}
+                  onClick={() => decreaseCount(row)}
+                >
                   {row?.product_name}
                 </TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
-                  {row?.price} сом
-                </TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
+                <TableCell
+                  align="left"
+                  style={{ width: "15%" }}
+                  onClick={() => decreaseCount(row)}
+                >
                   {row?.amount} кг
                 </TableCell>
                 <TableCell align="left" style={{ width: "10%" }}>
                   <input
                     type="text"
-                    onChange={(e) => onChangeCount(e, row)}
-                    name="counts"
+                    onChange={(e) => onChangeCount(e.target.value, row)}
+                    name="counts" 
                     value={row?.count}
                     maxLength={10}
                     className="counts"
                     readOnly={!checkInvoice}
                   />
                 </TableCell>
-                <TableCell align="left" style={{ width: "10%" }}>
+                {/* <TableCell align="left" style={{ width: "10%" }}>
                   <input
                     type="checkbox"
                     onChange={(e) => onChangeCheck(e, row)}
@@ -104,6 +121,13 @@ const ListProdsSI = () => {
                     checked={row?.is_checked}
                     disabled={!checkInvoice}
                   />
+                </TableCell> */}
+                <TableCell
+                  align="left"
+                  style={{ width: "15%" }}
+                  onClick={() => increaseCount(row)}
+                >
+                  {row?.price} сом
                 </TableCell>
               </TableRow>
             ))}

@@ -1,5 +1,5 @@
 ////hooks
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -30,7 +30,8 @@ const ActionsRouteTA = () => {
 
   const clickCateg = ({ link, id }) => {
     let linkNext = `/${activeActions_TA?.guid}/${activeActions_TA?.point_guid}`;
-    navigate(`${link}${linkNext}/${id}`);
+    const { comment, guid } = activeActions_TA;
+    navigate(`${link}${linkNext}/${id}`, { state: { comment, guid } });
   };
 
   return (
