@@ -11,14 +11,20 @@ export const propsStoreFN = (oldStore) => {
 const axiosInstance = axios.create({
   baseURL: REACT_APP_API_URL,
   timeout: 1000,
-  headers: { Authorization: `` },
+  headers: {
+    Authorization: {
+      user_guid: store?.getState()?.saveDataSlice?.dataSave?.guid,
+      agent_guid: store?.getState()?.saveDataSlice?.dataSave?.guid,
+      user_type: store?.getState()?.saveDataSlice?.dataSave?.user_type,
+    },
+  },
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
     const state = store?.getState();
-    const user_guid = state?.saveDataSlice?.dataSave?.guid;
-    const agent_guid = state?.saveDataSlice?.dataSave?.guid;
+    const user_guid = store?.getState()?.saveDataSlice?.dataSave?.guid;
+    const agent_guid = store?.getState()?.saveDataSlice?.dataSave?.guid;
     const user_type = state?.saveDataSlice?.dataSave?.user_type;
 
     // Добавляем guid в тело запроса, если это POST запрос

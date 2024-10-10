@@ -7,7 +7,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import "./style.scss";
 
 ////// components
-import MenuAgents from "../../common/MenuAgents/MenuAgents";
 import MenuAdmin from "../../common/MenuAdmin/MenuAdmin";
 
 /////// fns
@@ -15,14 +14,17 @@ import { getListTA } from "../../store/reducers/mainSlice";
 import { getListWorkShop } from "../../store/reducers/mainSlice";
 import { getPointsRouteAgent } from "../../store/reducers/mapSlice";
 import { getActiveRouteList } from "../../store/reducers/photoSlice";
+import HeaderInfo from "../../common/HeaderInfo/HeaderInfo";
 
 const MainLayouts = () => {
   const dispatch = useDispatch();
-  const { pathname } = useLocation();
 
-  const { user_type, guid } = useSelector(
-    (state) => state.saveDataSlice?.dataSave
-  );
+  const [active, setActive] = useState(true);
+
+  const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
+  const { dataSave } = useSelector((state) => state.saveDataSlice);
+
+  // console.log(dataSave, "dataSave");
 
   useEffect(() => {
     dispatch(getListWorkShop());
@@ -32,17 +34,13 @@ const MainLayouts = () => {
     //// отправляю запрос для получения точек каждого агента
   }, []);
 
-  const objMenu = { 1: <MenuAgents />, 2: <MenuAdmin /> };
-  /// user_type - 1 agent 2 admin
-
-  const noPadding = user_type == 2 || pathname === "/maps";
-
   return (
     <div className="layouts">
-      <div className={`pages ${noPadding ? "adminInfo" : ""}`}>
+      <MenuAdmin active={active} setActive={setActive} />
+      <HeaderInfo active={active} setActive={setActive} />
+      <div className="pages">
         <Outlet />
       </div>
-      {objMenu?.[user_type]}
     </div>
   );
 };

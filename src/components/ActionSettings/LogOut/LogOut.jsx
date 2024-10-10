@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 ////// imgs
 import lofOut from "../../../assets/images/logout.png";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 ////// style
 import "./style.scss";
@@ -11,7 +12,7 @@ import "./style.scss";
 /////// components
 import { Tooltip } from "@mui/material";
 
-const LogOut = () => {
+const LogOut = ({ active }) => {
   const navigate = useNavigate();
 
   const logOut = () => {
@@ -19,14 +20,21 @@ const LogOut = () => {
     window.location.reload();
     navigate("/");
   };
+  if (active) {
+    return (
+      <button onClick={logOut} className="logOut">
+        <LogoutIcon />
+        {active && <p>Выйти</p>}
+      </button>
+    );
+  }
 
   return (
     <Tooltip title={"Выйти"} placement="left">
-      <div className="logOut">
-        <button onClick={logOut}>
-          <img src={lofOut} alt="()" />
-        </button>
-      </div>
+      <button onClick={logOut} className="logOut">
+        <LogoutIcon />
+        {active && <p>Выйти</p>}
+      </button>
     </Tooltip>
   );
 };

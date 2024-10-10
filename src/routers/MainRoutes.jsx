@@ -13,18 +13,9 @@ import MainLayouts from "../layouts/MainLayouts/MainLayouts";
 ////fns
 
 /////// pages
-import MainPage from "../pages/MainPage/MainPage";
+import ListApplicationPage from "../pages/ListApplicationPage/ListApplicationPage";
+import HistoryApplicationPage from "../pages/HistoryApplicationPage/HistoryApplicationPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
-import SettingsPage from "../pages/SettingsPage/SettingsPage";
-import MapsPage from "../pages/MapsPage/MapsPage";
-import CameraPage from "../pages/CameraPage/CameraPage";
-import SendInvoicePage from "../pages/SendInvoicePage/SendInvoicePage";
-import MyInvoicePage from "../pages/MyInvoicePage/MyInvoicePage";
-import AcceptInvoicePage from "../pages/AcceptInvoicePage/AcceptInvoicePage";
-import LookPdfPage from "../pages/LookPdfPage/LookPdfPage";
-import AddPointsPage from "../pages/AddPointsPage/AddPointsPage";
-import AddPointInRoutePage from "../pages/AddPointInRoutePage/AddPointInRoutePage";
-import TakeMoneyPage from "../pages/TakeMoneyPage/TakeMoneyPage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -37,7 +28,7 @@ const MainRoutes = () => {
   const { listOrders, invoiceInfo } = useSelector((state) => state.mainSlice);
   const { activeRouteList } = useSelector((state) => state.photoSlice);
   const { mapGeo, listRouteAllTA } = useSelector((state) => state.mapSlice);
-
+  /// dataSave?.user_type == 2
   return (
     <Routes>
       {!!!dataSave?.guid ? (
@@ -45,35 +36,28 @@ const MainRoutes = () => {
       ) : (
         <>
           <Route element={<MainLayouts />}>
-            <Route path="/" element={<MainPage />} />
-            {/* ///// agentPages */}
-            <Route path="/my_invoice" element={<MyInvoicePage />} />
-            <Route path="/accept_invoice" element={<AcceptInvoicePage />} />
-            <Route path="/view/:url" element={<LookPdfPage />} />
-            <Route path="/camera" element={<CameraPage />} />
-            <Route path="/maps" element={<MapsPage />} />
-            <Route path="/create_points" element={<AddPointsPage />} />
-            <Route path="/add_points_route" element={<AddPointInRoutePage />} />
-            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/" element={<ListApplicationPage />} />
+            <Route
+              path="/history_application"
+              element={<HistoryApplicationPage />}
+            />
           </Route>
-          <Route
-            path="/send_app/:route_guid/:guid_point/:type"
-            element={<SendInvoicePage />}
-          />
-          <Route
-            path="/maps_camera/:route_guid/:guid_point/:type"
-            element={<CameraPage />}
-          />
-          <Route
-            path="/take_money/:route_guid/:guid_point/:type"
-            element={<TakeMoneyPage />}
-          />
         </>
       )}
-      {/* <Route path="*" element={<NotFoundPage />} /> */}
     </Routes>
   );
 };
 
 export default MainRoutes;
 /// user_type 2 - админ, 1 - агент
+
+// useEffect(() => {
+//   (async () => {
+//     try {
+//       const data = await dispatch(TestTest()).unwrap();
+//       console.log(data, "data");
+//     } catch (error) {
+//       // обработка ошибки
+//     }
+//   })();
+// }, []);

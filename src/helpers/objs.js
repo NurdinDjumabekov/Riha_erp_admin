@@ -22,7 +22,6 @@ import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import AvTimerOutlinedIcon from "@mui/icons-material/AvTimerOutlined";
-import ChecklistIcon from "@mui/icons-material/Checklist";
 import TaxiAlertIcon from "@mui/icons-material/TaxiAlert";
 
 /////// icons
@@ -42,6 +41,8 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import NearMeIcon from "@mui/icons-material/NearMe";
+import ChecklistIcon from "@mui/icons-material/Checklist";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 
 export const objStatusOrders = {
   0: {
@@ -161,61 +162,65 @@ export const listActionsTitle = [
   },
 ];
 
-export const objStatusText = {
-  1: "Товар добавлен!",
-  2: "Товар обновлён!",
-};
+export const objStatusText = { 1: "Товар добавлен!", 2: "Товар обновлён!" };
 
 export const listMenu = [
+  {
+    id: 2,
+    title: "Заявки",
+    icon: <TextSnippetIcon sx={{ color: "#fff" }} />,
+    iconActive: <TextSnippetIcon sx={{ color: "#988c7d" }} />,
+    link: "/",
+  },
   {
     id: 1,
     title: "Реестр заявок",
     icon: <ReceiptLongIcon sx={{ color: "#fff" }} />,
     iconActive: <ReceiptLongIcon sx={{ color: "#988c7d" }} />,
-    link: "/",
+    link: "/history_application",
   },
   {
     id: 4,
     title: "Производство",
     icon: <AvTimerOutlinedIcon sx={{ color: "#fff" }} />,
     iconActive: <AvTimerOutlinedIcon sx={{ color: "#988c7d" }} />,
-    link: "/",
+    link: "/s",
   },
   {
     id: 5,
-    title: "Склад готовой продукции",
+    title: "СГП",
     icon: <HomeWorkIcon sx={{ color: "#fff" }} />,
-    link: "/",
+    link: "/f",
   },
   {
     id: 6,
     title: "Маршруты ТА",
     icon: <TaxiAlertIcon sx={{ color: "#fff" }} />,
-    link: "/all_agents",
+    link: "/asd",
   },
   {
     id: 7,
     title: "Долги и оплаты ТА",
     icon: <PaymentsIcon sx={{ color: "#fff" }} />,
-    link: "/all_agents",
+    link: "/assd",
   },
   {
     id: 10,
     title: "Настройки",
     icon: <SettingsSuggestOutlinedIcon sx={{ color: "#fff" }} />,
-    link: "/asd",
+    link: "/ga",
   },
   {
     id: 15,
     title: "Отчеты",
     icon: <SummarizeOutlinedIcon sx={{ color: "#fff" }} />,
-    link: "/asd",
+    link: "/asd21",
   },
   {
     id: 26,
     title: "Справочники",
     icon: <AccountTreeOutlinedIcon sx={{ color: "#fff" }} />,
-    link: "/as",
+    link: "/as1231231",
   },
 ];
 

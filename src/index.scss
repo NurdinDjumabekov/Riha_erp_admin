@@ -1,10 +1,12 @@
+// @import url("./assets/fonts/Nunito_sans/stylesheet.css");
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
 }
 
 li {
@@ -22,9 +24,9 @@ a {
 }
 
 button {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 400;
   border: none;
   cursor: pointer;
 }

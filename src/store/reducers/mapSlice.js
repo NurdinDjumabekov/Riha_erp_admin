@@ -68,26 +68,6 @@ const initialState = {
   //// check
 };
 
-////// sendGeoUser - отправка геолокации пользователя(агента)
-export const sendGeoUser = createAsyncThunk(
-  "sendGeoUser",
-  async function (props, { dispatch, rejectWithValue }) {
-    const { guid, latitude, longitude } = props;
-    const data = { agent_guid: guid, lat: latitude, lon: longitude };
-    const url = `${REACT_APP_API_URL}/ta/add_gps`;
-    try {
-      const response = await axios.post(url, data);
-      if (response.status >= 200 && response.status < 300) {
-        return response.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 ////////////////////////// account admin
 
 ////// getPointsRouteAgent - get данных координат точек для каждого ТА

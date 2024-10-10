@@ -66,6 +66,7 @@ const ViewRouter = () => {
                     <button
                       onClick={() => setActive(i.id)}
                       className={active == i.id ? "active" : ""}
+                      key={i?.id}
                     >
                       {i?.icon}
                       <p>{i?.title}</p>

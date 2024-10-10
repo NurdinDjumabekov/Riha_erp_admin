@@ -67,6 +67,7 @@ const ModalProduction = () => {
                   <button
                     className={i?.id == active ? "active" : ""}
                     onClick={() => setActive(i.id)}
+                    key={i?.id}
                   >
                     {i?.icons}
                     <p>{i?.name}</p>

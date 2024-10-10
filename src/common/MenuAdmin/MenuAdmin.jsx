@@ -1,7 +1,7 @@
 ///// hooks
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 ////// style
 import "./style.scss";
@@ -16,40 +16,67 @@ import { listMenu } from "../../helpers/objs";
 ////// fns
 import { setInvoiceInfo } from "../../store/reducers/mainSlice";
 
-const MenuAdmin = () => {
-  const dispatch = useDispatch();
-  const location = useLocation();
+///// icons
+import logo from "../../assets/images/rihaLogo.png";
+import twoArrow from "../../assets/icons/twoArrow.svg";
+import arrowRight from "../../assets/icons/arrowMenu.svg";
 
-  const [active, setActive] = useState("/");
+const MenuAdmin = ({ active, setActive }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
-  const handleChange = (link, id) => {
-    setActive(link);
-    dispatch(setInvoiceInfo({ ...invoiceInfo, action: id }));
-  };
-
-  useEffect(() => {
-    setActive(location?.pathname);
-  }, [location?.pathname]);
+  const clickPage = (link) => navigate(link);
 
   return (
     <div className="actionSettings">
-      <div className="actionSettings__inner">
+      <div className={`actionSettings__inner ${active ? "" : "activeHeader"}`}>
+        <h1 className={active ? "" : "activeLogo"}>
+          <img src={logo} alt="logo" />
+          <button onClick={() => setActive(!active)}>
+            {active ? (
+              <img src={twoArrow} alt="<<" />
+            ) : (
+              <img src={twoArrow} alt="<<" className="rotate" />
+            )}
+          </button>
+        </h1>
+        <div className={`menuBlocks ${active ? "" : "menuBlocksActive"}`}>
+          <span>Меню</span>
+        </div>
         {listMenu?.map(({ title, icon, id, link }) => (
-          <Tooltip
-            key={id}
-            title={<p style={{ fontSize: 15, padding: 5 }}>{title}</p>}
-            placement="left"
-            arrow
-            onClick={() => handleChange(link, id)}
-          >
-            <div className={active == link ? "activeMenu111" : ""}>
-              <button>{icon}</button>
-            </div>
-          </Tooltip>
+          <>
+            {active ? (
+              <div
+                className={pathname == link ? "activeMenu" : ""}
+                onClick={() => clickPage(link)}
+              >
+                <button>{icon}</button>
+                <p>{title}</p>
+                <img src={arrowRight} alt=">" className="navArrow" />
+              </div>
+            ) : (
+              <Tooltip
+                key={id}
+                title={<p style={{ fontSize: 15, padding: 5 }}>{title}</p>}
+                placement="left"
+                arrow
+                onClick={() => clickPage(link)}
+              >
+                <div
+                  className={pathname == link ? "activeMenu" : ""}
+                  onClick={() => clickPage(link)}
+                >
+                  <button>{icon}</button>
+                </div>
+              </Tooltip>
+            )}
+          </>
         ))}
       </div>
-      <LogOut />
+      <LogOut active={active} />
     </div>
   );
 };

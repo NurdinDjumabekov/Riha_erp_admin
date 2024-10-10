@@ -71,7 +71,6 @@ const EveryDataHour = ({ content }) => {
               <div className="status__inner">
                 {objStatusOrders?.[status]?.icon}
               </div>
-              <p></p>
             </Tooltip>
           </div>
         </h5>
