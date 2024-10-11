@@ -12,7 +12,6 @@ import {
 import storage from "redux-persist/lib/storage";
 
 //// slice
-import stateSlice from "./reducers/stateSlice";
 import saveDataSlice from "./reducers/saveDataSlice";
 import mainSlice from "./reducers/mainSlice";
 import selectsSlice from "./reducers/selectsSlice";
@@ -26,7 +25,6 @@ import pointsSlice from "./reducers/pointsSlice";
 
 const reducer = combineReducers({
   mainSlice,
-  stateSlice,
   saveDataSlice,
   selectsSlice,
   wareHouseSlice,

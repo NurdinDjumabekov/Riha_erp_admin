@@ -6,7 +6,6 @@ const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   debtEveryTA: { vozvrat: [], dolg: [] }, /// долг каждого агента
-  dataPay: { comment: "", amount: "", user_guid: "" },
 };
 
 ////// getEveryDebt - get список долгов каждого ТА
@@ -27,43 +26,12 @@ export const getEveryDebt = createAsyncThunk(
   }
 );
 
-////// sendPayFN - оплата (для всех)
-export const sendPayFN = createAsyncThunk(
-  "sendPayFN",
-  async function (data, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/add_oplata`;
-    try {
-      const response = await axios.post(url, data);
-      if (response.status >= 200 && response.status < 300) {
-        if (response?.data?.result == 1) {
-          dispatch(getEveryDebt({ agent_guid: data?.user_guid }));
-          myAlert("Оплата успешно произведена");
-          dispatch(clearDataPay());
-        }
-        return response?.data?.result;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 const paySlice = createSlice({
   name: "paySlice",
   initialState,
   reducers: {
     setDebtEveryTA: (state, action) => {
       state.debtEveryTA = action?.payload;
-    },
-
-    setDataPay: (state, action) => {
-      state.dataPay = action?.payload;
-    },
-
-    clearDataPay: (state, action) => {
-      state.dataPay = { comment: "", amount: "", user_guid: "" };
     },
   },
   extraReducers: (builder) => {
@@ -82,6 +50,6 @@ const paySlice = createSlice({
   },
 });
 
-export const { setDebtEveryTA, setDataPay, clearDataPay } = paySlice.actions;
+export const { setDebtEveryTA } = paySlice.actions;
 
 export default paySlice.reducer;

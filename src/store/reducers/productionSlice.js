@@ -73,10 +73,6 @@ const productionSlice = createSlice({
       state.listProduction = action.payload;
     },
 
-    setListProductionInvoice: (state, action) => {
-      state.listProductionInvoice = action.payload;
-    },
-
     /////изменение ключа count в списке товаров производства
     changeCountProduction: (state, action) => {
       const { product_guid, count } = action.payload;
@@ -109,11 +105,7 @@ const productionSlice = createSlice({
     });
   },
 });
-export const {
-  setListProductionInvoice,
-  setListProduction,
-  changeCountProduction,
-  setActiveDate,
-} = productionSlice.actions;
+export const { setListProduction, changeCountProduction, setActiveDate } =
+  productionSlice.actions;
 
 export default productionSlice.reducer;

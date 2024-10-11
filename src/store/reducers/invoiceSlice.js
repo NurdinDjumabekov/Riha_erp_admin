@@ -23,8 +23,6 @@ const initialState = {
   listSendOrdersSI: [], //// временный список для хранения списка заказа ТА
   viewApp: true,
   listInvoice: [],
-  listProdEveryInvoice: [],
-  listHistoryAcceptInvoice: [], /// история принятых накладынй ТА
 };
 
 ////// getListWorkShop - get список цехов
@@ -191,7 +189,7 @@ export const createEditProdInInvoiceSI = createAsyncThunk(
   }
 );
 
-////// getListProdsInInvoiceSI - список товаров определённой накладной
+////// getListProdsInInvoiceSI - список товаров определённой накладной //// check
 export const getListProdsInInvoiceSI = createAsyncThunk(
   "getListProdsInInvoiceSI",
   async function (guid, { dispatch, rejectWithValue }) {
@@ -209,7 +207,7 @@ export const getListProdsInInvoiceSI = createAsyncThunk(
   }
 );
 
-////// delProdInInvoiceSI - удаление товаров с накладных
+////// delProdInInvoiceSI - удаление товаров с накладных //// check
 export const delProdInInvoiceSI = createAsyncThunk(
   "delProdInInvoiceSI",
   async function (props, { dispatch, rejectWithValue }) {
@@ -230,7 +228,7 @@ export const delProdInInvoiceSI = createAsyncThunk(
   }
 );
 
-////// sendInvoiceForTT - отправка накладной торговому точке
+////// sendInvoiceForTT - отправка накладной торговой точке
 export const sendInvoiceForTT = createAsyncThunk(
   "sendInvoiceForTT",
   async function ({ data }, { dispatch, rejectWithValue }) {
@@ -241,64 +239,6 @@ export const sendInvoiceForTT = createAsyncThunk(
         myAlert("Накладная отправлена торговой точке");
         // dispatch(setInvoiceSendInfo({ seller_guid: "", invoice_guid: "" }));
         data?.navigate("/maps");
-        return response?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-////// getMyEveryInvoice - get список товаров накладных отпущенных админом
-export const getMyEveryInvoice = createAsyncThunk(
-  "getMyEveryInvoice",
-  async function (guid, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_invoice?invoice_guid=${guid}`;
-    try {
-      const response = await axios(url);
-      if (response.status >= 200 && response.status < 300) {
-        return response?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-////// acceptInvoice - принятие накладной ТА
-export const acceptInvoice = createAsyncThunk(
-  "acceptInvoice",
-  async function ({ data, navigate }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/update_invoice`;
-    try {
-      const response = await axios.put(url, data);
-      if (response.status >= 200 && response.status < 300) {
-        if (response?.data?.result == 1) {
-          myAlert("Накладная принята");
-          dispatch(setInvoiceInfo({ guid: "", action: 0 }));
-        }
-        return response?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-////// historyAcceptInvoice - история принятых накладных ТА в виде пдф
-export const historyAcceptInvoice = createAsyncThunk(
-  "historyAcceptInvoice",
-  async function ({ agent_guid }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_invoice_files?reciever_guid=${agent_guid}`;
-    try {
-      const response = await axios(url);
-      if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -322,22 +262,6 @@ const invoiceSlice = createSlice({
       state.checkInvoice = action.payload;
     },
 
-    setListProdsSI: (state, action) => {
-      state.listProdsSI = action.payload;
-    },
-
-    /////изменение ключа count и checkbox в списке товаров
-    changeCountCheckedListProdsSI: (state, action) => {
-      const { product_guid, count } = action.payload;
-      state.listProdsSI = state.listProdsSI?.map((i) => {
-        if (i?.product_guid === product_guid) {
-          return { ...i, count, is_checked: count == "" ? false : true };
-        } else {
-          return i;
-        }
-      });
-    },
-
     //// сброс cgeckbox и count в списке
     getDefaultListSI: (state, action) => {
       state.listProdsSI = state.listProdsSI?.map((i) => ({
@@ -345,19 +269,6 @@ const invoiceSlice = createSlice({
         count: "",
         is_checked: false,
       }));
-    },
-
-    ///// очищаю временный список для отправки создания заказа от ТА
-    clearListOrdersSI: (state, action) => {
-      state.listSendOrdersSI = [];
-    },
-
-    /////изменение ключа count в списке товаров временной корзины
-    changeCountOrdersSI: (state, action) => {
-      const { product_guid, count } = action.payload;
-      state.listSendOrdersSI = state.listSendOrdersSI?.map((i) =>
-        i?.product_guid === product_guid ? { ...i, count, my_status: true } : i
-      );
     },
 
     setViewApp: (state, action) => {
@@ -437,55 +348,13 @@ const invoiceSlice = createSlice({
     builder.addCase(getListProdsInInvoiceSI.pending, (state, action) => {
       state.preloader = true;
     });
-
-    ///////////// getMyEveryInvoice
-    builder.addCase(getMyEveryInvoice.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listProdEveryInvoice = action.payload;
-    });
-    builder.addCase(getMyEveryInvoice.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(getMyEveryInvoice.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    /////////// acceptInvoice
-    builder.addCase(acceptInvoice.fulfilled, (state, action) => {
-      state.preloader = false;
-    });
-    builder.addCase(acceptInvoice.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(acceptInvoice.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    /////////// historyAcceptInvoice
-    builder.addCase(historyAcceptInvoice.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listHistoryAcceptInvoice = action.payload;
-    });
-    builder.addCase(historyAcceptInvoice.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(historyAcceptInvoice.pending, (state, action) => {
-      state.preloader = true;
-    });
   },
 });
 
 export const {
   setInvoiceSendInfo,
   setCheckInvoice,
-  setListProdsSI,
-  changeCountCheckedListProdsSI,
   getDefaultListSI,
-  clearListOrdersSI,
-  changeCountOrdersSI,
   setViewApp,
 } = invoiceSlice.actions;
 

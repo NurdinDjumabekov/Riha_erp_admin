@@ -7,49 +7,9 @@ import { setStateLoad } from "./mapSlice";
 
 const { REACT_APP_API_URL, REACT_APP_MAP_KEY } = process.env;
 
-const initialState = {
-  infoNewPoint: {
-    lat: "",
-    lon: "",
-    codeid: 0,
-    name: "",
-    address: "",
-    phone: "",
-    inn: "",
-    ittn: "",
-    name_owner: "",
-    number_owner: "",
-  }, /// для создания новой ТТ от имени ТА
+const initialState = {};
 
-  infoNextpoint: {
-    point: { label: "", value: "" },
-    comment: "",
-    route_sheet_guid: "",
-    position: { label: "", value: "" },
-  }, //// для добавление в маршрут новой точки от имени ТА
-};
-
-////// getAddres - get наименование точки
-export const getAddres = createAsyncThunk(
-  "getAddres",
-  async function (infoNewPoint, { dispatch, rejectWithValue }) {
-    const { lon, lat } = infoNewPoint;
-    const url = `https://catalog.api.2gis.com/3.0/items/geocode?lon=${lat}&lat=${lon}&fields=items.point&key=${REACT_APP_MAP_KEY}`;
-    try {
-      const response = await axios(url);
-      if (response.status >= 200 && response.status < 300) {
-        const address = response.data?.result?.items?.[0]?.full_name;
-        dispatch(setInfoNewPoint({ ...infoNewPoint, address }));
-        return response.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
+//// обе апи на будущее
 ////// addNewPonts - создаю новую точку от имени ТА
 export const addNewPonts = createAsyncThunk(
   "addNewPonts",
@@ -109,48 +69,11 @@ export const addNewPontToday = createAsyncThunk(
 const pointsSlice = createSlice({
   name: "pointsSlice",
   initialState,
-  reducers: {
-    setInfoNewPoint: (state, action) => {
-      state.infoNewPoint = action?.payload;
-    },
-    clearInfoNewPoint: (state, action) => {
-      state.infoNewPoint = clearAddPoints;
-    },
+  reducers: {},
 
-    setInfoNextpoint: (state, action) => {
-      state.infoNextpoint = action?.payload;
-    },
-    clearInfoNextpoint: (state, action) => {
-      state.infoNextpoint = clearPositionPoints;
-    },
-  },
-
-  extraReducers: (builder) => {
-    ////////////// addNewPonts
-    builder.addCase(addNewPonts.fulfilled, (state, action) => {
-      state.preloader = false;
-      if (action.payload?.result == 1) {
-        myAlert("Новая точка успешно добавлена");
-        action.payload?.navigate("/maps");
-      } else if (action.payload?.result == -2) {
-        myAlert("Такая точка уже есть в нашей системе", "error");
-      }
-    });
-    builder.addCase(addNewPonts.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(addNewPonts.pending, (state, action) => {
-      state.preloader = true;
-    });
-  },
+  extraReducers: (builder) => {},
 });
 
-export const {
-  setInfoNewPoint,
-  clearInfoNewPoint,
-  setInfoNextpoint,
-  clearInfoNextpoint,
-} = pointsSlice.actions;
+export const {} = pointsSlice.actions;
 
 export default pointsSlice.reducer;

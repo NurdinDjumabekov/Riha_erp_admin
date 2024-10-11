@@ -58,17 +58,11 @@ const initialState = {
 
   //////////////////////////////////////// для агента
   //// check
-  listRoute_TA: [], /// список маршрутов для ТА
   everyRoutes_TA: [], /// каждый маршрут для ТА (от первой точки до последней)
-  activeActions_TA: { guid_point: "", point: "", actionType: 0 },
-  // 1 - модалка для  действий (сфотать, отпустить накладную и т.д.)
-  listHistoryRoute: [], //// история списка маршрутов ТА
   listTA_RouteNoPlan: [], //// список коориднат по которым ехал Та(типо сам, не по плану)
   stateLoad: true, /// всегда меняю его с true на false и наоборот (нужен для перезагрузки карт)
   //// check
 };
-
-////////////////////////// account admin
 
 ////// getPointsRouteAgent - get данных координат точек для каждого ТА
 export const getPointsRouteAgent = createAsyncThunk(
@@ -322,52 +316,18 @@ export const getEveryRoutes_TA = createAsyncThunk(
   }
 );
 
-////// sendCommentInRoute - отправка комментарий к отпредеденному маршруту от ТА
-export const sendCommentInRoute = createAsyncThunk(
-  "sendCommentInRoute",
-  async function (data, { dispatch, rejectWithValue }) {
-    const { prevNav } = data;
-    const url = `${REACT_APP_API_URL}/ta/set_route`;
-    try {
-      const response = await axios.put(url, data);
-      if (response.status >= 200 && response.status < 300) {
-        myAlert("Комментарий успешно отправлен");
-        prevNav();
-        return response.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 const mapSlice = createSlice({
   name: "mapSlice",
   initialState,
   reducers: {
-    setMapGeo: (state, action) => {
-      state.mapGeo = action?.payload;
-    },
-    setDateRoute: (state, action) => {
-      state.dateRoute = action?.payload;
-    },
-    setListPointsEveryTA: (state, action) => {
-      state.listPointsEveryTA = action?.payload;
-    },
-    setListRouteEveryTA: (state, action) => {
-      state.listRouteEveryTA = action?.payload;
-    },
-    setListRouteAllTA: (state, action) => {
-      state.listRouteAllTA = action?.payload;
-    },
     setRouteCRUD: (state, action) => {
       state.routeCRUD = action?.payload;
     },
+
     clearRouteCRUD: (state, action) => {
       state.routeCRUD = clearRoute;
     },
+
     setActiveRoute: (state, action) => {
       state.activeRoute = action?.payload;
     },
@@ -375,14 +335,13 @@ const mapSlice = createSlice({
     setEveryListRouteCRUD: (state, action) => {
       state.everyListRouteCRUD = action?.payload;
     },
+
     clearEveryListRouteCRUD: (state, action) => {
       state.everyListRouteCRUD = clearEveryListRoute;
     },
+
     setActiveViewMap: (state, action) => {
       state.activeViewMap = action?.payload;
-    },
-    setActiveActions_TA: (state, action) => {
-      state.activeActions_TA = action?.payload;
     },
 
     setStateLoad: (state, action) => {
@@ -551,18 +510,12 @@ const mapSlice = createSlice({
 });
 
 export const {
-  setMapGeo,
-  setDateRoute,
-  setListPointsEveryTA,
-  setListRouteEveryTA,
-  setListRouteAllTA,
   setRouteCRUD,
   clearRouteCRUD,
   setActiveRoute,
   setEveryListRouteCRUD,
   clearEveryListRouteCRUD,
   setActiveViewMap,
-  setActiveActions_TA,
   setStateLoad,
 } = mapSlice.actions;
 

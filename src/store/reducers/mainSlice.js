@@ -30,7 +30,6 @@ const initialState = {
   activeDate: { date_from: "", date_to: "" },
   // Состояние для диапазона активной недели
   checkInvoice: true, //// можно ли редактировать накладную
-  listWorkPlan: [], //// данные для графиков плана работы
   activeDateHistory: transformActionDate(new Date()), /// активная дата для историй заявок
   activeInvoiceHistory: "", /// активная накладная для историй заявок
 };
@@ -444,24 +443,6 @@ export const actionsInvoiceAllDay = createAsyncThunk(
   }
 );
 
-////// getWorkPlanEveryTA - get рабочий план каждого ТА
-export const getWorkPlanEveryTA = createAsyncThunk(
-  "getWorkPlanEveryTA",
-  async function ({ guid }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_work_plan?agent_guid=${guid}`;
-    try {
-      const response = await axios(url);
-      if (response.status >= 200 && response.status < 300) {
-        return response?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 ////// getHistoryInvoice - get список историй заявок
 export const getHistoryInvoice = createAsyncThunk(
   "getHistoryInvoice",
@@ -504,11 +485,6 @@ const mainSlice = createSlice({
     ///// очищаю временный список для отправки создания заказа от ТА
     clearListOrders: (state, action) => {
       state.listSendOrders = [];
-    },
-
-    ///// очищаю список заказа от ТА
-    clearOrders: (state, action) => {
-      state.listOrders = [];
     },
 
     setListProds: (state, action) => {
@@ -568,10 +544,6 @@ const mainSlice = createSlice({
         count: "",
         is_checked: false,
       }));
-    },
-
-    setListWorkPlan: (state, action) => {
-      state.listWorkPlan = action.payload;
     },
 
     /////  активная дата для историй заявок
@@ -743,19 +715,6 @@ const mainSlice = createSlice({
       state.preloader = true;
     });
 
-    //////////// getWorkPlanEveryTA
-    builder.addCase(getWorkPlanEveryTA.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listWorkPlan = action.payload;
-    });
-    builder.addCase(getWorkPlanEveryTA.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(getWorkPlanEveryTA.pending, (state, action) => {
-      state.preloader = true;
-    });
-
     ////////////// getHistoryInvoice
     builder.addCase(getHistoryInvoice.fulfilled, (state, action) => {
       state.preloader = false;
@@ -785,8 +744,6 @@ export const {
   setActiveDate,
   setCheckInvoice,
   getDefaultList,
-  setListWorkPlan,
-  clearOrders,
   setActiveDateHistory,
   setActiveInvoiceHistory,
 } = mainSlice.actions;
