@@ -251,24 +251,6 @@ export const sendInvoiceForTT = createAsyncThunk(
   }
 );
 
-////// getMyInvoice - get список накладных отпущенных админом
-export const getMyInvoice = createAsyncThunk(
-  "getMyInvoice",
-  async function (guid, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_invoices?date=0&reciever_guid=${guid}`;
-    try {
-      const response = await axios(url);
-      if (response.status >= 200 && response.status < 300) {
-        return response?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 ////// getMyEveryInvoice - get список товаров накладных отпущенных админом
 export const getMyEveryInvoice = createAsyncThunk(
   "getMyEveryInvoice",
@@ -298,7 +280,6 @@ export const acceptInvoice = createAsyncThunk(
         if (response?.data?.result == 1) {
           myAlert("Накладная принята");
           dispatch(setInvoiceInfo({ guid: "", action: 0 }));
-          dispatch(getMyInvoice(data?.user_guid));
         }
         return response?.data;
       } else {
@@ -454,19 +435,6 @@ const invoiceSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getListProdsInInvoiceSI.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    ///////////// getMyInvoice
-    builder.addCase(getMyInvoice.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listInvoice = action.payload;
-    });
-    builder.addCase(getMyInvoice.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(getMyInvoice.pending, (state, action) => {
       state.preloader = true;
     });
 

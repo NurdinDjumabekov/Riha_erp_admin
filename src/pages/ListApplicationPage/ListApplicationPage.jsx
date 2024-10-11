@@ -13,11 +13,6 @@ import ModalOrderCRUD from "../../components/MainPage/Modals/ModalOrderCRUD/Moda
 import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
 import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/ModaIngridients";
 import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
-import ModalProduction from "../../Modals/MainPage/ModalProduction/ModalProduction";
-import ModalWareHome from "../../Modals/MainPage/ModalWareHome/ModalWareHome";
-import ViewRouter from "../../Modals/ViewRouter/ViewRouter";
-import ModalPayTA from "../../Modals/MainPage/ModalPayTA/ModalPayTA";
-import ModalAppTA from "../../Modals/MainPage/ModalAppTA/ModalAppTA";
 
 ////// helpers
 import { confirmAllDay } from "../../helpers/LocalData";
@@ -41,13 +36,10 @@ import "./style.scss";
 
 const ListApplicationPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const calendarRef = useRef(null);
 
-  const { user_type, fio } = useSelector(
-    (state) => state.saveDataSlice?.dataSave
-  );
+  const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
   const { listOrders, activeDate } = useSelector((state) => state.mainSlice);
   const { listTitleOrders } = useSelector((state) => state.mainSlice);
   const { listTA } = useSelector((state) => state.mainSlice);
@@ -212,13 +204,8 @@ const ListApplicationPage = () => {
         </div>
         <MenuLeft />
       </div>
-      <ModalAppTA />
       <ModalOrderCRUD />
       <ModaIngridients />
-      <ModalProduction />
-      <ModalWareHome />
-      <ModalPayTA />
-      <ViewRouter />
     </div>
   );
 };

@@ -16,6 +16,10 @@ import MainLayouts from "../layouts/MainLayouts/MainLayouts";
 import ListApplicationPage from "../pages/ListApplicationPage/ListApplicationPage";
 import HistoryApplicationPage from "../pages/HistoryApplicationPage/HistoryApplicationPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
+import ProductionPage from "../pages/ProductionPage/ProductionPage";
+import WareHomePage from "../pages/WareHomePage/WareHomePage";
+import RouterPage from "../pages/RouterPage/RouterPage";
+import PayPage from "../pages/PayPage/PayPage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -41,6 +45,10 @@ const MainRoutes = () => {
               path="/history_application"
               element={<HistoryApplicationPage />}
             />
+            <Route path="/production" element={<ProductionPage />} />
+            <Route path="/ware_home" element={<WareHomePage />} />
+            <Route path="/route" element={<RouterPage />} />
+            <Route path="/pay" element={<PayPage />} />
           </Route>
         </>
       )}

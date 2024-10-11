@@ -1,0 +1,109 @@
+.sortSendProds {
+  .sortActions {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 5px 0 0;
+    gap: 20px;
+    width: 100%;
+
+    &__inner {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      width: 100%;
+      padding: 10px;
+
+      .myInputs {
+        width: 50% !important;
+      }
+    }
+  }
+
+  .sendActions {
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 5px 0 5px;
+  }
+
+  .myInputs {
+    width: 25%;
+    max-width: 250px;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+
+    h6 {
+      font-size: 13px;
+      font-weight: 500;
+      margin: 0 0 3px 0;
+    }
+
+    .select {
+      .css-qbdosj-Input {
+        height: 38px;
+        cursor: pointer;
+      }
+
+      .css-13cymwt-control {
+        border: 1px solid #e1dede !important;
+        box-shadow: none !important;
+        cursor: pointer;
+
+        &:hover {
+          border: 1px solid #6361615b !important;
+          cursor: pointer;
+        }
+      }
+
+      .css-t3ipsp-control {
+        border: 1px solid #6361615b !important;
+        box-shadow: none !important;
+        cursor: pointer;
+      }
+    }
+
+    .input {
+      height: 27px;
+      border-radius: 3px;
+      border: 1px solid #e1dede !important;
+      padding: 2px 10px;
+      width: 100%;
+      font-size: 13px;
+
+      &::placeholder {
+        color: #a9afb8;
+      }
+
+      &:focus {
+        border: 1px solid #6a696987;
+        outline: none;
+      }
+    }
+  }
+
+  .saveAction {
+    height: 38px;
+    background: #299b31;
+    padding: 1px 15px 3px;
+    border-radius: 5px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px;
+
+    p {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  .generatePdf {
+    background: #1976d2;
+  }
+}

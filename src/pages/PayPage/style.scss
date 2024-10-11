@@ -1,0 +1,62 @@
+.payPage {
+  height: 100%;
+  padding: 10px;
+  position: relative;
+  padding: 0px 8px 8px;
+
+  .listTAInfo {
+    padding-top: 5px;
+  }
+
+  &__main {
+    height: 100%;
+    display: flex;
+    gap: 10px;
+    height: 100%;
+
+    .listAgentsInfo {
+      width: 330px;
+      max-width: 330px;
+      min-width: 330px;
+      margin: 0;
+
+      &__inner {
+        width: 300px;
+        max-width: 300px;
+        min-width: 300px;
+        button {
+          padding: 8px !important;
+
+          .logo {
+            width: 35px;
+            height: 35px;
+
+            img {
+              width: 35px;
+              height: 35px;
+            }
+          }
+
+          .content {
+            p {
+              font-size: 13px;
+              font-weight: 500;
+            }
+
+            span {
+              font-size: 11px;
+            }
+          }
+        }
+
+        .active {
+          .content {
+            span {
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+  }
+}

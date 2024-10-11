@@ -1,0 +1,58 @@
+.listsWareHome {
+  background: #fff;
+  border-radius: 5px;
+
+  .sendActions {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+
+    .saveAction {
+      height: 38px;
+      background: #299b31;
+      padding: 1px 20px 3px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 13px 0 0 0;
+
+      p {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+
+    .generatePdf {
+      background: #1976d2;
+    }
+  }
+
+  &__inner {
+    height: calc(100% - 70px);
+
+    .standartTable {
+      box-shadow: none !important;
+    }
+
+    > div {
+      height: 100%;
+
+      .actionsDel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+      }
+
+      .footerTable {
+        font-weight: bold !important;
+        height: 30px !important;
+      }
+    }
+  }
+}
