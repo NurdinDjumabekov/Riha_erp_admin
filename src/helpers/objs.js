@@ -43,6 +43,7 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import RestartAltIcon from "@mui/icons-material/EditCalendar";
 
 export const objStatusOrders = {
   0: {
@@ -203,6 +204,12 @@ export const listMenu = [
     title: "Долги и оплаты ТА",
     icon: <PaymentsIcon sx={{ color: "#fff" }} />,
     link: "/pay",
+  },
+  {
+    id: 8,
+    title: "Возврат товара",
+    icon: <RestartAltIcon sx={{ color: "#fff" }} />,
+    link: "/return_prod",
   },
   {
     id: 10,

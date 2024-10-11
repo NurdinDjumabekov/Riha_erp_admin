@@ -38,8 +38,6 @@ const MenuLeft = () => {
     /// get обновленный список каждой заявки по часам
   }, [checked]);
 
-  // console.log(listTA, "listTA");
-
   return (
     <div className="menuLeft">
       <div className="menuLeft__inner">

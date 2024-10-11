@@ -23,6 +23,8 @@ const initialState = {
   listSendOrdersSI: [], //// временный список для хранения списка заказа ТА
   viewApp: true,
   listInvoice: [],
+  listInvoiceReturn: [], //// список накладных возврата
+  listProdsReturn: [], //// список продуктов возврата
 };
 
 ////// getListWorkShop - get список цехов
@@ -239,6 +241,25 @@ export const sendInvoiceForTT = createAsyncThunk(
         myAlert("Накладная отправлена торговой точке");
         // dispatch(setInvoiceSendInfo({ seller_guid: "", invoice_guid: "" }));
         data?.navigate("/maps");
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getListInvoiceReturns - список товаров возврата
+export const getListInvoiceReturns = createAsyncThunk(
+  "getListInvoiceReturns",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { reciever_guid, sender_guid, date_from, date_to } = props;
+    const url = `${REACT_APP_API_URL}/ta/get_return_invoice?route_guid=&reciever_guid=${reciever_guid}&sender_guid=${sender_guid}&date_from=${date_from}&date_to=${date_to}&is_admin=1&reciever_type=3`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);

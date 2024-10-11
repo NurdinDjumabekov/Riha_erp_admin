@@ -20,6 +20,7 @@ import ProductionPage from "../pages/ProductionPage/ProductionPage";
 import WareHomePage from "../pages/WareHomePage/WareHomePage";
 import RouterPage from "../pages/RouterPage/RouterPage";
 import PayPage from "../pages/PayPage/PayPage";
+import ReturnProdsPage from "../pages/ReturnProdsPage/ReturnProdsPage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ const MainRoutes = () => {
             <Route path="/ware_home" element={<WareHomePage />} />
             <Route path="/route" element={<RouterPage />} />
             <Route path="/pay" element={<PayPage />} />
+            <Route path="/return_prod" element={<ReturnProdsPage />} />
           </Route>
         </>
       )}
