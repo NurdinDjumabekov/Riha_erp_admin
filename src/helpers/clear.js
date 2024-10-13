@@ -55,4 +55,6 @@ export const clearDataTasks = {
   comment: "",
   task_guid: "",
   type: 0,
+  filesUser: [],
+  filesAgent: [],
 };

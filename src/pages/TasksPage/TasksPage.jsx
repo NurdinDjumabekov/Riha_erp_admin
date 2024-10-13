@@ -82,8 +82,8 @@ const TasksPage = () => {
   const getData = async () => {
     try {
       const list = await dispatch(getListTA({ first: false })).unwrap();
-      setActiveTA(list?.[0]?.guid); //// активный ТА
-      const obj = { guid: list?.[0]?.guid, first: false };
+      setActiveTA(list?.[9]?.guid); //// активный ТА
+      const obj = { guid: list?.[9]?.guid, first: false };
       const listTT = await dispatch(getPointsRouteAgent(obj)).unwrap();
 
       setActiveTT(listTT?.[0]?.guid); //// активный ТТ

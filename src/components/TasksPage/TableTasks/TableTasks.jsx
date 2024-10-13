@@ -13,10 +13,9 @@ import { TableRow, Paper } from "@mui/material";
 import AddTasks from "../AddTasks/AddTasks";
 
 /////// helpers
-import {
-  reverseTransformActionTime,
-  transformActionDate,
-} from "../../../helpers/transformDate";
+import { transformActionDate } from "../../../helpers/transformDate";
+import { reverseTransformActionTime } from "../../../helpers/transformDate";
+import { clearDataTasks } from "../../../helpers/clear";
 
 /////// fns
 import { changeStatusTasks } from "../../../store/reducers/taskExpensesSlice";
@@ -26,7 +25,6 @@ import { getTasks } from "../../../store/reducers/taskExpensesSlice";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import DeleteIcon from "../../../assets/MyIcons/DeleteIcon";
 import EditIcon from "../../../assets/MyIcons/EditIcon";
-import { clearDataTasks } from "../../../helpers/clear";
 
 const TableTasks = ({ activeTA, activeTT, dateRange }) => {
   const dispatch = useDispatch();
@@ -35,6 +33,8 @@ const TableTasks = ({ activeTA, activeTT, dateRange }) => {
     deadline_date: new Date(),
     comment: "",
     task_guid: "",
+    filesUser: [],
+    filesAgent: [],
     type: 0, /// 1 - создание задачи , 2 - редактирование задачи
   });
 
