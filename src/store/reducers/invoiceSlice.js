@@ -251,12 +251,31 @@ export const sendInvoiceForTT = createAsyncThunk(
   }
 );
 
-////// getListInvoiceReturns - список товаров возврата
+////// getListInvoiceReturns - список накладных возврата
 export const getListInvoiceReturns = createAsyncThunk(
   "getListInvoiceReturns",
   async function (props, { dispatch, rejectWithValue }) {
     const { reciever_guid, sender_guid, date_from, date_to } = props;
     const url = `${REACT_APP_API_URL}/ta/get_return_invoice?route_guid=&reciever_guid=${reciever_guid}&sender_guid=${sender_guid}&date_from=${date_from}&date_to=${date_to}&is_admin=1&reciever_type=3`;
+    try {
+      const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getListProdsReturns - список товаров возврата
+export const getListProdsReturns = createAsyncThunk(
+  "getListProdsReturns",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { invoice_guid } = props;
+    const url = `${REACT_APP_API_URL}/ta++++++++++++++++/`;
     try {
       const response = await axios(url);
       if (response.status >= 200 && response.status < 300) {
@@ -367,6 +386,32 @@ const invoiceSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getListProdsInInvoiceSI.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///////////// getListInvoiceReturns
+    builder.addCase(getListInvoiceReturns.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listInvoiceReturn = action.payload;
+    });
+    builder.addCase(getListInvoiceReturns.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getListInvoiceReturns.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///////////// getListProdsReturns
+    builder.addCase(getListProdsReturns.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listProdsReturn = action.payload;
+    });
+    builder.addCase(getListProdsReturns.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getListProdsReturns.pending, (state, action) => {
       state.preloader = true;
     });
   },

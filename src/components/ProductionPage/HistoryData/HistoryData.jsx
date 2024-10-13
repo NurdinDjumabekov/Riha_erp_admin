@@ -23,8 +23,6 @@ import "./style.scss";
 import { transformActionDate } from "../../../helpers/transformDate";
 import { reverseTransformActionDate } from "../../../helpers/transformDate";
 
-////// icons
-
 const HistoryData = () => {
   const dispatch = useDispatch();
 
@@ -39,7 +37,7 @@ const HistoryData = () => {
     dispatch(setActiveDate(transformActionDate(item)));
     const obj = {
       date_from: transformActionDate(item),
-      date_to: "",
+      date_to: "", //// check
       setActiveInvoice,
     };
     dispatch(getListProdProduction(obj));

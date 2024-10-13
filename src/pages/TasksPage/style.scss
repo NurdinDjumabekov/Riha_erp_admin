@@ -1,0 +1,34 @@
+.tasksPage {
+  padding: 0px 7px 7px 7px;
+  height: 100%;
+
+  &__inner {
+    height: 100%;
+    display: flex;
+    gap: 10px;
+
+    .listTAInfo {
+      height: 100%;
+      width: 300px;
+      min-width: 300px;
+      max-width: 300px;
+
+      &__inner {
+        height: calc(100% - 110px);
+      }
+    }
+    .listTT {
+      padding-top: 0px;
+
+      .listTAInfo__inner {
+        height: calc(100% - 45px);
+
+        .logo {
+          img {
+            object-fit: cover;
+          }
+        }
+      }
+    }
+  }
+}

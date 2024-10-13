@@ -352,4 +352,9 @@ export const listStatus = [
   },
 ];
 
-export const styleTooltip = { width: 140, height: 140, borderRadius: "50%" };
+export const styleTooltip = {
+  width: 140,
+  height: 140,
+  borderRadius: "50%",
+  objectFit: "cover",
+};

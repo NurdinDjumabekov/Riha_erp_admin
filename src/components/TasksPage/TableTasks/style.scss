@@ -1,0 +1,42 @@
+.tableTasks {
+  .dolg {
+    height: 100%;
+    padding-top: 55px;
+
+    h5 {
+      top: 16px;
+    }
+
+    .saveAction {
+      height: 38px;
+      background: #299b31;
+      padding: 1px 20px 3px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: absolute;
+      right: 15px;
+      top: 9px;
+
+      p {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+
+      button {
+        background: transparent;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}

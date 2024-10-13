@@ -49,3 +49,10 @@ export const clearPositionPoints = {
   route_sheet_guid: "",
   position: { label: "", value: "" },
 };
+
+export const clearDataTasks = {
+  deadline_date: new Date(),
+  comment: "",
+  task_guid: "",
+  type: 0,
+};

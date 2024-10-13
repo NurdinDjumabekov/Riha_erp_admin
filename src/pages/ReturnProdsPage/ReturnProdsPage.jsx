@@ -10,11 +10,14 @@ import EventIcon from "@mui/icons-material/EventNoteTwoTone";
 
 ////// fns
 import { getListTA } from "../../store/reducers/mainSlice";
-import { getListInvoiceReturns } from "../../store/reducers/invoiceSlice";
+import {
+  getListInvoiceReturns,
+  getListProdsReturns,
+} from "../../store/reducers/invoiceSlice";
 
 ////// components
 import { Tooltip } from "@mui/material";
-import InfoProds from "../../components/HistoryApplicationPage/InfoProds/InfoProds";
+import TableReturn from "../../components/ReturnProdsPage/TableReturn/TableReturn";
 import DatePicker from "react-datepicker";
 
 ////// style
@@ -28,20 +31,23 @@ const ReturnProdsPage = () => {
   const dispatch = useDispatch();
   const { dataSave } = useSelector((state) => state.saveDataSlice);
 
-  const [active, setActive] = useState("");
+  const [active, setActive] = useState(""); //// активный ТА
+  const [activeInvoice, setActiveInvoice] = useState(""); //// активная накладная
   const [dateRange, setDateRange] = useState([new Date(), new Date()]);
 
   const { listTA } = useSelector((state) => state.mainSlice);
 
-  const clickAgent = (agent_guid) => {
-    setActive(agent_guid);
+  const clickAgent = async (agent_guid) => {
+    setActive(agent_guid); //// активный ТА
     const sendData = {
       reciever_guid: dataSave.guid,
       sender_guid: agent_guid,
       date_from: transformActionDate(dateRange?.[0]),
       date_to: transformActionDate(dateRange?.[1]),
     };
-    dispatch(getListInvoiceReturns(sendData)); // get список историй накладных возврата
+    const invoices = await dispatch(getListInvoiceReturns(sendData)).unwrap(); // get список накладных возврата
+    dispatch(getListProdsReturns(invoices?.[0]?.invoice_guid)); // get список товаров возврата
+    setActiveInvoice(invoices?.[0]?.invoice_guid); //// активная накладная
   };
 
   const onChangeDate = async (item) => {
@@ -55,7 +61,9 @@ const ReturnProdsPage = () => {
         date_from: transformActionDate(item?.[0]),
         date_to: transformActionDate(item?.[1]),
       };
-      dispatch(getListInvoiceReturns(sendData)); // get список историй накладных возврата
+      const invoices = await dispatch(getListInvoiceReturns(sendData)).unwrap(); // get список накладных возврата
+      dispatch(getListProdsReturns(invoices?.[0]?.invoice_guid)); // get список товаров возврата
+      setActiveInvoice(invoices?.[0]?.invoice_guid); //// активная накладная
     }
   };
 
@@ -69,15 +77,15 @@ const ReturnProdsPage = () => {
         date_from: transformActionDate(dateRange?.[0]),
         date_to: transformActionDate(dateRange?.[1]),
       };
-      dispatch(getListInvoiceReturns(sendData)); // get список историй накладных возврата
+      const invoices = await dispatch(getListInvoiceReturns(sendData)).unwrap(); // get список накладных возврата
+      dispatch(getListProdsReturns(invoices?.[0]?.invoice_guid)); // get список товаров возврата
+      setActiveInvoice(invoices?.[0]?.invoice_guid); //// активная накладная
     } catch (error) {}
   };
 
   useEffect(() => {
     getData();
   }, []);
-
-  console.log(dateRange, "dateRange");
 
   return (
     <div className="returnProds">
@@ -126,7 +134,10 @@ const ReturnProdsPage = () => {
             ))}
           </div>
         </div>
-        <InfoProds active={active} />
+        <TableReturn
+          activeInvoice={activeInvoice}
+          setActiveInvoice={setActiveInvoice}
+        />
       </div>
     </div>
   );

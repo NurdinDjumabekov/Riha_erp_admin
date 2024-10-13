@@ -44,6 +44,7 @@ import NearMeIcon from "@mui/icons-material/NearMe";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import RestartAltIcon from "@mui/icons-material/EditCalendar";
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 export const objStatusOrders = {
   0: {
@@ -212,6 +213,12 @@ export const listMenu = [
     link: "/return_prod",
   },
   {
+    id: 9,
+    title: "Задания для ТА",
+    icon: <AssignmentIcon sx={{ color: "#fff" }} />,
+    link: "/tasks",
+  },
+  {
     id: 10,
     title: "Настройки",
     icon: <SettingsSuggestOutlinedIcon sx={{ color: "#fff" }} />,
@@ -307,3 +314,9 @@ export const listActionsMap = [
     link: "/add_points_route",
   },
 ];
+
+
+export const objStatusTasks = {
+  1: "Добавить задачу для торгового агента",
+  2: "Редактировать",
+};

@@ -21,6 +21,7 @@ import WareHomePage from "../pages/WareHomePage/WareHomePage";
 import RouterPage from "../pages/RouterPage/RouterPage";
 import PayPage from "../pages/PayPage/PayPage";
 import ReturnProdsPage from "../pages/ReturnProdsPage/ReturnProdsPage";
+import TasksPage from "../pages/TasksPage/TasksPage";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,7 @@ const MainRoutes = () => {
             <Route path="/route" element={<RouterPage />} />
             <Route path="/pay" element={<PayPage />} />
             <Route path="/return_prod" element={<ReturnProdsPage />} />
+            <Route path="/tasks" element={<TasksPage />} />
           </Route>
         </>
       )}
