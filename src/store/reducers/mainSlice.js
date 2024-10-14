@@ -482,6 +482,10 @@ const mainSlice = createSlice({
       );
     },
 
+    listTAfn: (state, action) => {
+      state.listTA = action.payload;
+    },
+
     ///// очищаю временный список для отправки создания заказа от ТА
     clearListOrders: (state, action) => {
       state.listSendOrders = [];
@@ -734,6 +738,7 @@ const mainSlice = createSlice({
 export const {
   editListAgents,
   setListTA,
+  listTAfn,
   clearListOrders,
   changeCountListProds,
   changeCountCheckedListProds,

@@ -36,6 +36,7 @@ const MainRoutes = () => {
   const { activeRouteList } = useSelector((state) => state.photoSlice);
   const { mapGeo, listRouteAllTA } = useSelector((state) => state.mapSlice);
   /// dataSave?.user_type == 2
+
   return (
     <Routes>
       {!!!dataSave?.guid ? (

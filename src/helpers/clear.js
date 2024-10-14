@@ -58,3 +58,12 @@ export const clearDataTasks = {
   filesUser: [],
   filesAgent: [],
 };
+
+export const clearDataSpending = {
+  amount: "",
+  comment: "",
+  type: 0,
+  spending: { value: "", label: "" },
+};
+
+

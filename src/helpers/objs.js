@@ -326,3 +326,15 @@ export const objStatusTasks = {
   1: "Добавить задачу для торгового агента",
   2: "Редактировать",
 };
+
+export const objStatusSpending = {
+  1: "Добавить трату торгового агента",
+  2: "Редактировать",
+};
+
+export const listStatusSpending = [
+  { label: "Принять", value: "1" },
+  { label: "Отклонить", value: "2" },
+];
+
+export const statusAll = { 1: "#299b31", 2: "red" };

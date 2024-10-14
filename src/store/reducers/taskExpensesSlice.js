@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { myAlert } from "../../helpers/MyAlert";
 import axiosInstance from "../../axiosInstance";
+import { transformActionDate } from "../../helpers/transformDate";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -10,6 +11,7 @@ const initialState = {
   listSpending: [], /// список трат
   listSpendingTA: [], /// список трат ТА
 };
+
 /////////////////////////////////////////////////////// tasks
 ////// getTasks - get список задач
 export const getTasks = createAsyncThunk(
@@ -36,7 +38,7 @@ export const createTasks = createAsyncThunk(
   async function (data, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/create_task`;
     try {
-      const response = await axios.post(url, data);
+      const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -88,9 +90,9 @@ export const changeStatusTasks = createAsyncThunk(
 export const addFileInTasks = createAsyncThunk(
   "addFileInTasks",
   async function (data, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/+++++++++++++`;
+    const url = `${REACT_APP_API_URL}/ta/add_file`;
     try {
-      const response = await axiosInstance.put(url, data);
+      const response = await axios.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -106,7 +108,7 @@ export const addFileInTasks = createAsyncThunk(
 export const delFileInTasks = createAsyncThunk(
   "delFileInTasks",
   async function (data, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/+++++++++++++`;
+    const url = `${REACT_APP_API_URL}/ta/del_file`;
     try {
       const response = await axiosInstance.put(url, data);
       if (response.status >= 200 && response.status < 300) {
@@ -121,6 +123,7 @@ export const delFileInTasks = createAsyncThunk(
 );
 
 /////////////////////////////////////////////////////// траты ТА
+
 ////// getListSpending - get список возможных трат
 export const getListSpending = createAsyncThunk(
   "getListSpending",
@@ -143,10 +146,74 @@ export const getListSpending = createAsyncThunk(
 export const getListSpendingTA = createAsyncThunk(
   "getListSpendingTA",
   async function (props, { dispatch, rejectWithValue }) {
-    const { user_guid, expense_type_guid } = props;
-    const url = `${REACT_APP_API_URL}/ta/get_expenses?user_guid=${user_guid}&date=2024-10-10&expense_type_guid=${expense_type_guid}`;
+    const { active, dateRange } = props;
+    const date_to = transformActionDate(dateRange?.[1]);
+    const date_from = transformActionDate(dateRange?.[0]);
+    const url = `${REACT_APP_API_URL}/ta/get_expenses?user_guid=${active}&date_to=${date_to}&date_from=${date_from}`;
     try {
       const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// createSpending - cоздание расходов
+export const createSpending = createAsyncThunk(
+  "createSpending",
+  async function (props, { dispatch, rejectWithValue }) {
+    const data = {
+      amount: props?.amount,
+      comment: props?.comment,
+      user_guid: props?.active,
+      user_type: 1, /// всегда 1 т.к. только ТА создают траты
+      expense_type_guid: props.spending?.value,
+    };
+    const url = `${REACT_APP_API_URL}/ta/add_expense`;
+    try {
+      const response = await axios.post(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// delSpending - удаление расходов
+export const delSpending = createAsyncThunk(
+  "delSpending",
+  async function (data, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/del_expense`;
+    try {
+      const response = await axios.post(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// changeSpendingStatus - изменение статуса списка задач
+export const changeSpendingStatus = createAsyncThunk(
+  "changeSpendingStatus",
+  async function (props, { dispatch, rejectWithValue }) {
+    const data = { ...props, status: props?.status?.value };
+    const url = `${REACT_APP_API_URL}/ta/expense_status`;
+    try {
+      const response = await axios.put(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -191,6 +258,19 @@ const taskExpensesSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getListSpending.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////////////// getListSpendingTA
+    builder.addCase(getListSpendingTA.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listSpendingTA = action.payload;
+    });
+    builder.addCase(getListSpendingTA.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getListSpendingTA.pending, (state, action) => {
       state.preloader = true;
     });
   },

@@ -8,34 +8,32 @@ import EventIcon from "@mui/icons-material/EventNoteTwoTone";
 
 ////// fns
 import { getListTA } from "../../store/reducers/mainSlice";
-import { getListProdsReturns } from "../../store/reducers/invoiceSlice";
-import { getListInvoiceReturns } from "../../store/reducers/invoiceSlice";
+import { getListSpendingTA } from "../../store/reducers/taskExpensesSlice";
+import { getListSpending } from "../../store/reducers/taskExpensesSlice";
 
 ////// components
 import { Tooltip } from "@mui/material";
 import TableSpendings from "../../components/SpendingPage/TableSpendings/TableSpendings";
 import DatePicker from "react-datepicker";
 
+////// helpers
+import { styleTooltip } from "../../helpers/LocalData";
+
 ////// style
 import "./style.scss";
 
-////// helpers
-import { styleTooltip } from "../../helpers/LocalData";
-import { transformActionDate } from "../../helpers/transformDate";
-import { getListSpending } from "../../store/reducers/taskExpensesSlice";
-
 const SpendingPage = () => {
   const dispatch = useDispatch();
-  const { dataSave } = useSelector((state) => state.saveDataSlice);
-
-  const [active, setActive] = useState(""); //// активный ТА
-  const [activeInvoice, setActiveInvoice] = useState(""); //// активная накладная
-  const [dateRange, setDateRange] = useState([new Date(), new Date()]);
 
   const { listTA } = useSelector((state) => state.mainSlice);
 
+  const [active, setActive] = useState(""); //// активный ТА
+  const [dateRange, setDateRange] = useState([new Date(), new Date()]);
+
   const clickAgent = async (agent_guid) => {
     setActive(agent_guid); //// активный ТА
+    dispatch(getListSpendingTA({ dateRange, active: agent_guid }));
+    /// get список возможных трат TA
   };
 
   const onChangeDate = async (item) => {
@@ -43,6 +41,7 @@ const SpendingPage = () => {
 
     if (!!item?.[1]) {
       ///// сортировка трат по дате
+      dispatch(getListSpendingTA({ dateRange: item, active }));
     }
   };
 
@@ -50,6 +49,8 @@ const SpendingPage = () => {
     try {
       const list = await dispatch(getListTA({ first: false })).unwrap();
       setActive(list?.[0]?.guid);
+      dispatch(getListSpendingTA({ dateRange, active: list?.[0]?.guid }));
+      /// get список возможных трат TA
     } catch (error) {}
   };
 
@@ -75,8 +76,6 @@ const SpendingPage = () => {
             <EventIcon />
           </div>
           <div className="line"></div>
-          {/* <h6>Торговые агенты</h6>
-          <div className="line"></div> */}
           <div className="listTAInfo__inner scroll_table">
             {listTA?.map((i) => (
               <button
@@ -105,10 +104,7 @@ const SpendingPage = () => {
             ))}
           </div>
         </div>
-        <TableSpendings
-          activeInvoice={activeInvoice}
-          setActiveInvoice={setActiveInvoice}
-        />
+        <TableSpendings active={active} dateRange={dateRange} />
       </div>
     </div>
   );

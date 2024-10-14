@@ -1,58 +1,80 @@
-import { ru } from "date-fns/locale";
-
 ////// hooks
-import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
 import Modals from "../../../common/Modals/Modals";
 import SendInput from "../../../common/SendInput/SendInput";
-import DatePicker from "react-datepicker";
-import { useDropzone } from "react-dropzone";
+import Select from "react-select";
 
 ////// style
 import "./style.scss";
 
 ////// fns
-import { getTasks } from "../../../store/reducers/taskExpensesSlice";
-import { delFileInTasks } from "../../../store/reducers/taskExpensesSlice";
-import { addFileInTasks } from "../../../store/reducers/taskExpensesSlice";
-import { createTasks } from "../../../store/reducers/taskExpensesSlice";
+import {
+  createSpending,
+  getListSpendingTA,
+} from "../../../store/reducers/taskExpensesSlice";
 
 ////// helpers
-import { transformDateTime } from "../../../helpers/transformDate";
-import { transformActionDate } from "../../../helpers/transformDate";
 import { myAlert } from "../../../helpers/MyAlert";
-import { objStatusTasks } from "../../../helpers/objs";
+import { objStatusSpending } from "../../../helpers/objs";
 
 /////// icons
-import DeleteIcon from "../../../assets/MyIcons/DeleteIcon";
+import { transformLists } from "../../../helpers/transformLists";
 
 const AddSpending = (props) => {
   const dispatch = useDispatch();
 
-  const { activeTA, activeTT } = props;
-  const { dateRange, setObj, obj, closeModal } = props;
+  const { setObj, obj, closeModal, active, dateRange } = props;
 
-  const { dataSave } = useSelector((state) => state.saveDataSlice);
+  const { listSpending } = useSelector((state) => state.taskExpensesSlice);
 
-  const onChangeDate = (dateTime) => {};
+  const listNewSpending = transformLists(listSpending, "guid", "name");
 
-  const onChange = (e) => setObj({ ...obj, comment: e.target.value });
+  const onChangeSel = (spending) => setObj({ ...obj, spending });
 
-  const addEditTasksFN = async () => {
-    if (!activeTT) return myAlert("Не выбрана торговая точка", "error");
-    if (!obj?.comment) return myAlert("Добавьте комментарий", "error");
+  const onChange = (e) => setObj({ ...obj, [e.target.name]: e.target.value });
+
+  const addEditSpendingFN = async () => {
+    if (!obj?.spending?.value) return myAlert("Выберите трату", "error");
+    if (!obj?.amount) return myAlert("Введите сумму", "error");
+    if (!obj?.comment) return myAlert("Введите комментарий", "error");
+
+    const send = { ...obj, active };
+    const response = await dispatch(createSpending(send)).unwrap();
+    if (response?.result == 1) {
+      myAlert(response?.msg);
+      dispatch(getListSpendingTA({ dateRange, active })); /// get список возможных трат TA
+      closeModal();
+    }
   };
 
   return (
-    <div className="addTasks">
+    <div className="addTasks addSpending">
       <Modals
         openModal={!!obj?.type}
         closeModal={closeModal}
-        title={objStatusTasks?.[obj?.type]}
+        title={objStatusSpending?.[obj?.type]}
       >
         <div className="addTasks__inner">
+          <div className="myInputs">
+            <h6>Выберите трату</h6>
+            <Select
+              options={listNewSpending}
+              className="select"
+              onChange={onChangeSel}
+              value={obj?.spending}
+            />
+          </div>
+
+          <SendInput
+            value={obj?.amount}
+            onChange={onChange}
+            title={"Сумма (сом)"}
+            name={"amount"}
+            type={"number"}
+          />
+
           <SendInput
             value={obj?.comment}
             onChange={onChange}
@@ -62,7 +84,7 @@ const AddSpending = (props) => {
           />
 
           <div className="sendBlock">
-            <button onClick={addEditTasksFN}>+ Добавить</button>
+            <button onClick={addEditSpendingFN}>+ Добавить</button>
           </div>
         </div>
       </Modals>

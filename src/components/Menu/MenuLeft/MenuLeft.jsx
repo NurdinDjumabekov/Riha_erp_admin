@@ -15,8 +15,10 @@ import minus from "../../../assets/icons/minus-square.svg";
 import user from "../../../assets/images/iAm.jpg";
 
 ////// fns
-import { getListOrders } from "../../../store/reducers/mainSlice";
+import { getListOrders, listTAfn } from "../../../store/reducers/mainSlice";
 import { editListAgents } from "../../../store/reducers/mainSlice";
+
+////// helpers
 import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
 
 const MenuLeft = () => {
@@ -38,13 +40,22 @@ const MenuLeft = () => {
     /// get обновленный список каждой заявки по часам
   }, [checked]);
 
+  const viewAllApp = () => {
+    const newListTA = listTA?.map((i) => ({
+      ...i,
+      is_checked: checked ? 0 : 1,
+    }));
+    dispatch(listTAfn(newListTA));
+    setChecked(!checked);
+  };
+
   return (
     <div className="menuLeft">
       <div className="menuLeft__inner">
         <SearchShop />
-        <div className="title" onClick={() => setLook(!look)}>
-          <h2>Торговые агенты</h2>
-          <button>
+        <div className="title">
+          <h2 onClick={viewAllApp}>Торговые агенты</h2>
+          <button onClick={() => setLook(!look)}>
             <img src={look ? minus : plus} alt="-" />
           </button>
         </div>

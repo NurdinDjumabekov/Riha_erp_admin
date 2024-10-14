@@ -89,7 +89,7 @@ const TasksPage = () => {
       setActiveTT(listTT?.[0]?.guid); //// активный ТТ
 
       const sendData = {
-        agent_guid: list?.[0]?.guid,
+        agent_guid: list?.[9]?.guid,
         date_from: transformActionDate(dateRange?.[0]),
         date_to: transformActionDate(dateRange?.[0]),
         point_guid: listTT?.[0]?.guid,

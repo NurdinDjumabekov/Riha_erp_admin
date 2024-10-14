@@ -1,7 +1,7 @@
 import { ru } from "date-fns/locale";
 
 ////// hooks
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
@@ -14,7 +14,7 @@ import { useDropzone } from "react-dropzone";
 import "./style.scss";
 
 ////// fns
-import { getTasks } from "../../../store/reducers/taskExpensesSlice";
+import { editTasks, getTasks } from "../../../store/reducers/taskExpensesSlice";
 import { delFileInTasks } from "../../../store/reducers/taskExpensesSlice";
 import { addFileInTasks } from "../../../store/reducers/taskExpensesSlice";
 import { createTasks } from "../../../store/reducers/taskExpensesSlice";
@@ -44,15 +44,24 @@ const AddTasks = (props) => {
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      console.log(acceptedFiles);
       if (obj?.type == 1) {
         setObj({ ...obj, filesUser: [...obj.filesUser, ...acceptedFiles] });
         //// загрузка файлов при создание задачи
       } else if (obj?.type == 2) {
         //// загрузка файлов при редактирование задачи
+        const formData = new FormData();
+        formData.append("user_guid", dataSave?.guid);
+        formData.append("task_guid", obj?.guid);
+        formData.append("user_type", dataSave?.user_type);
+        formData.append("route_guid", "0");
+        formData.append("user_guid", "0");
+        formData.append("user_type", "0");
+        acceptedFiles?.forEach((file) => {
+          formData.append("files", file);
+        });
         const loadFile = async () => {
-          const data = await dispatch(addFileInTasks()).unwrap();
-          setObj({ ...obj, filesUser: [...obj.filesUser, ...data] });
+          const resp = await dispatch(addFileInTasks(formData)).unwrap();
+          setObj({ ...obj, filesUser: [...obj.filesUser, ...resp?.data] });
         };
         loadFile();
       }
@@ -69,24 +78,48 @@ const AddTasks = (props) => {
     if (!activeTT) return myAlert("Не выбрана торговая точка", "error");
     if (!obj?.comment) return myAlert("Добавьте комментарий", "error");
 
+    const { filesUser, filesAgent, ...others } = obj;
+    const i = { ...others, point_guid: activeTT, agent_guid: activeTA };
+    const deadline_date = transformDateTime(obj?.deadline_date);
+
     let response;
     if (obj?.type == 1) {
       //// создание задачи
 
-      const formData = new FormData();
-      formData.append("user_guid", dataSave?.guid);
-      formData.append("user_type", dataSave?.user_type);
-      formData.append("agent_guid", activeTA);
-      formData.append("point_guid", activeTT);
-      formData.append("comment", obj?.comment);
-      formData.append("deadline_date", transformDateTime(obj?.deadline_date));
-      formData.append("filesUser", obj?.filesUser);
-      response = await dispatch(createTasks(formData)).unwrap();
+      response = await dispatch(createTasks({ ...i, deadline_date })).unwrap();
+
+      if (response?.guid) {
+        const formData = new FormData();
+        formData.append("user_guid", dataSave?.guid);
+        formData.append("task_guid", response?.guid);
+        formData.append("user_type", dataSave?.user_type);
+        formData.append("route_guid", "0");
+        formData.append("user_guid", "0");
+        formData.append("user_type", "0");
+        obj?.filesUser?.forEach((file) => {
+          formData.append("files", file);
+        });
+
+        const resFile = await dispatch(addFileInTasks(formData)).unwrap();
+
+        /// resFile
+        // if (resFile?.result == 1) {
+        if (true) {
+          const sendData = {
+            agent_guid: activeTA,
+            date_from: transformActionDate(dateRange?.[0]),
+            date_to: transformActionDate(dateRange?.[0]),
+            point_guid: activeTT,
+          };
+          dispatch(getTasks(sendData));
+          closeModal();
+        }
+      }
     } else if (obj?.type == 2) {
       //// редактирование задачи
       const i = { ...obj, point_guid: activeTT, agent_guid: activeTA };
       const deadline_date = transformDateTime(obj?.deadline_date);
-      response = await dispatch(createTasks({ ...i, deadline_date })).unwrap();
+      response = await dispatch(editTasks({ ...i, deadline_date })).unwrap();
     }
 
     if (response?.result == 1) {
@@ -148,6 +181,8 @@ const AddTasks = (props) => {
       </ul>
     ),
   };
+
+  console.log(obj, "obj");
 
   return (
     <div className="addTasks">

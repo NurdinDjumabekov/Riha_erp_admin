@@ -44,7 +44,6 @@ const TableTasks = ({ activeTA, activeTT, dateRange }) => {
     //// 0 - Ожидание, 1 - В процессе, 2 - Готов, -1 - Удаление
     const data = { task_guid: guid, comment: "удаление", status };
     const response = await dispatch(changeStatusTasks(data)).unwrap();
-    // console.log(response?.result, "response");
     if (response?.result == 1) {
       const sendData = {
         agent_guid: activeTA,
@@ -96,19 +95,22 @@ const TableTasks = ({ activeTA, activeTT, dateRange }) => {
                   <TableCell align="left" style={{ width: "13%" }}>
                     Статус
                   </TableCell>
-                  <TableCell align="left" style={{ width: "30%" }}>
+                  <TableCell align="left" style={{ width: "23%" }}>
                     Комментарий
                   </TableCell>
                   <TableCell align="left" style={{ width: "13%" }}>
-                    Файлы
+                    Файлы админа
                   </TableCell>
-                  <TableCell align="center" style={{ width: "14%" }}>
+                  <TableCell align="left" style={{ width: "13%" }}>
+                    Файлы агента
+                  </TableCell>
+                  <TableCell align="center" style={{ width: "8%" }}>
                     *
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {listTasks?.map((row) => (
+                {listTasks?.map((row, index) => (
                   <TableRow key={row?.codeid} className="everyInvoice">
                     <TableCell
                       component="th"
@@ -116,7 +118,7 @@ const TableTasks = ({ activeTA, activeTT, dateRange }) => {
                       style={{ width: "4%" }}
                       align="center"
                     >
-                      {row?.codeid}
+                      {index + 1}
                     </TableCell>
                     <TableCell
                       component="th"
@@ -142,7 +144,7 @@ const TableTasks = ({ activeTA, activeTT, dateRange }) => {
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "35%" }}
+                      style={{ width: "23%" }}
                     >
                       {row?.comment}
                     </TableCell>
@@ -154,7 +156,12 @@ const TableTasks = ({ activeTA, activeTT, dateRange }) => {
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "14%" }}
+                      style={{ width: "13%" }}
+                    ></TableCell>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{ width: "8%" }}
                     >
                       <div className="actions">
                         <button onClick={() => openModalEditTasks(row)}>

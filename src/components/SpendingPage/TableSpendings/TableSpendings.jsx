@@ -1,5 +1,5 @@
 ////// hooks
-import * as React from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// style
@@ -9,30 +9,73 @@ import "./style.scss";
 import { Table, TableBody, TableCell } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
+import AddSpending from "../AddSpending/AddSpending";
+import ConfirmModal from "../../../common/ConfirmModal/ConfirmModal";
+import ChangeStatusSpending from "../ChangeStatusSpending/ChangeStatusSpending";
 
 /////// helpers
-import { objStatusOrdersMini } from "../../../helpers/objs";
-import { getListProdsReturns } from "../../../store/reducers/invoiceSlice";
-import AddSpending from "../AddSpending/AddSpending";
+import { clearDataSpending } from "../../../helpers/clear";
+import { myAlert } from "../../../helpers/MyAlert";
 
 /////// fns
+import { getListSpendingTA } from "../../../store/reducers/taskExpensesSlice";
+import { delSpending } from "../../../store/reducers/taskExpensesSlice";
 
-const TableSpendings = ({ activeInvoice, setActiveInvoice }) => {
+/////// icons
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import DeleteIcon from "../../../assets/MyIcons/DeleteIcon";
+import EditIcon from "../../../assets/MyIcons/EditIcon";
+import { statusAll } from "../../../helpers/objs";
+
+const TableSpendings = ({ active, dateRange }) => {
   const dispatch = useDispatch();
 
-  const { listInvoiceReturn, listProdsReturn } = useSelector(
-    (state) => state.invoiceSlice /// список заявок и товаров каждой заявки возврата
-  );
+  const { listSpendingTA } = useSelector((state) => state.taskExpensesSlice);
 
-  const clickInvoice = ({ invoice_guid }) => {
-    dispatch(getListProdsReturns(invoice_guid)); // get список товаров возврата
-    setActiveInvoice(invoice_guid); //// активная накладная
+  const [obj, setObj] = useState({
+    amount: "",
+    comment: "",
+    type: 0,
+    spending: { value: "", label: "" },
+  });
+  /// 1 - создание траты , 2 - редактирование траты
+
+  const [statusAction, setStatusAction] = useState({}); ///  для принятия и отклонения трат
+  const [actionDel, setActionDel] = useState(""); ///  для удаления траты
+
+  const closeModal = () => {
+    setObj(clearDataSpending);
+    setStatusAction({});
+  };
+
+  const delSpendingFN = async () => {
+    ///// удаление расходов
+    const send = { expense_guid: actionDel };
+    const response = await dispatch(delSpending(send)).unwrap(); // удаление расходов
+    if (response?.result == 1) {
+      myAlert(response?.msg);
+      dispatch(getListSpendingTA({ dateRange, active })); /// get список возможных трат TA
+      setActionDel("");
+    }
+  };
+
+  const openModalStatus = ({ user_guid, user_type, guid }) => {
+    //// открытия модлаки для изменения статтуса трат
+    const send = { user_guid, user_type, expense_guid: guid, comment: "" };
+    setStatusAction({ ...send, status: { label: "Принять", value: "1" } });
   };
 
   return (
-    <div className="infoProdsApp">
+    <div className="infoProdsApp tableSpending">
       <div className="dolg">
-        <h5>Заявки</h5>
+        <h5>Траты торговых агентов</h5>
+        <button
+          className="saveAction"
+          onClick={() => setObj({ ...obj, type: 1 })}
+        >
+          <NoteAddIcon sx={{ width: 16, height: 16 }} />
+          <p>Добавить трату</p>
+        </button>
         <div className="dolg__inner">
           <TableContainer
             component={Paper}
@@ -45,100 +88,95 @@ const TableSpendings = ({ activeInvoice, setActiveInvoice }) => {
                   <TableCell align="center" style={{ width: "5%" }}>
                     №
                   </TableCell>
-                  <TableCell align="center" style={{ width: "5%" }}>
-                    ...
-                  </TableCell>
                   <TableCell align="left" style={{ width: "15%" }}>
-                    ФИО
+                    Наименование
                   </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
+                  <TableCell align="left" style={{ width: "10%" }}>
                     Дата создания
                   </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
-                    Дата исполнения
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
+                  <TableCell align="left" style={{ width: "10%" }}>
                     Сумма
                   </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
+                  <TableCell align="left" style={{ width: "7%" }}>
                     Статус
                   </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
+                  <TableCell align="center" style={{ width: "5%" }}>
+                    *
+                  </TableCell>
+                  <TableCell align="left" style={{ width: "24%" }}>
+                    Комментарий
+                  </TableCell>
+                  <TableCell align="left" style={{ width: "24%" }}>
                     Комментарий
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {listInvoiceReturn?.map((row) => (
-                  <TableRow
-                    key={row?.codeid}
-                    onClick={() => clickInvoice(row)}
-                    className="everyInvoice"
-                  >
+                {listSpendingTA?.map((row, index) => (
+                  <TableRow key={row?.codeid} className="everyInvoice">
                     <TableCell
                       component="th"
                       scope="row"
                       style={{ width: "5%" }}
                       align="center"
                     >
-                      {row?.codeid}
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ width: "5%" }}
-                    >
-                      <div className="checkboxTable">
-                        <input
-                          type="checkbox"
-                          name="check"
-                          checked={row?.invoice_guid === activeInvoice}
-                        />
-                      </div>
+                      {index + 1}
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
                       style={{ width: "15%" }}
                     >
-                      {row?.agent}
+                      {row?.name}
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "15%" }}
+                      style={{ width: "10%" }}
                     >
                       {row?.date}
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "15%" }}
+                      style={{ width: "10%" }}
                     >
-                      {row?.date_from}
+                      {row?.amount} сом
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "15%" }}
+                      style={{ width: "7%", color: statusAll?.[row?.status] }}
                     >
-                      {row?.total_price} сом
+                      {row?.status_name}
                     </TableCell>
-
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "15%" }}
+                      style={{ width: "5%" }}
                     >
-                      {objStatusOrdersMini?.[row?.status]}
+                      <div className="actions">
+                        <button onClick={() => openModalStatus(row)}>
+                          <EditIcon width={17} height={17} />
+                        </button>
+                        <button onClick={() => setActionDel(row?.guid)}>
+                          <DeleteIcon width={19} height={19} color={"red"} />
+                        </button>
+                      </div>
                     </TableCell>
-
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "15%" }}
+                      style={{ width: "24%" }}
                     >
-                      Накладная {row?.invoice_codeid}
+                      {row?.comment}
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{ width: "24%" }}
+                    >
+                      {row?.status_comment}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -147,7 +185,28 @@ const TableSpendings = ({ activeInvoice, setActiveInvoice }) => {
           </TableContainer>
         </div>
       </div>
-      <AddSpending />
+      <AddSpending
+        setObj={setObj}
+        obj={obj}
+        closeModal={closeModal}
+        active={active}
+        dateRange={dateRange}
+      />
+
+      <ChangeStatusSpending
+        setStatusAction={setStatusAction}
+        statusAction={statusAction}
+        closeModal={closeModal}
+        active={active}
+        dateRange={dateRange}
+      />
+
+      <ConfirmModal
+        state={actionDel}
+        yesFN={delSpendingFN}
+        noFN={() => setActionDel("")}
+        title={"Удалить ?"}
+      />
     </div>
   );
 };
