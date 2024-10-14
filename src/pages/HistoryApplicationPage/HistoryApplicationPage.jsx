@@ -85,8 +85,6 @@ const HistoryApplicationPage = () => {
             <EventIcon />
           </div>
           <div className="line"></div>
-          {/* <h6>Торговые агенты</h6>
-          <div className="line"></div> */}
           <div className="listTAInfo__inner scroll_table">
             {listTA?.map((i) => (
               <button
@@ -115,7 +113,7 @@ const HistoryApplicationPage = () => {
             ))}
           </div>
         </div>
-        <InfoProds active={active} />
+        <InfoProds />
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import { TableRow, Paper } from "@mui/material";
 /////// helpers
 import { objStatusOrdersMini } from "../../../helpers/objs";
 import { getListProdsReturns } from "../../../store/reducers/invoiceSlice";
+import { roundingNum } from "../../../helpers/totals";
 
 /////// fns
 
@@ -121,7 +122,7 @@ const TableReturn = ({ activeInvoice, setActiveInvoice }) => {
                       scope="row"
                       style={{ width: "15%" }}
                     >
-                      {row?.total_price} сом
+                      {roundingNum(row?.total_price)} сом
                     </TableCell>
 
                     <TableCell
@@ -164,10 +165,10 @@ const TableReturn = ({ activeInvoice, setActiveInvoice }) => {
                     Наименование
                   </TableCell>
                   <TableCell align="left" style={{ width: "23%" }}>
-                    Кол-во в кг
+                    Вес
                   </TableCell>
                   <TableCell align="left" style={{ width: "23%" }}>
-                    Кол-во в шт
+                    Кол-во
                   </TableCell>
                   <TableCell align="left" style={{ width: "23%" }}>
                     Сумма
@@ -197,21 +198,21 @@ const TableReturn = ({ activeInvoice, setActiveInvoice }) => {
                       scope="row"
                       style={{ width: "23%" }}
                     >
-                      {row?.count}
+                      {roundingNum(row?.count)}
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
                       style={{ width: "23%" }}
                     >
-                      {row?.count}
+                      {roundingNum(row?.count_per)}
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
                       style={{ width: "23%" }}
                     >
-                      {row?.price} сом
+                      {roundingNum(row?.price)} сом
                     </TableCell>
                   </TableRow>
                 ))}
@@ -220,13 +221,13 @@ const TableReturn = ({ activeInvoice, setActiveInvoice }) => {
                     Итого
                   </TableCell>
                   <TableCell align="left" style={{ fontWeight: "bold" }}>
-                    {listProdsReturn?.[0]?.total_count}
+                    {roundingNum(listProdsReturn?.[0]?.total_count || 0)}
                   </TableCell>
                   <TableCell align="left" style={{ fontWeight: "bold" }}>
-                    {listProdsReturn?.[0]?.total_count}
+                    {roundingNum(listProdsReturn?.[0]?.total_count || 0)}
                   </TableCell>
                   <TableCell align="left" style={{ fontWeight: "bold" }}>
-                    {listProdsReturn?.[0]?.total_price} сом
+                    {roundingNum(listProdsReturn?.[0]?.total_price || 0)} сом
                   </TableCell>
                 </TableRow>
               </TableBody>

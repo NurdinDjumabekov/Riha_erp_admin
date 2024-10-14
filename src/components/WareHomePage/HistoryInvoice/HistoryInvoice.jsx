@@ -27,6 +27,7 @@ import EventIcon from "@mui/icons-material/EventNoteTwoTone";
 import { transformActionDate } from "../../../helpers/transformDate";
 import { reverseTransformActionDate } from "../../../helpers/transformDate";
 import { objStatusInvoice, styleTooltip } from "../../../helpers/LocalData";
+import { roundingNum } from "../../../helpers/totals";
 
 const HistoryInvoice = () => {
   const dispatch = useDispatch();
@@ -129,7 +130,7 @@ const HistoryInvoice = () => {
                       Сумма
                     </TableCell>
                     <TableCell align="left" style={{ width: "15%" }}>
-                      Кол-во
+                      Вес
                     </TableCell>
                     <TableCell align="left" style={{ width: "15%" }}>
                       Дата отпуска
@@ -154,17 +155,17 @@ const HistoryInvoice = () => {
                         style={{ width: "5%" }}
                         align="center"
                       >
-                        {row?.codeid}
+                        {index + 1}
                       </TableCell>
                       <TableCell
                         component="th"
                         scope="row"
                         style={{ width: "15%" }}
                       >
-                        {row?.total_price} сом
+                        {roundingNum(row?.total_price)} сом
                       </TableCell>
                       <TableCell align="left" style={{ width: "15%" }}>
-                        {row?.total_count} кг
+                        {roundingNum(row?.total_count)} кг
                       </TableCell>
                       <TableCell align="left" style={{ width: "15%" }}>
                         {row?.sender_conf_date || "01.10.2024 17:12"}

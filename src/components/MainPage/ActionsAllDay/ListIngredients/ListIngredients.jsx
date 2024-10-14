@@ -4,7 +4,6 @@ import React from "react";
 import { Table, TableBody, TableCell } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
-import { sumCountsFN, totalSum } from "../../../../helpers/totals";
 
 const ListIngredients = ({ list }) => {
   return (

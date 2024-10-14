@@ -15,6 +15,7 @@ import { validNums } from "../../../helpers/validations";
 
 ////// style
 import "./style.scss";
+import { roundingNum } from "../../../helpers/totals";
 
 const ListProds = () => {
   const dispatch = useDispatch();
@@ -93,7 +94,7 @@ const ListProds = () => {
                   component="th"
                   scope="row"
                   style={{ width: "8%" }}
-                  onClick={() => handleDecrement(row)}
+                  // onClick={() => handleDecrement(row)}
                 >
                   {index + 1}
                 </TableCell>
@@ -141,9 +142,9 @@ const ListProds = () => {
                 <TableCell
                   align="left"
                   style={{ width: "20%" }}
-                  onClick={() => handleIncrement(row)}
+                  // onClick={() => handleIncrement(row)}
                 >
-                  {row?.workshop_price} сом
+                  {roundingNum(row?.workshop_price)} сом
                 </TableCell>
                 {/* <TableCell align="left" style={{ width: "10%" }}>
                   <div className="checkboxTable">

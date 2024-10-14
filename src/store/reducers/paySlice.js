@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { myAlert } from "../../helpers/MyAlert";
+import { getListTA } from "./mainSlice";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -15,6 +16,25 @@ export const getEveryDebt = createAsyncThunk(
     const url = `${REACT_APP_API_URL}/ta/account?agent_guid=${agent_guid}`;
     try {
       const response = await axios(url);
+      if (response.status >= 200 && response.status < 300) {
+        dispatch(getListTA({ first: false }));
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// payTA - оплата ТА
+export const payTA = createAsyncThunk(
+  "payTA",
+  async function (data, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/add_oplata`;
+    try {
+      const response = await axios.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {

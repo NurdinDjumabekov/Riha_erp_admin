@@ -12,7 +12,7 @@ import SortSendProds from "../SortSendProds/SortSendProds";
 
 ////// helpers
 import { validNums } from "../../../helpers/validations";
-import { sumCountsFN, totalSum } from "../../../helpers/totals";
+import { roundingNum, sumCountsFN, totalSum } from "../../../helpers/totals";
 
 ////// style
 import "./style.scss";
@@ -72,7 +72,7 @@ const ListsWareHome = () => {
                   Цена
                 </TableCell>
                 <TableCell align="left" style={{ width: "15%" }}>
-                  Кол-во в заявках
+                  Вес в заявках
                 </TableCell>
                 <TableCell align="left" style={{ width: "10%" }}>
                   Выпущено
@@ -152,7 +152,7 @@ const ListsWareHome = () => {
                   Итого
                 </TableCell>
                 <TableCell align="left" className="footerTable">
-                  {totalSum(allProdsWH, "count", "price")} сом
+                  {roundingNum(totalSum(allProdsWH, "count", "price"))} сом
                 </TableCell>
                 <TableCell colSpan={1} align="left"></TableCell>
                 <TableCell
@@ -160,7 +160,7 @@ const ListsWareHome = () => {
                   align="left"
                   style={{ fontWeight: "bold" }}
                 >
-                  {sumCountsFN(allProdsWH, "count")} кг
+                  {roundingNum(sumCountsFN(allProdsWH, "count"))} кг
                 </TableCell>
               </TableRow>
             </TableBody>

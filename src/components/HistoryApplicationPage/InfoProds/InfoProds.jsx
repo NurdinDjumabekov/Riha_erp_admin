@@ -11,43 +11,29 @@ import "./style.scss";
 import { Table, TableBody, TableCell } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
-import DatePicker from "react-datepicker";
 
 /////// helpers
 import { objStatusOrdersMini } from "../../../helpers/objs";
-import { reverseTransformActionDate } from "../../../helpers/transformDate";
 import { transformActionDate } from "../../../helpers/transformDate";
 
 /////// fns
 import { getListProdsInInvoice } from "../../../store/reducers/mainSlice";
-import { setActiveDateHistory } from "../../../store/reducers/mainSlice";
 import { setActiveInvoiceHistory } from "../../../store/reducers/mainSlice";
-import { getHistoryInvoice } from "../../../store/reducers/mainSlice";
+import { roundingNum } from "../../../helpers/totals";
 
-const InfoProds = ({ active }) => {
+const InfoProds = ({}) => {
   const dispatch = useDispatch();
 
   const { listOrders, listSendOrders, activeInvoiceHistory } = useSelector(
     (state) => state.mainSlice /// список заявок и товаров каждой заявки
   );
 
-  const { activeDateHistory } = useSelector((state) => state.mainSlice);
-
-  const onChangeDate = async (item) => {
-    ///// сортировка заявок по дате
-    dispatch(setActiveDateHistory(transformActionDate(item)));
-    const data = {
-      date_from: transformActionDate(item),
-      date_to: transformActionDate(item),
-    };
-    const obj = { agents_guid: [active], history: 1 };
-    dispatch(getHistoryInvoice({ ...data, ...obj })); // get список историй заявок
-  };
-
   const clickInvoice = ({ invoice_guid }) => {
     dispatch(setActiveInvoiceHistory(invoice_guid)); /// для активной накладной
     dispatch(getListProdsInInvoice(invoice_guid)); //// для получения товаров
   };
+
+  console.log(listSendOrders);
 
   return (
     <div className="infoProdsApp">
@@ -142,9 +128,8 @@ const InfoProds = ({ active }) => {
                       scope="row"
                       style={{ width: "15%" }}
                     >
-                      {row?.total_price} сом
+                      {roundingNum(row?.total_price)} сом
                     </TableCell>
-
                     <TableCell
                       component="th"
                       scope="row"
@@ -185,10 +170,10 @@ const InfoProds = ({ active }) => {
                     Наименование
                   </TableCell>
                   <TableCell align="left" style={{ width: "23%" }}>
-                    Кол-во в кг
+                    Вес
                   </TableCell>
                   <TableCell align="left" style={{ width: "23%" }}>
-                    Кол-во в шт
+                    Кол-во
                   </TableCell>
                   <TableCell align="left" style={{ width: "23%" }}>
                     Сумма
@@ -218,21 +203,21 @@ const InfoProds = ({ active }) => {
                       scope="row"
                       style={{ width: "23%" }}
                     >
-                      {row?.count}
+                      {roundingNum(row?.count)} кг
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
                       style={{ width: "23%" }}
                     >
-                      {row?.count}
+                      {roundingNum(row?.count_per)} шт
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
                       style={{ width: "23%" }}
                     >
-                      {row?.price} сом
+                      {roundingNum(row?.price)} сом
                     </TableCell>
                   </TableRow>
                 ))}
@@ -241,13 +226,13 @@ const InfoProds = ({ active }) => {
                     Итого
                   </TableCell>
                   <TableCell align="left" style={{ fontWeight: "bold" }}>
-                    {listSendOrders?.[0]?.total_count}
+                    {roundingNum(listSendOrders?.[0]?.total_count)} кг
                   </TableCell>
                   <TableCell align="left" style={{ fontWeight: "bold" }}>
-                    {listSendOrders?.[0]?.total_count}
+                    {roundingNum(listSendOrders?.[0]?.total_count)} шт
                   </TableCell>
                   <TableCell align="left" style={{ fontWeight: "bold" }}>
-                    {listSendOrders?.[0]?.total_price} сом
+                    {roundingNum(listSendOrders?.[0]?.total_price)} сом
                   </TableCell>
                 </TableRow>
               </TableBody>

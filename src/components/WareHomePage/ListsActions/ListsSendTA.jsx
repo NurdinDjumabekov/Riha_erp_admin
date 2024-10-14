@@ -8,7 +8,7 @@ import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 ////// helpers
-import { sumCountsFN, totalSum } from "../../../helpers/totals";
+import { roundingNum, sumCountsFN, totalSum } from "../../../helpers/totals";
 import { emptyCountCheck } from "../../../helpers/validations";
 import { myAlert } from "../../../helpers/MyAlert";
 
@@ -74,13 +74,16 @@ const ListsSendTA = () => {
     /// удаление твоара с накладной ТА через запрос (status: -1)
   };
 
+  console.log(listWHProdTA, "listWHProdTA");
+
   return (
     <div className="listsWareHome">
       <div className="sendActions">
-        <button className="saveAction generatePdf" onClick={clickPdf}>
+        <div />
+        {/* <button className="saveAction generatePdf" onClick={clickPdf}>
           <FileCopyIcon sx={{ width: 16, height: 16 }} />
           <p>Сгенерировать документ</p>
-        </button>
+        </button> */}
 
         <button
           className="saveAction"
@@ -103,16 +106,19 @@ const ListsSendTA = () => {
                 <TableCell align="center" style={{ width: "5%" }}>
                   №
                 </TableCell>
-                <TableCell style={{ width: "50%" }}>Продукт</TableCell>
-                <TableCell align="left" style={{ width: "20%" }}>
+                <TableCell style={{ width: "40%" }}>Продукт</TableCell>
+                <TableCell align="left" style={{ width: "15%" }}>
                   Цена
                 </TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
+                <TableCell align="left" style={{ width: "16%" }}>
+                  Вес
+                </TableCell>
+                <TableCell align="left" style={{ width: "16%" }}>
                   Кол-во
                 </TableCell>
                 <TableCell
                   align="left"
-                  style={{ width: "10%" }}
+                  style={{ width: "8%" }}
                   className="titleCheckbox "
                 >
                   *
@@ -133,17 +139,20 @@ const ListsSendTA = () => {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ width: "50%" }}
+                    style={{ width: "40%" }}
                   >
                     {row?.product_name}
                   </TableCell>
-                  <TableCell align="left" style={{ width: "20%" }}>
-                    {row?.price} сом
-                  </TableCell>
                   <TableCell align="left" style={{ width: "15%" }}>
-                    {row?.count} кг
+                    {roundingNum(row?.price)} сом
                   </TableCell>
-                  <TableCell align="center" style={{ width: "10%" }}>
+                  <TableCell align="left" style={{ width: "16%" }}>
+                    {roundingNum(row?.count)} кг
+                  </TableCell>
+                  <TableCell align="left" style={{ width: "16%" }}>
+                    {roundingNum(row?.count_per)} шт
+                  </TableCell>
+                  <TableCell align="center" style={{ width: "8%" }}>
                     <Tooltip
                       title={"Удалить"}
                       placement="top"
@@ -171,14 +180,21 @@ const ListsSendTA = () => {
                   Итого
                 </TableCell>
                 <TableCell align="left" className="footerTable">
-                  {totalSum(listWHProdTA, "count", "price")} сом
+                  {roundingNum(totalSum(listWHProdTA, "count", "price"))} сом
+                </TableCell>
+                <TableCell
+                  colSpan={1}
+                  align="left"
+                  style={{ fontWeight: "bold" }}
+                >
+                  {roundingNum(sumCountsFN(listWHProdTA, "count"))} кг
                 </TableCell>
                 <TableCell
                   colSpan={2}
                   align="left"
                   style={{ fontWeight: "bold" }}
                 >
-                  {sumCountsFN(listWHProdTA, "count")} кг
+                  {roundingNum(sumCountsFN(listWHProdTA, "count_per"))} шт
                 </TableCell>
               </TableRow>
             </TableBody>

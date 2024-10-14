@@ -68,10 +68,7 @@ const ModaIngridients = () => {
       comp: <ListIngredients list={list_ingredient} />,
       length: list_ingredient?.length,
     },
-    3: {
-      comp: <ListZames list={[]} />,
-      length: 5,
-    },
+    3: { comp: <ListZames list={[]} />, length: 5 },
   };
 
   useEffect(() => {

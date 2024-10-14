@@ -22,6 +22,7 @@ import "./style.scss";
 ////// helpers
 import { transformActionDate } from "../../../helpers/transformDate";
 import { reverseTransformActionDate } from "../../../helpers/transformDate";
+import { roundingNum } from "../../../helpers/totals";
 
 const HistoryData = () => {
   const dispatch = useDispatch();
@@ -116,7 +117,7 @@ const HistoryData = () => {
                     Цена
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
-                    Кол-во
+                    Вес
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
                     Выпущено
@@ -148,13 +149,13 @@ const HistoryData = () => {
                       {row?.product_name}
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
-                      {row?.price} сом
+                      {roundingNum(row?.price)} сом
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
-                      {row?.change} кг
+                      {roundingNum(row?.change)} кг
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
-                      {row?.count} кг
+                      {roundingNum(row?.count)} кг
                     </TableCell>
                     <TableCell align="left" style={{ width: "15%" }}>
                       {row?.date_from}

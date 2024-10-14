@@ -16,12 +16,13 @@ import "./style.scss";
 
 ////// helpers
 import { validNums } from "../../../helpers/validations";
-import { sumCountsFN, totalSum } from "../../../helpers/totals";
+import { roundingNum, sumCountsFN, totalSum } from "../../../helpers/totals";
 
 ////// icons
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { styleIconDel } from "../../../helpers/objs";
 
 const ListAcceptProd = () => {
   const dispatch = useDispatch();
@@ -58,6 +59,7 @@ const ListAcceptProd = () => {
     dispatch(delProdInInvoice({ data, ...obj, guid }));
   };
 
+
   return (
     <div className="listAcceptProd">
       <TableContainer
@@ -71,16 +73,19 @@ const ListAcceptProd = () => {
               <TableCell style={{ width: "8%" }} align="center">
                 №
               </TableCell>
-              <TableCell style={{ width: "50%" }}>Продукт</TableCell>
-              <TableCell align="left" style={{ width: "10%" }}>
+              <TableCell style={{ width: "39%" }}>Продукт</TableCell>
+              <TableCell align="left" style={{ width: "15%" }}>
                 Кол-во
               </TableCell>
-              <TableCell align="left" style={{ width: "22%" }}>
+              <TableCell align="left" style={{ width: "15%" }}>
+                Вес
+              </TableCell>
+              <TableCell align="left" style={{ width: "15%" }}>
                 Цена
               </TableCell>
               <TableCell
                 align="left"
-                style={{ width: "10%" }}
+                style={{ width: "8%" }}
                 className="titleCheckbox"
               >
                 *
@@ -95,21 +100,21 @@ const ListAcceptProd = () => {
                   scope="row"
                   align="center"
                   style={{ width: "8%" }}
-                  onClick={() => decrementCount(row)}
+                  // onClick={() => decrementCount(row)}
                 >
                   {index + 1}
                 </TableCell>
                 <TableCell
                   component="th"
                   scope="row"
-                  style={{ width: "50%" }}
-                  onClick={() => decrementCount(row)}
+                  style={{ width: "39%" }}
+                  // onClick={() => decrementCount(row)}
                 >
                   {row?.product_name}
                 </TableCell>
                 <TableCell
                   align="left"
-                  style={{ width: "10%" }}
+                  style={{ width: "15%" }}
                   className="counterRow"
                 >
                   <div className="countInputContainer">
@@ -126,25 +131,22 @@ const ListAcceptProd = () => {
                 </TableCell>
                 <TableCell
                   align="left"
-                  style={{ width: "20%" }}
-                  onClick={() => incrementCount(row)}
+                  style={{ width: "15%" }}
+                  // onClick={() => incrementCount(row)}
                 >
-                  {row?.price} сом
+                  {roundingNum(row?.count_per)}
                 </TableCell>
-                <TableCell align="center" style={{ width: "10%" }}>
+                <TableCell align="left" style={{ width: "15%" }}>
+                  {roundingNum(row?.price)} сом
+                </TableCell>
+                <TableCell align="center" style={{ width: "8%" }}>
                   <Tooltip title={"Удалить"} placement="top" disableInteractive>
                     <button
                       className="actionsDel"
                       disabled={!checkInvoice}
                       onClick={() => delProd(row)}
                     >
-                      <DeleteIcon
-                        sx={{
-                          color: "rgba(213, 42, 42, 0.848)",
-                          width: 20,
-                          height: 20,
-                        }}
-                      />
+                      <DeleteIcon sx={styleIconDel} />
                     </button>
                   </Tooltip>
                 </TableCell>
@@ -155,14 +157,17 @@ const ListAcceptProd = () => {
                 Итого
               </TableCell>
               <TableCell align="left" className="footerTable">
-                {totalSum(listSendOrders, "count", "price")} сом
+                {roundingNum(sumCountsFN(listSendOrders, "count"))} шт
+              </TableCell>
+              <TableCell align="left" className="footerTable">
+                {roundingNum(sumCountsFN(listSendOrders, "count_per"))} кг
               </TableCell>
               <TableCell
                 colSpan={2}
                 align="left"
                 style={{ fontWeight: "bold" }}
               >
-                {sumCountsFN(listSendOrders, "count")} шт
+                {roundingNum(totalSum(listSendOrders, "count", "price"))} сом
               </TableCell>
             </TableRow>
           </TableBody>

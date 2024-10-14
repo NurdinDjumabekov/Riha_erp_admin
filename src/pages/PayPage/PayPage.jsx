@@ -74,13 +74,13 @@ const PayPage = () => {
                 </div>
                 <div className="content">
                   <p>{i?.fio}</p>
-                  <span>Баланс: {i?.bonuse} сом</span>
+                  <span>Баланс: {i?.balance} сом</span>
                 </div>
               </button>
             ))}
           </div>
         </div>
-        <InfoDebit debtEveryTA={debtEveryTA} />
+        <InfoDebit debtEveryTA={debtEveryTA} active={active} />
       </div>
     </div>
   );

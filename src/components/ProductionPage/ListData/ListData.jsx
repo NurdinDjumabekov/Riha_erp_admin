@@ -23,6 +23,7 @@ import "./style.scss";
 ////// helpers
 import { emptyCountCheck, validNums } from "../../../helpers/validations";
 import { myAlert } from "../../../helpers/MyAlert";
+import { roundingNum } from "../../../helpers/totals";
 
 ////// icons
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -153,7 +154,7 @@ const ListData = () => {
                     Цена
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
-                    Количество
+                    Вес
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
                     Разница
@@ -185,11 +186,11 @@ const ListData = () => {
                       {row?.product_name}
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
-                      {row?.price} сом
+                      {roundingNum(row?.price)} сом
                     </TableCell>
 
                     <TableCell align="left" style={{ width: "10%" }}>
-                      {row?.countOld} кг
+                      {roundingNum(+row?.countOld)} кг
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
                       <div className="countsBlock">

@@ -1,14 +1,14 @@
 import React from "react";
 
 ////// components
-import { Table, TableBody, TableCell, TableFooter } from "@mui/material";
+import { Table, TableBody, TableCell } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
-import { sumCountsFN, totalSum } from "../../../../helpers/totals";
+
+////// helpers
+import { roundingNum, sumCountsFN, totalSum } from "../../../../helpers/totals";
 
 const ListProds = ({ list }) => {
-  console.log(list, "list");
-
   return (
     <TableContainer
       component={Paper}
@@ -21,12 +21,15 @@ const ListProds = ({ list }) => {
             <TableCell align="center" style={{ width: "5%" }}>
               №
             </TableCell>
-            <TableCell style={{ width: "52%" }}>Продукт</TableCell>
-            <TableCell align="left" style={{ width: "25%" }}>
+            <TableCell style={{ width: "44%" }}>Продукт</TableCell>
+            <TableCell align="left" style={{ width: "17%" }}>
               Цена
             </TableCell>
-            <TableCell align="left" style={{ width: "23%" }}>
-              Кол-во/вес
+            <TableCell align="left" style={{ width: "17%" }}>
+              Вес
+            </TableCell>
+            <TableCell align="left" style={{ width: "17%" }}>
+              Кол-во
             </TableCell>
           </TableRow>
         </TableHead>
@@ -41,14 +44,17 @@ const ListProds = ({ list }) => {
               >
                 {index + 1}
               </TableCell>
-              <TableCell component="th" scope="row" style={{ width: "52%" }}>
+              <TableCell component="th" scope="row" style={{ width: "44%" }}>
                 {row?.product_name}
               </TableCell>
-              <TableCell align="left" style={{ width: "25%" }}>
-                {row?.total_price} сом
+              <TableCell align="left" style={{ width: "17%" }}>
+                {roundingNum(row?.total_price)} сом
               </TableCell>
-              <TableCell align="left" style={{ width: "23%" }}>
-                {row?.total_count} кг
+              <TableCell align="left" style={{ width: "17%" }}>
+                {roundingNum(row?.total_count)} кг
+              </TableCell>
+              <TableCell align="left" style={{ width: "17%" }}>
+                {roundingNum(row?.count_per)} шт
               </TableCell>
             </TableRow>
           ))}
@@ -57,10 +63,13 @@ const ListProds = ({ list }) => {
               Итого
             </TableCell>
             <TableCell align="left" className="footerTable">
-              {totalSum(list, "total_count", "total_price")} сом
+              {roundingNum(totalSum(list, "total_count", "total_price"))} сом
             </TableCell>
-            <TableCell colSpan={2} align="left" style={{ fontWeight: "bold" }}>
-              {/* {sumCountsFN(list, "total_count")} шт */}
+            <TableCell colSpan={1} align="left" style={{ fontWeight: "bold" }}>
+              {roundingNum(sumCountsFN(list, "total_count"))} кг
+            </TableCell>
+            <TableCell colSpan={1} align="left" style={{ fontWeight: "bold" }}>
+              {roundingNum(sumCountsFN(list, "count_per"))} шт
             </TableCell>
           </TableRow>
         </TableBody>

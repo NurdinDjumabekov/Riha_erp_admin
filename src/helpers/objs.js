@@ -215,7 +215,7 @@ export const listMenu = [
   },
   {
     id: 9,
-    title: "Задания для ТА",
+    title: "Задания от руководителя",
     icon: <AssignmentIcon sx={{ color: "#fff" }} />,
     link: "/tasks",
   },
@@ -229,19 +229,19 @@ export const listMenu = [
     id: 10,
     title: "Настройки",
     icon: <SettingsSuggestOutlinedIcon sx={{ color: "#fff" }} />,
-    link: "/ga",
+    link: "",
   },
   {
     id: 15,
     title: "Отчеты",
     icon: <SummarizeOutlinedIcon sx={{ color: "#fff" }} />,
-    link: "/asd21",
+    link: "",
   },
   {
     id: 26,
     title: "Справочники",
     icon: <AccountTreeOutlinedIcon sx={{ color: "#fff" }} />,
-    link: "/as1231231",
+    link: "",
   },
 ];
 
@@ -338,3 +338,9 @@ export const listStatusSpending = [
 ];
 
 export const statusAll = { 1: "#299b31", 2: "red" };
+
+export const styleIconDel = {
+  color: "rgba(213, 42, 42, 0.848)",
+  width: 20,
+  height: 20,
+};

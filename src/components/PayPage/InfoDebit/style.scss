@@ -42,15 +42,35 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     position: relative;
-    padding: 40px 0px 10px;
+    padding: 50px 0px 10px;
     background: #fff;
 
     h5 {
       position: absolute;
       left: 20px;
-      top: 10px;
+      top: 13px;
       font-weight: 600;
       font-size: 16px;
+    }
+
+    .saveAction {
+      height: 35px;
+      background: #299b31;
+      padding: 1px 15px 3px;
+      border-radius: 5px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: absolute;
+      right: 15px;
+      top: 7px;
+
+      p {
+        font-size: 14px;
+        font-weight: 500;
+      }
     }
   }
 }
