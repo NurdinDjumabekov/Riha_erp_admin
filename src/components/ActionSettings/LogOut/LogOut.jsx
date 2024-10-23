@@ -16,9 +16,9 @@ const LogOut = ({ active }) => {
   const navigate = useNavigate();
 
   const logOut = () => {
+    navigate("/");
     localStorage.clear();
     window.location.reload();
-    navigate("/");
   };
   if (active) {
     return (

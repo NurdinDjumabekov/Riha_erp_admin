@@ -20,6 +20,7 @@ import "./style.scss";
 
 ////// fns
 import { actionsInvoiceAllDay } from "../../../../store/reducers/mainSlice";
+import { createInvoiceAdmin } from "../../../../store/reducers/mainSlice";
 import { getListTA } from "../../../../store/reducers/mainSlice";
 import { getListWorkShop } from "../../../../store/reducers/mainSlice";
 import { setInvoiceInfo } from "../../../../store/reducers/mainSlice";
@@ -31,6 +32,7 @@ import { searchActiveOrdersTA } from "../../../../helpers/searchActiveOrdersTA";
 ////// icons
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import AddProdInDay from "../../ActionsAllDay/AddProdInDay/AddProdInDay";
+import { addDateFN } from "../../../../helpers/transformDate";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -39,12 +41,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ModaIngridients = () => {
   const dispatch = useDispatch();
   const [active, setActive] = useState(1); // 1,2,3
+  const [invoiceGuid, setInvoiceGuid] = useState(""); // guid накладной для создания
 
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
   const { listsForProduction } = useSelector((state) => state.mainSlice);
-  const { list_ingredient, list_products } = listsForProduction;
   const { listTA, activeDate } = useSelector((state) => state.mainSlice);
   const { checkInvoice } = useSelector((state) => state.mainSlice);
+
+  const guidStandartAgent = "88F8CF21-F5D0-4F55-BC33-B168D739D1D4";
 
   const handleClose = () => dispatch(setInvoiceInfo({ guid: "", action: 0 }));
 
@@ -61,22 +65,37 @@ const ModaIngridients = () => {
 
   const obj = {
     1: {
-      comp: <ListProds list={list_products} />,
-      length: list_products?.length,
+      comp: (
+        <ListProds
+          list={listsForProduction?.list_products}
+          invoiceGuid={invoiceGuid}
+        />
+      ),
+      length: listsForProduction?.list_products?.length,
     },
     2: {
-      comp: <ListIngredients list={list_ingredient} />,
-      length: list_ingredient?.length,
+      comp: <ListIngredients list={listsForProduction?.list_ingredient} />,
+      length: listsForProduction?.list_ingredient?.length,
     },
     3: { comp: <ListZames list={[]} />, length: 5 },
+  };
+
+  const create = async () => {
+    const { date_from, date_to } = addDateFN(invoiceInfo?.date_from);
+    const obj = { date_from, date_to, agent_guid: guidStandartAgent };
+    /// if админ добавляет товары в накладную, то подставляю статичный guid
+    const res = await dispatch(createInvoiceAdmin(obj)).unwrap();
+    setInvoiceGuid(res?.invoice_guid);
   };
 
   useEffect(() => {
     if (invoiceInfo?.action == 0) {
       setActive(1);
+      setInvoiceGuid("");
     } else if (invoiceInfo?.action == 3) {
       dispatch(getListWorkShop()); /// get список цехов
       dispatch(getListTA({ first: true })); /// get список агентов
+      create(); /// создание накладной для добавления т0варов админом
     }
   }, [invoiceInfo?.action]);
 
@@ -130,7 +149,7 @@ const ModaIngridients = () => {
             </div>
           </section>
           <div className="listsInvoice">
-            <AddProdInDay />
+            <AddProdInDay invoiceGuid={invoiceGuid} />
             {obj?.[active]?.comp}
           </div>
         </div>

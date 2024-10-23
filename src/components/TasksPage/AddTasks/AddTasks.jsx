@@ -88,33 +88,33 @@ const AddTasks = (props) => {
 
       response = await dispatch(createTasks({ ...i, deadline_date })).unwrap();
 
-      if (response?.guid) {
-        const formData = new FormData();
-        formData.append("user_guid", dataSave?.guid);
-        formData.append("task_guid", response?.guid);
-        formData.append("user_type", dataSave?.user_type);
-        formData.append("route_guid", "0");
-        formData.append("user_guid", "0");
-        formData.append("user_type", "0");
-        obj?.filesUser?.forEach((file) => {
-          formData.append("files", file);
-        });
+      // if (response?.guid) {
+      //   const formData = new FormData();
+      //   formData.append("user_guid", dataSave?.guid);
+      //   formData.append("task_guid", response?.guid);
+      //   formData.append("user_type", dataSave?.user_type);
+      //   formData.append("route_guid", "0");
+      //   formData.append("user_guid", "0");
+      //   formData.append("user_type", "0");
+      //   obj?.filesUser?.forEach((file) => {
+      //     formData.append("files", file);
+      //   });
 
-        const resFile = await dispatch(addFileInTasks(formData)).unwrap();
+      //   const resFile = await dispatch(addFileInTasks(formData)).unwrap();
 
-        /// resFile
-        // if (resFile?.result == 1) {
-        if (true) {
-          const sendData = {
-            agent_guid: activeTA,
-            date_from: transformActionDate(dateRange?.[0]),
-            date_to: transformActionDate(dateRange?.[0]),
-            point_guid: activeTT,
-          };
-          dispatch(getTasks(sendData));
-          closeModal();
-        }
-      }
+      //   /// resFile
+      //   // if (resFile?.result == 1) {
+      //   if (true) {
+      //     const sendData = {
+      //       agent_guid: activeTA,
+      //       date_from: transformActionDate(dateRange?.[0]),
+      //       date_to: transformActionDate(dateRange?.[0]),
+      //       point_guid: activeTT,
+      //     };
+      //     dispatch(getTasks(sendData));
+      //     closeModal();
+      //   }
+      // }
     } else if (obj?.type == 2) {
       //// редактирование задачи
       const i = { ...obj, point_guid: activeTT, agent_guid: activeTA };
@@ -181,8 +181,6 @@ const AddTasks = (props) => {
       </ul>
     ),
   };
-
-  console.log(obj, "obj");
 
   return (
     <div className="addTasks">

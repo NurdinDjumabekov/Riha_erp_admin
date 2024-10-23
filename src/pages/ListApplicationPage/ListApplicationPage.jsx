@@ -1,7 +1,6 @@
 /////// hooks
 import { useDispatch, useSelector } from "react-redux";
 import React, { useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 ////// components
 import FullCalendar from "@fullcalendar/react";
@@ -29,7 +28,6 @@ import { getListOrders } from "../../store/reducers/mainSlice";
 import { createInvoice } from "../../store/reducers/mainSlice";
 
 ////// icons
-import UserIcon from "@mui/icons-material/AccountCircle";
 
 /////// style
 import "./style.scss";

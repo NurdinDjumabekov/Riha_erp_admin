@@ -20,7 +20,7 @@ export const getTasks = createAsyncThunk(
     const { agent_guid, date_from, date_to, point_guid } = props;
     const url = `${REACT_APP_API_URL}/ta/get_tasks?agent_guid=${agent_guid}&date=${date_from}&point_guid=${point_guid}&is_admin`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -74,7 +74,7 @@ export const changeStatusTasks = createAsyncThunk(
   async function (data, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/update_task_status`;
     try {
-      const response = await axios.put(url, data);
+      const response = await axiosInstance.put(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -92,7 +92,7 @@ export const addFileInTasks = createAsyncThunk(
   async function (data, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/add_file`;
     try {
-      const response = await axios.post(url, data);
+      const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -130,7 +130,7 @@ export const getListSpending = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_expense_type`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -151,7 +151,7 @@ export const getListSpendingTA = createAsyncThunk(
     const date_from = transformActionDate(dateRange?.[0]);
     const url = `${REACT_APP_API_URL}/ta/get_expenses?user_guid=${active}&date_to=${date_to}&date_from=${date_from}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -176,7 +176,7 @@ export const createSpending = createAsyncThunk(
     };
     const url = `${REACT_APP_API_URL}/ta/add_expense`;
     try {
-      const response = await axios.post(url, data);
+      const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -194,7 +194,7 @@ export const delSpending = createAsyncThunk(
   async function (data, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/del_expense`;
     try {
-      const response = await axios.post(url, data);
+      const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -213,7 +213,7 @@ export const changeSpendingStatus = createAsyncThunk(
     const data = { ...props, status: props?.status?.value };
     const url = `${REACT_APP_API_URL}/ta/expense_status`;
     try {
-      const response = await axios.put(url, data);
+      const response = await axiosInstance.put(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {

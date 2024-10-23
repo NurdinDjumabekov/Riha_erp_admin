@@ -9,7 +9,7 @@ const ListIngredients = ({ list }) => {
   return (
     <TableContainer
       component={Paper}
-      sx={{ height: "99%", width: "60%" }}
+      sx={{ height: "100%", width: "60%" }}
       className="scroll_table standartTable"
     >
       <Table stickyHeader aria-label="sticky table">

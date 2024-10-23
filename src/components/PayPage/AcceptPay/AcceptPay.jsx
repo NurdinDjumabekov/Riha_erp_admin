@@ -27,9 +27,9 @@ const AcceptPay = (props) => {
 
     const send = {
       ...obj,
-      user_guid: active,
-      user_type: "1",
-      create_user_guid: dataSave?.guid,
+      user_guid_to: active,
+      user_type_to: "1",
+      // create_user_guid: dataSave?.guid,
     };
     const response = await dispatch(payTA(send)).unwrap();
     if (response?.result == 1) {

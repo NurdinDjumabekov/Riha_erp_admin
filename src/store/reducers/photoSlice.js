@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import axiosInstance from "../../axiosInstance";
 
 const { REACT_APP_API_URL } = process.env;
 
@@ -15,7 +16,7 @@ export const getActiveRouteList = createAsyncThunk(
   async function (agent_guid, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/agent_route_sheet?agent_guid=${agent_guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data?.[0];
       } else {

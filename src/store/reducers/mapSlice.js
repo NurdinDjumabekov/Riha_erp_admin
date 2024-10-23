@@ -70,7 +70,7 @@ export const getPointsRouteAgent = createAsyncThunk(
   async function ({ guid, first }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_points?agent_guid=${guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         if (first) {
           const obj = {
@@ -98,7 +98,7 @@ export const getDateRouteAgent = createAsyncThunk(
     const dateNew = transformActionDate(date);
     const url = `${REACT_APP_API_URL}/ta/get_all_gps?agent_guid=${guid}&date_from=${dateNew}&date_to=${dateNew}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response.data;
       } else {
@@ -116,7 +116,7 @@ export const getAllRouteAgent = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_current_gps?agent_guid=0`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         console.log("start");
         return response.data;
@@ -135,7 +135,7 @@ export const getListRoute = createAsyncThunk(
   async function ({ agent_guid, first }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_route_sheets?agent_guid=${agent_guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         dispatch(getEveryRouteWithTT(response.data?.[0]?.guid));
         dispatch(setActiveRoute({ guid: response.data?.[0]?.guid })); /// активный маршрут для отображения
@@ -191,7 +191,7 @@ export const getEveryRouteWithTT = createAsyncThunk(
   async function (invoice_guid, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_route?route_sheet_guid=${invoice_guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response.data;
       } else {
@@ -283,7 +283,7 @@ export const getListRoutes_TA = createAsyncThunk(
     const { agent_guid, user_type, activeDate } = props;
     const url = `${REACT_APP_API_URL}/ta/agent_route_sheet?agent_guid=${agent_guid}&date=${activeDate}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         const obj = { route_sheet_guid: response.data?.[0]?.guid, user_type };
         dispatch(getEveryRoutes_TA(obj));
@@ -304,7 +304,7 @@ export const getEveryRoutes_TA = createAsyncThunk(
     const { route_sheet_guid, user_type } = props;
     const url = `${REACT_APP_API_URL}/ta/agent_routes?route_sheet_guid=${route_sheet_guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return { list: response.data, user_type };
       } else {

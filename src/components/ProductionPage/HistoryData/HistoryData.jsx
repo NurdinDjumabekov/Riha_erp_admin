@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 import DatePicker from "react-datepicker";
-import GeneratePdf from "../GeneratePdf/GeneratePdf";
+import GeneratePdfProduction from "../GeneratePdfProduction/GeneratePdfProduction";
 
 ////// fns
 import { setListProduction } from "../../../store/reducers/productionSlice";
@@ -23,6 +23,9 @@ import "./style.scss";
 import { transformActionDate } from "../../../helpers/transformDate";
 import { reverseTransformActionDate } from "../../../helpers/transformDate";
 import { roundingNum } from "../../../helpers/totals";
+
+////// icons
+import EventIcon from "@mui/icons-material/EventNoteTwoTone";
 
 const HistoryData = () => {
   const dispatch = useDispatch();
@@ -85,7 +88,7 @@ const HistoryData = () => {
         </div>
         <div className="prods">
           <div className="prods__sortDate">
-            <div className="date">
+            <div className="date inputSend">
               <p>Дата изготовления</p>
               <DatePicker
                 selected={reverseTransformActionDate(activeDate)}
@@ -98,8 +101,9 @@ const HistoryData = () => {
                 locale={ru}
                 maxDate={new Date()}
               />
+              <EventIcon />
             </div>
-            <GeneratePdf activeInvoice={activeInvoice} />
+            <GeneratePdfProduction activeInvoice={activeInvoice} />
           </div>
           <TableContainer
             component={Paper}
@@ -117,7 +121,7 @@ const HistoryData = () => {
                     Цена
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
-                    Вес
+                    Вес / Кол-во
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
                     Выпущено
@@ -152,10 +156,10 @@ const HistoryData = () => {
                       {roundingNum(row?.price)} сом
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
-                      {roundingNum(row?.change)} кг
+                      {roundingNum(row?.change)} {row?.unit}
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
-                      {roundingNum(row?.count)} кг
+                      {roundingNum(row?.count)} {row?.unit}
                     </TableCell>
                     <TableCell align="left" style={{ width: "15%" }}>
                       {row?.date_from}

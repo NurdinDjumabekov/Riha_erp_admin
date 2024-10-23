@@ -25,14 +25,14 @@ const TableReturn = ({ activeInvoice, setActiveInvoice }) => {
   );
 
   const clickInvoice = ({ invoice_guid }) => {
-    dispatch(getListProdsReturns(invoice_guid)); // get список товаров возврата
+    dispatch(getListProdsReturns({ invoice_guid })); // get список товаров возврата
     setActiveInvoice(invoice_guid); //// активная накладная
   };
 
   return (
     <div className="infoProdsApp">
       <div className="dolg">
-        <h5>Заявки</h5>
+        <h5>Накладные</h5>
         <div className="dolg__inner">
           <TableContainer
             component={Paper}
@@ -130,7 +130,7 @@ const TableReturn = ({ activeInvoice, setActiveInvoice }) => {
                       scope="row"
                       style={{ width: "15%" }}
                     >
-                      {objStatusOrdersMini?.[row?.status]}
+                      {/* {objStatusOrdersMini?.[row?.status]} */}
                     </TableCell>
 
                     <TableCell
@@ -148,7 +148,7 @@ const TableReturn = ({ activeInvoice, setActiveInvoice }) => {
         </div>
       </div>
       <div className="vozvrat">
-        <h5>Товары заявки</h5>
+        <h5>Товары накладных</h5>
         <div className="dolg__inner">
           <TableContainer
             component={Paper}

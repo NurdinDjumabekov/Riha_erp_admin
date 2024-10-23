@@ -33,8 +33,6 @@ const InfoProds = ({}) => {
     dispatch(getListProdsInInvoice(invoice_guid)); //// для получения товаров
   };
 
-  console.log(listSendOrders);
-
   return (
     <div className="infoProdsApp">
       <div className="dolg">
@@ -133,7 +131,7 @@ const InfoProds = ({}) => {
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "15%" }}
+                      style={{ width: "15%", color: "#00ab55" }}
                     >
                       {objStatusOrdersMini?.[row?.status]}
                     </TableCell>
@@ -170,10 +168,10 @@ const InfoProds = ({}) => {
                     Наименование
                   </TableCell>
                   <TableCell align="left" style={{ width: "23%" }}>
-                    Вес
+                    Вес (кг)
                   </TableCell>
                   <TableCell align="left" style={{ width: "23%" }}>
-                    Кол-во
+                    Кол-во (шт)
                   </TableCell>
                   <TableCell align="left" style={{ width: "23%" }}>
                     Сумма
@@ -203,7 +201,7 @@ const InfoProds = ({}) => {
                       scope="row"
                       style={{ width: "23%" }}
                     >
-                      {roundingNum(row?.count)} кг
+                      {roundingNum(row?.count)}
                     </TableCell>
                     <TableCell
                       component="th"

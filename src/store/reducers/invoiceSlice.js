@@ -33,7 +33,7 @@ export const getListWorkShop = createAsyncThunk(
   async function ({ agent_guid }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_agent_leftover_workshop?agent_guid=${agent_guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         const obj = response?.data?.[0];
         dispatch(getListCategs({ guid: obj?.workshop_guid, agent_guid })); /// для получение категорий
@@ -197,7 +197,7 @@ export const getListProdsInInvoiceSI = createAsyncThunk(
   async function (guid, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_application?invoice_guid=${guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -258,7 +258,7 @@ export const getListInvoiceReturns = createAsyncThunk(
     const { reciever_guid, sender_guid, date_from, date_to } = props;
     const url = `${REACT_APP_API_URL}/ta/get_return_invoice?route_guid=&reciever_guid=${reciever_guid}&sender_guid=${sender_guid}&date_from=${date_from}&date_to=${date_to}&is_admin=1&reciever_type=3`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -275,9 +275,9 @@ export const getListProdsReturns = createAsyncThunk(
   "getListProdsReturns",
   async function (props, { dispatch, rejectWithValue }) {
     const { invoice_guid } = props;
-    const url = `${REACT_APP_API_URL}/ta++++++++++++++++/`;
+    const url = `${REACT_APP_API_URL}/ta/get_invoice?invoice_guid=${invoice_guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {

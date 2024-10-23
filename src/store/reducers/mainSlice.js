@@ -41,12 +41,13 @@ export const logInAccount = createAsyncThunk(
     const { navigate, data } = props;
     const url = `${REACT_APP_API_URL}/ta/login`;
     try {
-      const response = await axios.post(url, data);
+      const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
-        const { result, guid, fio, user_type } = response?.data;
+        const { result, guid, fio, user_type, token, phone } = response?.data;
         if (result == 1 && !!guid) {
+          const obj = { guid, fio, user_type, token };
+          dispatch(setDataSave({ ...obj, phone }));
           navigate("/");
-          dispatch(setDataSave({ guid, fio, user_type }));
         } else {
           myAlert("Неверный логин или пароль", "error");
         }
@@ -65,7 +66,7 @@ export const getListWorkShop = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_workshop`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         const obj = response?.data?.[0];
         dispatch(getListCategs(obj)); /// для получение категорий
@@ -257,7 +258,7 @@ export const getListProdsInInvoice = createAsyncThunk(
   async function (guid, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_application?invoice_guid=${guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -299,6 +300,7 @@ export const createInvoiceAdmin = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         const guid = response?.data?.invoice_guid;
         dispatch(setInvoiceInfoReturn({ guid }));
+        return response.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -404,14 +406,13 @@ export const delProdInInvoice = createAsyncThunk(
 ////// addEveryProd - добавление товаров в заявку по одному
 export const addEveryProd = createAsyncThunk(
   "addEveryProd",
-  async function ({ data, updateData }, { dispatch, rejectWithValue }) {
+  async function ({ data }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/create_application_product`;
     try {
       const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         myAlert("Товар успешно добавлен!");
-        dispatch(getEveryDataDay(updateData)); //// get данные всего дня
-        dispatch(getDefaultList()); //// очищаю counts всего списка
+        return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }

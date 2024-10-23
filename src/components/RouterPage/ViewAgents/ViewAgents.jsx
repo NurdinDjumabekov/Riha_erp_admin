@@ -25,7 +25,6 @@ const ViewAgents = () => {
   const { mapGeo, key, listRouteAllTA } = useSelector(
     (state) => state.mapSlice
   );
-
   useEffect(() => {
     let intervalId;
     const getRoute = () => dispatch(getAllRouteAgent());
@@ -49,7 +48,7 @@ const ViewAgents = () => {
     const loadMap = async () => {
       const mapgl = await load();
       map = new mapgl.Map("map-container-admin", {
-        center: [mapGeo.longitude, mapGeo.latitude],
+        center: [74.6283202, 42.8540827],
         zoom: 13,
         key,
       });
@@ -64,7 +63,7 @@ const ViewAgents = () => {
         mapRef.current.destroy();
       }
     };
-  }, [mapGeo, key]);
+  }, [key]);
 
   useEffect(() => {
     if (isCheck && listRouteAllTA.length > 0) {

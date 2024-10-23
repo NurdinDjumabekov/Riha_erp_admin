@@ -38,7 +38,7 @@ const ReturnProdsPage = () => {
   const clickAgent = async (agent_guid) => {
     setActive(agent_guid); //// активный ТА
     const sendData = {
-      reciever_guid: dataSave.guid,
+      reciever_guid: "b85094a9-d70a-46ab-a724-5f3d7a506b37",
       sender_guid: agent_guid,
       date_from: transformActionDate(dateRange?.[0]),
       date_to: transformActionDate(dateRange?.[1]),
@@ -54,7 +54,7 @@ const ReturnProdsPage = () => {
     if (!!item?.[1]) {
       ///// сортировка возврата товара по дате
       const sendData = {
-        reciever_guid: dataSave.guid,
+        reciever_guid: "b85094a9-d70a-46ab-a724-5f3d7a506b37",
         sender_guid: active,
         date_from: transformActionDate(item?.[0]),
         date_to: transformActionDate(item?.[1]),
@@ -70,7 +70,7 @@ const ReturnProdsPage = () => {
       const list = await dispatch(getListTA({ first: false })).unwrap();
       setActive(list?.[0]?.guid);
       const sendData = {
-        reciever_guid: dataSave.guid,
+        reciever_guid: "b85094a9-d70a-46ab-a724-5f3d7a506b37", // dataSave.guid
         sender_guid: list?.[0]?.guid,
         date_from: transformActionDate(dateRange?.[0]),
         date_to: transformActionDate(dateRange?.[1]),

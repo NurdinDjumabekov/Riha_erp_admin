@@ -11,22 +11,23 @@ import Select from "react-select";
 import debounce from "debounce";
 
 /////// fns
-import { createInvoiceAdmin } from "../../../../store/reducers/mainSlice";
-import { addEveryProd } from "../../../../store/reducers/mainSlice";
+import {
+  addEveryProd,
+  getDefaultList,
+  getEveryDataDay,
+} from "../../../../store/reducers/mainSlice";
 import { getListCategs } from "../../../../store/reducers/mainSlice";
 import { getListProds } from "../../../../store/reducers/mainSlice";
 import { getListWorkShop } from "../../../../store/reducers/mainSlice";
 import { searchListProds } from "../../../../store/reducers/mainSlice";
 import { changeCountListProds } from "../../../../store/reducers/mainSlice";
 import { setActiveWorkShop } from "../../../../store/reducers/selectsSlice";
-import { setActiveTA } from "../../../../store/reducers/selectsSlice";
 import { setActiveCategs } from "../../../../store/reducers/selectsSlice";
 
 ////// helpers
 import { validNums } from "../../../../helpers/validations";
 import { transformLists } from "../../../../helpers/transformLists";
 import { myAlert } from "../../../../helpers/MyAlert";
-import { addDateFN } from "../../../../helpers/transformDate";
 import { searchActiveOrdersTA } from "../../../../helpers/searchActiveOrdersTA";
 
 /////// style
@@ -34,26 +35,27 @@ import "./style.scss";
 
 /////// icons
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { addDateFN } from "../../../../helpers/transformDate";
 
-const AddProdInDay = () => {
+const AddProdInDay = ({ invoiceGuid }) => {
   const dispatch = useDispatch();
+
+  const guidStandartAgent = "88F8CF21-F5D0-4F55-BC33-B168D739D1D4";
 
   const [search, setSearch] = useState("");
 
   const { listWorkshop } = useSelector((state) => state.mainSlice);
   const { listCategs } = useSelector((state) => state.mainSlice);
   const { listProds } = useSelector((state) => state.mainSlice);
-  const { listTA } = useSelector((state) => state.mainSlice);
-  const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
   const { activeWorkShop } = useSelector((state) => state.selectsSlice);
   const { activeCategs } = useSelector((state) => state.selectsSlice);
-  const { activeTA } = useSelector((state) => state.selectsSlice);
   const { checkInvoice } = useSelector((state) => state.mainSlice);
+  const { listTA, activeDate } = useSelector((state) => state.mainSlice);
+  const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
   const workShop = transformLists(listWorkshop, "guid", "name");
   const categs = transformLists(listCategs, "category_guid", "category_name");
-  const list_TA = transformLists(listTA, "guid", "fio");
 
   const onChangeWS = (item) => {
     dispatch(setActiveWorkShop(item)); ///// выбор селекта цехов
@@ -87,19 +89,9 @@ const AddProdInDay = () => {
     }
   };
 
-  const onChangeAgents = (item) => {
-    dispatch(setActiveTA(item));
-    ///// выбор селекта ТА
-
-    const { date_from, date_to } = addDateFN(invoiceInfo?.date_from);
-    const obj = { date_from, date_to, agent_guid: item?.value };
-    dispatch(createInvoiceAdmin(obj));
-    ///// создание накладной админом за ТА
-  };
-
-  const addProdInvoice = (obj) => {
+  const addProdInvoice = async (obj) => {
     const { product_guid, count, workshop_price } = obj;
-    if (!!!activeTA?.guid) {
+    if (!!!invoiceGuid) {
       myAlert("Выберите торгового агента!", "error");
       return;
     }
@@ -110,31 +102,34 @@ const AddProdInDay = () => {
     }
 
     const data = {
-      invoice_guid: invoiceInfo?.guid,
+      invoice_guid: invoiceGuid,
       comment: "",
       products: [{ product_guid, count, workshop_price }],
     }; //// для добавление товара по олному в заявку
 
-    const agents_guid = searchActiveOrdersTA(listTA);
-    const updateData = {
-      agents_guid: [...agents_guid, activeTA?.guid],
-      date_from: invoiceInfo?.date_from,
-      date_to: invoiceInfo?.date_from,
-      //// для отпраки данных на обнолвение (после успешного добаление вызывается другой запрос)
-    };
-
-    dispatch(addEveryProd({ data, updateData }));
+    const res = await dispatch(addEveryProd({ data })).unwrap();
     //// добавление товаров в заявку по одному(внутр есть хапрос на обновление)
-  };
 
-  //////////////////////////////////////////// selects
+    if (res?.result) {
+      dispatch(getDefaultList()); //// очищаю counts всего списка
+
+      //// для обновлнния накладной заявки
+      const agents_guid = searchActiveOrdersTA(listTA);
+      const send = {
+        agents_guid: [...agents_guid, guidStandartAgent],
+        date_from: invoiceInfo?.date_from,
+        date_to: invoiceInfo?.date_from,
+        //// для отпраки данных на обнолвение (после успешного добаление вызывается другой запрос)
+      };
+      dispatch(getEveryDataDay(send)); //// get данные всего дня
+    }
+  };
 
   const onChangeCount = (e, item) => {
     const count = e?.target?.value?.replace(",", ".");
 
     if (validNums(count)) {
-      //// валидцаия на числа
-      return;
+      return; //// валидцаия на числа
     }
 
     dispatch(changeCountListProds({ ...item, count }));
@@ -144,15 +139,6 @@ const AddProdInDay = () => {
   return (
     <div className="addProdInDay indridients">
       <div className="selectsAll__inner daySelects">
-        <div className="myInputs">
-          <h6>Поиск товаров </h6>
-          <input
-            type="text"
-            className="input"
-            onChange={onChangeSearch}
-            value={search}
-          />
-        </div>
         <div className="myInputs">
           <h6>Цех</h6>
           <Select
@@ -172,18 +158,18 @@ const AddProdInDay = () => {
           />
         </div>
         <div className="myInputs">
-          <h6>Агенты</h6>
-          <Select
-            options={list_TA}
-            className="select"
-            onChange={onChangeAgents}
-            value={activeTA}
+          <h6>Поиск товаров </h6>
+          <input
+            type="text"
+            className="input"
+            onChange={onChangeSearch}
+            value={search}
           />
         </div>
       </div>
       <TableContainer
         component={Paper}
-        sx={{ height: "99%" }}
+        sx={{ height: "100%" }}
         className="scroll_table standartTable"
       >
         <Table stickyHeader aria-label="sticky table">

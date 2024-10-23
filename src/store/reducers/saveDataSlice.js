@@ -1,7 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  dataSave: { guid: "", fio: "", user_type: "" },
+  dataSave: {
+    guid: "",
+    fio: "",
+    user_type: "",
+    token: { accessToken: "", refreshToken: "" },
+    phone: "",
+  },
 };
 
 const saveDataSlice = createSlice({
@@ -13,10 +19,17 @@ const saveDataSlice = createSlice({
     },
 
     clearDataSave: (state, action) => {
-      state.dataSave = { guid: "", fio: "", user_type: "" };
+      state.dataSave = {
+        guid: "",
+        fio: "",
+        user_type: "",
+        token: { accessToken: "", refreshToken: "" },
+        phone: "",
+      };
     },
   },
 });
 export const { setDataSave, clearDataSave } = saveDataSlice.actions;
 
 export default saveDataSlice.reducer;
+// guid, fio, user_type, token: token?.accessToken

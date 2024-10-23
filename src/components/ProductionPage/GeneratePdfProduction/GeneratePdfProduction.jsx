@@ -17,10 +17,10 @@ import { View, PDFViewer } from "@react-pdf/renderer";
 ////// icons
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 
-const GeneratePdf = ({ activeInvoice }) => {
-  const nowDate = transformActionDate(new Date());
-
+const GeneratePdfProduction = ({ activeInvoice }) => {
   const [active, setActive] = useState(false);
+
+  console.log(activeInvoice?.products);
 
   return (
     <div className="generateBlock">
@@ -38,12 +38,7 @@ const GeneratePdf = ({ activeInvoice }) => {
             <Page size="A4" style={styles.page}>
               <View style={styles.section}>
                 <Text style={styles.header}>Отправитель:</Text>
-                <Text style={styles.header}>
-                  Отгрузка агенту № _____ , Исаева Светлана - ТА.{" "}
-                  {formatDateMonth(nowDate)}
-                </Text>
               </View>
-
               <View style={styles.table}>
                 <View style={styles.tableRow}>
                   <View style={[styles.tableCol, styles.numsTitle]}>
@@ -53,25 +48,26 @@ const GeneratePdf = ({ activeInvoice }) => {
                     <Text style={styles.textTitle}>Наименование</Text>
                   </View>
                   <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>Заказано</Text>
+                    <Text style={styles.textTitle}>Заказано в кг</Text>
                   </View>
                   <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>Кол-во кг</Text>
+                    <Text style={styles.textTitle}>Заказано в шт</Text>
                   </View>
                   <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>Кол-во шт</Text>
+                    <Text style={styles.textTitle}>Выпущено кг</Text>
                   </View>
                   <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>Расчётное кол-во</Text>
+                    <Text style={styles.textTitle}>Выпущено шт</Text>
                   </View>
                   <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>Цена</Text>
+                    <Text style={styles.textTitle}>
+                      Дата начала изготовления
+                    </Text>
                   </View>
                   <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>Сумма</Text>
-                  </View>
-                  <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>Тара</Text>
+                    <Text style={styles.textTitle}>
+                      Дата окончания изготовления
+                    </Text>
                   </View>
                 </View>
 
@@ -86,25 +82,22 @@ const GeneratePdf = ({ activeInvoice }) => {
                       </Text>
                     </View>
                     <View style={[styles.tableCol, styles.headersOther]}>
-                      <Text style={styles.tableCell}>100 сом</Text>
+                      <Text style={styles.tableCell}>{i?.count}</Text>
                     </View>
                     <View style={[styles.tableCol, styles.headersOther]}>
-                      <Text style={styles.tableCell}>1000 сом</Text>
+                      <Text style={styles.tableCell}>{i?.count}</Text>
                     </View>
                     <View style={[styles.tableCol, styles.headersOther]}>
-                      <Text style={styles.tableCell}>1000 сом</Text>
+                      <Text style={styles.tableCell}>{i?.change}</Text>
                     </View>
                     <View style={[styles.tableCol, styles.headersOther]}>
-                      <Text style={styles.tableCell}>1000 сом</Text>
+                      <Text style={styles.tableCell}>{i?.change}</Text>
                     </View>
                     <View style={[styles.tableCol, styles.headersOther]}>
-                      <Text style={styles.tableCell}>{i?.price}</Text>
+                      <Text style={styles.tableCell}>{i?.date_from}</Text>
                     </View>
                     <View style={[styles.tableCol, styles.headersOther]}>
-                      <Text style={styles.tableCell}>1000 сом</Text>
-                    </View>
-                    <View style={[styles.tableCol, styles.headersOther]}>
-                      <Text style={styles.tableCell}></Text>
+                      <Text style={styles.tableCell}>{i?.date_to}</Text>
                     </View>
                   </View>
                 ))}
@@ -127,10 +120,6 @@ const GeneratePdf = ({ activeInvoice }) => {
                     </View>
                   </View>
                 </View>
-                <View style={styles.acceptText}>
-                  <Text style={styles.linetext}>Для доставки принял</Text>
-                  <Text style={styles.line}></Text>
-                </View>
                 <View style={[styles.acceptText, styles.acceptTextMore]}>
                   <Text style={styles.linetext}>Комментарий</Text>
                   <Text style={styles.line}></Text>
@@ -144,4 +133,4 @@ const GeneratePdf = ({ activeInvoice }) => {
   );
 };
 
-export default GeneratePdf;
+export default GeneratePdfProduction;

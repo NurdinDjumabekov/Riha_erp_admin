@@ -53,7 +53,7 @@ export const styles = StyleSheet.create({
   tableRow: { flexDirection: "row", borderTop: "none" },
 
   tableCol: {
-    width: "8%",
+    width: "12%",
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
@@ -63,19 +63,20 @@ export const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    width: "5%",
   },
 
   nums: { textAlign: "center" },
 
   names: {
-    width: "33%",
+    width: "29%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
 
   headersOther: {
-    width: "9%",
+    width: "11%",
     fontSize: 10,
     textAlign: "center",
     paddingHorizontal: 1,
@@ -84,7 +85,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  numsMain: { paddingHorizontal: 2 },
+  numsMain: { paddingHorizontal: 2, width: "5%", textAlign: "center" },
 
   textTitle: {
     fontSize: 8,
@@ -102,7 +103,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
 
-  namesInner: { width: "33%", textAlign: "right" },
+  namesInner: { width: "29%", textAlign: "right" },
 
   tableCell: {
     fontSize: 7,

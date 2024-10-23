@@ -36,7 +36,7 @@ const AddSpending = (props) => {
   const onChange = (e) => setObj({ ...obj, [e.target.name]: e.target.value });
 
   const addEditSpendingFN = async () => {
-    if (!obj?.spending?.value) return myAlert("Выберите трату", "error");
+    // if (!obj?.spending?.value) return myAlert("Выберите трату", "error");
     if (!obj?.amount) return myAlert("Введите сумму", "error");
     if (!obj?.comment) return myAlert("Введите комментарий", "error");
 

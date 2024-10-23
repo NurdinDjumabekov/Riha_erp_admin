@@ -24,7 +24,7 @@ export const getListProdProduction = createAsyncThunk(
       date_from || ""
     }&date_to=${date_to || ""}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         setActiveInvoice(response?.data?.[0]);
         return response?.data;

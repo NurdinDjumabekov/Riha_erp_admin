@@ -1,26 +1,33 @@
 .addProdInDay {
-  width: 40%;
+  width: 50%;
   position: relative;
   max-height: 100%;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.144);
+  padding: 10px 0 0 0;
+  background: #fff;
+  border-radius: 5px;
 
   .daySelects {
-    position: absolute;
-    left: 0;
-    top: -55px;
     width: 100%;
+    padding: 0 10px 10px;
     z-index: 10;
+    position: relative;
 
     .myInputs {
-      width: 25% !important;
+      width: 33% !important;
       max-width: 400px !important;
 
+      h6 {
+        margin-bottom: 2px;
+      }
+
       .input {
-        height: 27px;
         border-radius: 3px;
         border: 1px solid #e1dede !important;
         padding: 2px 10px;
         width: 100%;
         font-size: 13px;
+        height: 38px;
 
         &::placeholder {
           color: #a9afb8;
@@ -86,7 +93,12 @@
   .daySelects {
     display: flex;
     align-items: flex-end;
-    width: 134%;
+    width: 100%;
     gap: 7px;
+  }
+
+  .standartTable {
+    box-shadow: none !important;
+    height: calc(100% - 80px);
   }
 }

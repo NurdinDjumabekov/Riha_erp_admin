@@ -23,7 +23,7 @@ export const getListWorkShopWH = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_workshop?all=1`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         const obj = response?.data?.[0];
         dispatch(getListCategsWH(obj)); /// для получение категорий
@@ -47,7 +47,7 @@ export const getListCategsWH = createAsyncThunk(
   async function ({ guid }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_category?workshop_guid=${guid}&all=1`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         const obj = response?.data?.[0];
         dispatch(getListProdsWH({ guid, guidCateg: obj?.category_guid }));
@@ -75,7 +75,7 @@ export const getListProdsWH = createAsyncThunk(
   async function ({ guid, guidCateg }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_sklad?category_guid=${guidCateg}&workshop_guid=${guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
@@ -134,7 +134,7 @@ export const getPastProdsTa = createAsyncThunk(
   async function (agent_guid, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_otpusk_invoice?agent_guid=${agent_guid}`;
     try {
-      const response = await axios(url);
+      const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         dispatch(setInvoiceGuid(response.data?.invoice_guid));
         ///// подставляю guid для дальнейшей работы

@@ -4,16 +4,15 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
+import GeneratePdfProduction from "../GeneratePdfProduction/GeneratePdfProduction";
 import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 
 ////// fns
-import {
-  changeCountProduction,
-  getListProdProduction,
-  sendInWareHomeFN,
-} from "../../../store/reducers/productionSlice";
+import { changeCountProduction } from "../../../store/reducers/productionSlice";
+import { getListProdProduction } from "../../../store/reducers/productionSlice";
+import { sendInWareHomeFN } from "../../../store/reducers/productionSlice";
 import { setListProduction } from "../../../store/reducers/productionSlice";
 import { setInvoiceInfo } from "../../../store/reducers/mainSlice";
 
@@ -28,8 +27,6 @@ import { roundingNum } from "../../../helpers/totals";
 ////// icons
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
-
-import GeneratePdf from "../GeneratePdf/GeneratePdf";
 
 const ListData = () => {
   const dispatch = useDispatch();
@@ -59,10 +56,7 @@ const ListData = () => {
 
   const clickInvoice = (item) => {
     setActiveInvoice(item);
-    const list = item?.products?.map((i) => ({
-      ...i,
-      countOld: i.count,
-    }));
+    const list = item?.products?.map((i) => ({ ...i, countOld: i.count }));
     dispatch(setListProduction(list));
   };
 
@@ -132,7 +126,7 @@ const ListData = () => {
 
         <div className="prods">
           <div className="prods__sortDate">
-            <GeneratePdf activeInvoice={activeInvoice} />
+            <GeneratePdfProduction activeInvoice={activeInvoice} />
             <button onClick={sendInWareHome} className="sendData">
               <AddBusinessIcon sx={{ width: 16 }} />
               <p>Отправить на склад</p>
@@ -154,7 +148,7 @@ const ListData = () => {
                     Цена
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
-                    Вес
+                    Вес/Кол-во
                   </TableCell>
                   <TableCell align="left" style={{ width: "10%" }}>
                     Разница
@@ -190,7 +184,7 @@ const ListData = () => {
                     </TableCell>
 
                     <TableCell align="left" style={{ width: "10%" }}>
-                      {roundingNum(+row?.countOld)} кг
+                      {roundingNum(+row?.countOld)} {row?.unit}
                     </TableCell>
                     <TableCell align="left" style={{ width: "10%" }}>
                       <div className="countsBlock">
@@ -200,7 +194,6 @@ const ListData = () => {
                           value={row?.count}
                           maxLength={10}
                           className="counts"
-                          // readOnly={!checkInvoice}
                         />
                         <div>
                           {row?.count != row?.countOld && (
@@ -224,21 +217,6 @@ const ListData = () => {
                     </TableCell>
                   </TableRow>
                 ))}
-                {/* <TableRow>
-            <TableCell colSpan={2} align="left" className="footerTable">
-              Итого
-            </TableCell>
-            <TableCell align="left" className="footerTable">
-              {totalSum(listProduction, "count", "price")} сом
-            </TableCell>
-            <TableCell
-              colSpan={3}
-              align="left"
-              style={{ fontWeight: "bold" }}
-            >
-              {sumCountsFN(listProduction, "count")} шт (кг)
-            </TableCell>
-          </TableRow> */}
               </TableBody>
             </Table>
           </TableContainer>
