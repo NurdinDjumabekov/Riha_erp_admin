@@ -61,6 +61,24 @@ export const getEveryOrderTA = createAsyncThunk(
   }
 );
 
+//// addProdInInvoiceReq - добавление товара в накланую отпуска для ТА
+export const addProdInInvoiceReq = createAsyncThunk(
+  "addProdInInvoiceReq",
+  async function (data, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/create_invoice_product`;
+    try {
+      const response = await axiosInstance.post(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 ////////////////////////////////////////////////////////
 
 //// getListWorkShopWH - get список цехов
@@ -122,25 +140,6 @@ export const getListProdsWH = createAsyncThunk(
     const url = `${REACT_APP_API_URL}/ta/get_sklad?category_guid=${guidCateg}&workshop_guid=${guid}`;
     try {
       const response = await axiosInstance(url);
-      if (response.status >= 200 && response.status < 300) {
-        return response?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-//// addProdInInvoiceTA - добавление товара в накланую отпуска для ТА
-export const addProdInInvoiceTA = createAsyncThunk(
-  "addProdInInvoiceTA",
-  async function (props, { dispatch, rejectWithValue }) {
-    const { data, agent_guid, obj } = props;
-    const url = `${REACT_APP_API_URL}/ta/create_invoice_product`;
-    try {
-      const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {

@@ -7,7 +7,7 @@ import Select from "react-select";
 
 ////// fns
 import {
-  addProdInInvoiceTA,
+  // addProdInInvoiceTA,
   getListCategsWH,
   getListProdsWH,
 } from "../../../store/reducers/wareHouseSlice";
@@ -95,7 +95,7 @@ const SortSendProds = () => {
 
     const obj = { ...activeCategs, ...activeWorkShop };
 
-    dispatch(addProdInInvoiceTA({ data, agent_guid: activeTA?.guid, obj }));
+    // dispatch(addProdInInvoiceTA({ data, agent_guid: activeTA?.guid, obj }));
     ///// добавление и редактирование товаров в заявке
   };
 

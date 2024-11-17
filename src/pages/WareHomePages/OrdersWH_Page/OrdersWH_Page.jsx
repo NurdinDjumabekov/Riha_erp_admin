@@ -169,7 +169,12 @@ const OrdersWH_Page = () => {
           </Table>
         </TableContainer>
       </div>
-      <ModalAddProd closeModal={closeModal} modal={modal} setModal={setModal} />
+      <ModalAddProd
+        state={state}
+        closeModal={closeModal}
+        modal={modal}
+        setModal={setModal}
+      />
     </div>
   );
 };
