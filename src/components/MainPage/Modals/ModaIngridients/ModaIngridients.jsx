@@ -15,9 +15,6 @@ import ListIngredients from "../../ActionsAllDay/ListIngredients/ListIngredients
 import ListProds from "../../ActionsAllDay/ListProds/ListProds";
 import ListZames from "../../ActionsAllDay/ListZames/ListZames";
 
-////// style
-import "./style.scss";
-
 ////// fns
 import { actionsInvoiceAllDay } from "../../../../store/reducers/mainSlice";
 import { createInvoiceAdmin } from "../../../../store/reducers/mainSlice";
@@ -28,11 +25,14 @@ import { setInvoiceInfo } from "../../../../store/reducers/mainSlice";
 ////// helpers
 import { listActionsTitle } from "../../../../helpers/objs";
 import { searchActiveOrdersTA } from "../../../../helpers/searchActiveOrdersTA";
+import { addDateFN } from "../../../../helpers/transformDate";
 
 ////// icons
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import AddProdInDay from "../../ActionsAllDay/AddProdInDay/AddProdInDay";
-import { addDateFN } from "../../../../helpers/transformDate";
+
+////// style
+import "./style.scss";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -48,7 +48,7 @@ const ModaIngridients = () => {
   const { listTA, activeDate } = useSelector((state) => state.mainSlice);
   const { checkInvoice } = useSelector((state) => state.mainSlice);
 
-  const guidStandartAgent = "88F8CF21-F5D0-4F55-BC33-B168D739D1D4";
+  const guidStandartAgent = "B534B4C2-FBE4-47AD-92D2-E7A5EB2C2D27";
 
   const handleClose = () => dispatch(setInvoiceInfo({ guid: "", action: 0 }));
 
@@ -63,19 +63,17 @@ const ModaIngridients = () => {
     dispatch(actionsInvoiceAllDay({ data, props }));
   };
 
+  const list_products = listsForProduction?.list_products;
+  const list_ingredient = listsForProduction?.list_ingredient;
+
   const obj = {
     1: {
-      comp: (
-        <ListProds
-          list={listsForProduction?.list_products}
-          invoiceGuid={invoiceGuid}
-        />
-      ),
-      length: listsForProduction?.list_products?.length,
+      comp: <ListProds list={list_products} invoiceGuid={invoiceGuid} />,
+      length: list_products?.length,
     },
     2: {
-      comp: <ListIngredients list={listsForProduction?.list_ingredient} />,
-      length: listsForProduction?.list_ingredient?.length,
+      comp: <ListIngredients list={list_ingredient} />,
+      length: list_ingredient?.length,
     },
     3: { comp: <ListZames list={[]} />, length: 5 },
   };

@@ -9,10 +9,12 @@ import { transformActionDate } from "../../helpers/transformDate";
 const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
+  preloader: false,
   listProduction: [], /// список товаров в производстве
   listHistoryProduction: [], /// список историй товаров в производстве
   listProductionInvoice: [], /// список накладных в производстве
   activeDate: transformActionDate(new Date()),
+  listLeftoversProduction: [], /// список остатков на производстве
 };
 
 ////// getListProdProduction - get список товаров производства
@@ -65,6 +67,44 @@ export const sendInWareHomeFN = createAsyncThunk(
   }
 );
 
+////// getListLeftoversProduction - get список остатков товарова производства
+export const getListLeftoversProduction = createAsyncThunk(
+  "getListLeftoversProduction",
+  async function (props, { dispatch, rejectWithValue }) {
+    const {} = props;
+    const url = `${REACT_APP_API_URL}/ta/+++++++++`;
+    try {
+      const response = await axiosInstance(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// addListLeftoversInProduction - добавить список остатков товарова в накладную производства
+export const addListLeftoversInProduction = createAsyncThunk(
+  "addListLeftoversInProduction",
+  async function (props, { dispatch, rejectWithValue }) {
+    const {} = props;
+    const url = `${REACT_APP_API_URL}/ta/+++++++++`;
+    try {
+      const response = await axiosInstance(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const productionSlice = createSlice({
   name: "productionSlice",
   initialState,
@@ -75,9 +115,9 @@ const productionSlice = createSlice({
 
     /////изменение ключа count в списке товаров производства
     changeCountProduction: (state, action) => {
-      const { product_guid, count } = action.payload;
+      const { product_guid, count_kg } = action.payload;
       state.listProduction = state.listProduction?.map((i) =>
-        i?.product_guid === product_guid ? { ...i, count } : i
+        i?.product_guid === product_guid ? { ...i, count_kg } : i
       );
     },
 
@@ -92,7 +132,7 @@ const productionSlice = createSlice({
       state.preloader = false;
       state.listProduction = action.payload?.[0]?.products?.map((i) => ({
         ...i,
-        countOld: i.count,
+        countOld: i.count_kg,
       }));
       state.listProductionInvoice = action.payload;
     });
@@ -103,8 +143,22 @@ const productionSlice = createSlice({
     builder.addCase(getListProdProduction.pending, (state, action) => {
       state.preloader = true;
     });
+
+    ///////////// getListLeftoversProduction
+    builder.addCase(getListLeftoversProduction.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listLeftoversProduction = action.payload;
+    });
+    builder.addCase(getListLeftoversProduction.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getListLeftoversProduction.pending, (state, action) => {
+      state.preloader = true;
+    });
   },
 });
+
 export const { setListProduction, changeCountProduction, setActiveDate } =
   productionSlice.actions;
 

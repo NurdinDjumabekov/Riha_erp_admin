@@ -55,10 +55,15 @@ const TableTasks = ({ activeTA, activeTT, dateRange }) => {
     }
   };
 
-  const openModalEditTasks = ({ guid, deadline, comment }) => {
+  const openModalEditTasks = (props) => {
+    const { guid, deadline, comment, filesUser } = props;
     //// для изменения данных в самом таске
     const time = reverseTransformActionTime(deadline);
-    setObj({ ...obj, type: 2, task_guid: guid, deadline_date: time, comment });
+
+    const localFilesUser = filesUser;
+
+    const send = { type: 2, task_guid: guid, deadline_date: time, comment };
+    setObj({ ...obj, ...send, localFilesUser });
   };
 
   const closeModal = () => setObj(clearDataTasks); /// очистка состояния
@@ -92,16 +97,19 @@ const TableTasks = ({ activeTA, activeTT, dateRange }) => {
                   <TableCell align="left" style={{ width: "13%" }}>
                     Дата исполнения
                   </TableCell>
-                  <TableCell align="left" style={{ width: "13%" }}>
+                  <TableCell align="left" style={{ width: "8%" }}>
                     Статус
                   </TableCell>
-                  <TableCell align="left" style={{ width: "23%" }}>
+                  <TableCell align="left" style={{ width: "20%" }}>
                     Комментарий
                   </TableCell>
-                  <TableCell align="left" style={{ width: "13%" }}>
+                  <TableCell align="left" style={{ width: "14%" }}>
+                    Комментарий
+                  </TableCell>
+                  <TableCell align="left" style={{ width: "10%" }}>
                     Файлы админа
                   </TableCell>
-                  <TableCell align="left" style={{ width: "13%" }}>
+                  <TableCell align="left" style={{ width: "10%" }}>
                     Файлы агента
                   </TableCell>
                   <TableCell align="center" style={{ width: "8%" }}>
@@ -137,27 +145,50 @@ const TableTasks = ({ activeTA, activeTT, dateRange }) => {
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "13%" }}
+                      style={{ width: "8%" }}
                     >
                       {row?.status_name}
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "23%" }}
+                      style={{ width: "20%" }}
                     >
                       {row?.comment}
                     </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "13%" }}
-                    ></TableCell>
+                      style={{ width: "14%" }}
+                    >
+                      {row?.comment_agent}
+                    </TableCell>
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ width: "13%" }}
-                    ></TableCell>
+                      style={{ width: "10%" }}
+                    >
+                      {row?.filesUser?.map((i, index) => (
+                        <div className="files">
+                          <a href={i?.file_path} target="_blank">
+                            Файл {index + 1}
+                          </a>
+                        </div>
+                      ))}
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{ width: "10%" }}
+                    >
+                      {row?.filesAgent?.map((i, index) => (
+                        <div className="files">
+                          <a href={i?.file_path} target="_blank">
+                            Файл {index + 1}
+                          </a>
+                        </div>
+                      ))}
+                    </TableCell>
                     <TableCell
                       component="th"
                       scope="row"

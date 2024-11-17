@@ -17,12 +17,10 @@ import "./style.scss";
 ////// helpers
 import { validNums } from "../../../helpers/validations";
 import { roundingNum, sumCountsFN, totalSum } from "../../../helpers/totals";
+import { styleIconDel } from "../../../helpers/objs";
 
 ////// icons
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import { styleIconDel } from "../../../helpers/objs";
 
 const ListAcceptProd = () => {
   const dispatch = useDispatch();
@@ -59,7 +57,6 @@ const ListAcceptProd = () => {
     dispatch(delProdInInvoice({ data, ...obj, guid }));
   };
 
-
   return (
     <div className="listAcceptProd">
       <TableContainer
@@ -75,10 +72,10 @@ const ListAcceptProd = () => {
               </TableCell>
               <TableCell style={{ width: "39%" }}>Продукт</TableCell>
               <TableCell align="left" style={{ width: "15%" }}>
-                Кол-во
+                Кол-во (шт)
               </TableCell>
               <TableCell align="left" style={{ width: "15%" }}>
-                Вес
+                Вес (кг)
               </TableCell>
               <TableCell align="left" style={{ width: "15%" }}>
                 Цена
@@ -134,7 +131,7 @@ const ListAcceptProd = () => {
                   style={{ width: "15%" }}
                   // onClick={() => incrementCount(row)}
                 >
-                  {roundingNum(row?.count_per)}
+                  {roundingNum(row?.count_kg)}
                 </TableCell>
                 <TableCell align="left" style={{ width: "15%" }}>
                   {roundingNum(row?.price)} сом
@@ -157,17 +154,17 @@ const ListAcceptProd = () => {
                 Итого
               </TableCell>
               <TableCell align="left" className="footerTable">
-                {roundingNum(sumCountsFN(listSendOrders, "count"))} шт
+                {roundingNum(listSendOrders?.[0]?.total_count)} шт
               </TableCell>
               <TableCell align="left" className="footerTable">
-                {roundingNum(sumCountsFN(listSendOrders, "count_per"))} кг
+                {roundingNum(listSendOrders?.[0]?.total_count_kg)} кг
               </TableCell>
               <TableCell
                 colSpan={2}
                 align="left"
                 style={{ fontWeight: "bold" }}
               >
-                {roundingNum(totalSum(listSendOrders, "count", "price"))} сом
+                {roundingNum(listSendOrders?.[0]?.total_price)} сом
               </TableCell>
             </TableRow>
           </TableBody>

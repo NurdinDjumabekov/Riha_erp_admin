@@ -289,6 +289,24 @@ export const getListProdsReturns = createAsyncThunk(
   }
 );
 
+////// editStatusInvoiceReturn - отправка накладной торговой точке
+export const editStatusInvoiceReturn = createAsyncThunk(
+  "editStatusInvoiceReturn",
+  async function (data, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/update_return_invoice`;
+    try {
+      const response = await axiosInstance.put(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const invoiceSlice = createSlice({
   name: "invoiceSlice",
   initialState,

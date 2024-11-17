@@ -15,16 +15,18 @@ import { myAlert } from "../../../helpers/MyAlert";
 ////// icons
 import DeleteIcon from "@mui/icons-material/Delete";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 
 /////// fns
-import { editProdInInvoiceTA } from "./../../../store/reducers/wareHouseSlice";
+import {
+  clearListWHProdTA,
+  editProdInInvoiceTA,
+} from "./../../../store/reducers/wareHouseSlice";
 import { sendInvoiceTAsale } from "../../../store/reducers/wareHouseSlice";
 
 ////// style
 import "./style.scss";
 
-const ListsSendTA = () => {
+const ListsSendTA = ({ getData }) => {
   const dispatch = useDispatch();
 
   const { listWHProdTA } = useSelector((state) => state.wareHouseSlice);
@@ -33,7 +35,7 @@ const ListsSendTA = () => {
   const { dataSave } = useSelector((state) => state.saveDataSlice);
   const { invoiceGuid } = useSelector((state) => state.wareHouseSlice);
 
-  const sendInvoiceTA = () => {
+  const sendInvoiceTA = async () => {
     ///// отпуская товар торговвому агенту
 
     if (emptyCountCheck(listWHProdTA)) {
@@ -56,14 +58,12 @@ const ListsSendTA = () => {
       user_type1: 2, // 1 agent 2 admin
     };
 
-    dispatch(sendInvoiceTAsale({ data }));
+    const res = await dispatch(sendInvoiceTAsale({ data })).unwrap();
     ///// добавление и редактирование товаров в заявке
-  };
-
-  const clickPdf = () => {
-    const url =
-      "https://riha-production.333.kg/files/invoice/Otpusk-nakladnaya-5-2024-10-01(18:21:33).pdf";
-    window.open(url, "_blank");
+    if (!!res?.result) {
+      getData();
+      dispatch(clearListWHProdTA()); /// очищаю список
+    }
   };
 
   const delProd = ({ product_guid, invoice_guid, price, count }) => {
@@ -73,8 +73,6 @@ const ListsSendTA = () => {
     dispatch(editProdInInvoiceTA({ activeTA, ...obj, data }));
     /// удаление твоара с накладной ТА через запрос (status: -1)
   };
-
-  console.log(listWHProdTA, "listWHProdTA");
 
   return (
     <div className="listsWareHome">
@@ -107,14 +105,14 @@ const ListsSendTA = () => {
                   №
                 </TableCell>
                 <TableCell style={{ width: "40%" }}>Продукт</TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
-                  Цена
+                <TableCell align="left" style={{ width: "16%" }}>
+                  Кол-во
                 </TableCell>
                 <TableCell align="left" style={{ width: "16%" }}>
                   Вес
                 </TableCell>
-                <TableCell align="left" style={{ width: "16%" }}>
-                  Кол-во
+                <TableCell align="left" style={{ width: "15%" }}>
+                  Цена
                 </TableCell>
                 <TableCell
                   align="left"
@@ -143,14 +141,14 @@ const ListsSendTA = () => {
                   >
                     {row?.product_name}
                   </TableCell>
+                  <TableCell align="left" style={{ width: "16%" }}>
+                    {roundingNum(row?.count)} шт
+                  </TableCell>
+                  <TableCell align="left" style={{ width: "16%" }}>
+                    {roundingNum(row?.count_kg)} кг
+                  </TableCell>
                   <TableCell align="left" style={{ width: "15%" }}>
                     {roundingNum(row?.price)} сом
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "16%" }}>
-                    {roundingNum(row?.count)} кг
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "16%" }}>
-                    {roundingNum(row?.count_per)} шт
                   </TableCell>
                   <TableCell align="center" style={{ width: "8%" }}>
                     <Tooltip
@@ -179,8 +177,8 @@ const ListsSendTA = () => {
                 <TableCell colSpan={2} align="left" className="footerTable">
                   Итого
                 </TableCell>
-                <TableCell align="left" className="footerTable">
-                  {roundingNum(totalSum(listWHProdTA, "count", "price"))} сом
+                <TableCell align="left" style={{ fontWeight: "bold" }}>
+                  {roundingNum(sumCountsFN(listWHProdTA, "count_kg"))} шт
                 </TableCell>
                 <TableCell
                   colSpan={1}
@@ -189,12 +187,8 @@ const ListsSendTA = () => {
                 >
                   {roundingNum(sumCountsFN(listWHProdTA, "count"))} кг
                 </TableCell>
-                <TableCell
-                  colSpan={2}
-                  align="left"
-                  style={{ fontWeight: "bold" }}
-                >
-                  {roundingNum(sumCountsFN(listWHProdTA, "count_per"))} шт
+                <TableCell colSpan={2} align="left" className="footerTable">
+                  {roundingNum(totalSum(listWHProdTA, "count", "price"))} сом
                 </TableCell>
               </TableRow>
             </TableBody>

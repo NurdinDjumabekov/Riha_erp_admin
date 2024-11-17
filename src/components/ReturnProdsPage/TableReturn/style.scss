@@ -70,4 +70,10 @@
   .everyInvoice {
     cursor: pointer;
   }
+
+  .actions {
+    > button {
+      background: transparent;
+    }
+  }
 }

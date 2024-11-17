@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// components
-import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
+import { Table, TableBody, TableCell } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 import DatePicker from "react-datepicker";
@@ -103,75 +103,77 @@ const HistoryData = () => {
               />
               <EventIcon />
             </div>
-            <GeneratePdfProduction activeInvoice={activeInvoice} />
+            {/* <GeneratePdfProduction activeInvoice={activeInvoice} /> */}
           </div>
-          <TableContainer
-            component={Paper}
-            sx={{ maxHeight: "100%" }}
-            className="scroll_table standartTable"
-          >
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center" style={{ width: "5%" }}>
-                    №
-                  </TableCell>
-                  <TableCell style={{ width: "35%" }}>Продукт</TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Цена
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Вес / Кол-во
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Выпущено
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
-                    Дата начала изготовления
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
-                    Дата окончания изготовления
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {listProduction?.map((row, index) => (
-                  <TableRow key={row?.product_guid}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ width: "5%" }}
-                      align="center"
-                    >
-                      {index + 1}
+          <div className="tableHistory">
+            <TableContainer
+              component={Paper}
+              sx={{ maxHeight: "100%" }}
+              className="scroll_table standartTable"
+            >
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" style={{ width: "5%" }}>
+                      №
                     </TableCell>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ width: "35%" }}
-                    >
-                      {row?.product_name}
+                    <TableCell style={{ width: "29%" }}>Продукт</TableCell>
+                    <TableCell align="left" style={{ width: "12%" }}>
+                      Было заказано (кг)
                     </TableCell>
-                    <TableCell align="left" style={{ width: "10%" }}>
-                      {roundingNum(row?.price)} сом
+                    <TableCell align="left" style={{ width: "12%" }}>
+                      Выпущено в кг
                     </TableCell>
-                    <TableCell align="left" style={{ width: "10%" }}>
-                      {roundingNum(row?.change)} {row?.unit}
-                    </TableCell>
-                    <TableCell align="left" style={{ width: "10%" }}>
-                      {roundingNum(row?.count)} {row?.unit}
+                    <TableCell align="left" style={{ width: "12%" }}>
+                      Выпущено в шт
                     </TableCell>
                     <TableCell align="left" style={{ width: "15%" }}>
-                      {row?.date_from}
+                      Дата начала изготовления
                     </TableCell>
                     <TableCell align="left" style={{ width: "15%" }}>
-                      {row?.date_to}
+                      Дата окончания изготовления
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {listProduction?.map((row, index) => (
+                    <TableRow key={row?.product_guid}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{ width: "5%" }}
+                        align="center"
+                      >
+                        {index + 1}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{ width: "29%" }}
+                      >
+                        {row?.product_name}
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "12%" }}>
+                        {roundingNum(row?.order_count)} кг
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "12%" }}>
+                        {roundingNum(row?.count_kg)} кг
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "12%" }}>
+                        {roundingNum(row?.count)} шт
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "15%" }}>
+                        {row?.date_from}
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "15%" }}>
+                        {row?.date_to}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
         </div>
       </div>
     </div>

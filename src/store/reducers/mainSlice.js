@@ -371,6 +371,7 @@ export const createEditProdInInvoice = createAsyncThunk(
         dispatch(getListOrders({ ...activeDate, agents_guid }));
         dispatch(getListProdsInInvoice(guid));
         dispatch(getDefaultList()); //// очищаю counts всего списка
+        return response?.data?.[0];
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -412,7 +413,7 @@ export const addEveryProd = createAsyncThunk(
       const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
         myAlert("Товар успешно добавлен!");
-        return response?.data;
+        return response?.data?.[0];
       } else {
         throw Error(`Error: ${response.status}`);
       }

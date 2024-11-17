@@ -2,7 +2,7 @@ import React from "react";
 
 const SendInput = (props) => {
   const { value, onChange, title, name, placeholder } = props;
-  const { type, maxLength, typeInput } = props;
+  const { type, maxLength, typeInput, ref } = props;
 
   return (
     <div className="inputSend">
@@ -13,6 +13,7 @@ const SendInput = (props) => {
           onChange={onChange}
           placeholder={placeholder}
           name={name}
+          ref={ref}
         />
       ) : (
         <input
@@ -22,6 +23,7 @@ const SendInput = (props) => {
           placeholder={placeholder}
           name={name}
           maxLength={type == "number" ? 14 : 100}
+          ref={ref}
         />
       )}
     </div>

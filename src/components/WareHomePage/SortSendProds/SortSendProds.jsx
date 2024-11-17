@@ -8,7 +8,6 @@ import Select from "react-select";
 ////// fns
 import {
   addProdInInvoiceTA,
-  getPastProdsTa,
   getListCategsWH,
   getListProdsWH,
 } from "../../../store/reducers/wareHouseSlice";
@@ -70,12 +69,7 @@ const SortSendProds = () => {
       user_type: 2,
     };
 
-    dispatch(getPastProdsTa(item?.guid));
     //// беру список товаров и данные накладной ( заранее созданной накланой)
-
-    // dispatch(createInvoiceSendTA({ data, agent_guid: item?.guid }));
-    /// создания накладной для отпуска ТА которого выбрали
-    /// при выборе ТА, автоматически создается накладная, туда уже надо будет добавить новый товар или отредактировать старый
   };
 
   const actionsProdInInvoice = () => {
@@ -104,6 +98,7 @@ const SortSendProds = () => {
     dispatch(addProdInInvoiceTA({ data, agent_guid: activeTA?.guid, obj }));
     ///// добавление и редактирование товаров в заявке
   };
+
   return (
     <div className="sortSendProds">
       <div className="sortActions">

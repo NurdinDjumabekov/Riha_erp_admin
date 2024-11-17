@@ -48,14 +48,12 @@ const AddTasks = (props) => {
         setObj({ ...obj, filesUser: [...obj.filesUser, ...acceptedFiles] });
         //// загрузка файлов при создание задачи
       } else if (obj?.type == 2) {
-        //// загрузка файлов при редактирование задачи
+        // //// загрузка файлов при редактирование задачи
         const formData = new FormData();
         formData.append("user_guid", dataSave?.guid);
         formData.append("task_guid", obj?.guid);
         formData.append("user_type", dataSave?.user_type);
         formData.append("route_guid", "0");
-        formData.append("user_guid", "0");
-        formData.append("user_type", "0");
         acceptedFiles?.forEach((file) => {
           formData.append("files", file);
         });
@@ -85,36 +83,31 @@ const AddTasks = (props) => {
     let response;
     if (obj?.type == 1) {
       //// создание задачи
-
       response = await dispatch(createTasks({ ...i, deadline_date })).unwrap();
+      if (response?.guid && obj?.filesUser && obj?.filesUser?.length > 0) {
+        const formData = new FormData();
+        formData.append("user_guid", dataSave?.guid);
+        formData.append("task_guid", response?.guid);
+        formData.append("user_type", dataSave?.user_type);
+        obj?.filesUser?.forEach((file) => {
+          formData.append(`files`, file);
+        });
 
-      // if (response?.guid) {
-      //   const formData = new FormData();
-      //   formData.append("user_guid", dataSave?.guid);
-      //   formData.append("task_guid", response?.guid);
-      //   formData.append("user_type", dataSave?.user_type);
-      //   formData.append("route_guid", "0");
-      //   formData.append("user_guid", "0");
-      //   formData.append("user_type", "0");
-      //   obj?.filesUser?.forEach((file) => {
-      //     formData.append("files", file);
-      //   });
+        const resFile = await dispatch(
+          addFileInTasks({ data: formData })
+        ).unwrap();
 
-      //   const resFile = await dispatch(addFileInTasks(formData)).unwrap();
-
-      //   /// resFile
-      //   // if (resFile?.result == 1) {
-      //   if (true) {
-      //     const sendData = {
-      //       agent_guid: activeTA,
-      //       date_from: transformActionDate(dateRange?.[0]),
-      //       date_to: transformActionDate(dateRange?.[0]),
-      //       point_guid: activeTT,
-      //     };
-      //     dispatch(getTasks(sendData));
-      //     closeModal();
-      //   }
-      // }
+        if (resFile?.result == 1) {
+          const sendData = {
+            agent_guid: activeTA,
+            date_from: transformActionDate(dateRange?.[0]),
+            date_to: transformActionDate(dateRange?.[0]),
+            point_guid: activeTT,
+          };
+          dispatch(getTasks(sendData));
+          closeModal();
+        }
+      }
     } else if (obj?.type == 2) {
       //// редактирование задачи
       const i = { ...obj, point_guid: activeTT, agent_guid: activeTA };
@@ -140,10 +133,12 @@ const AddTasks = (props) => {
     setObj({ ...obj, filesUser });
   };
 
-  const removeFiles = async ({ guid }) => {
-    const response = await dispatch(delFileInTasks(guid)).unwrap();
+  const removeFiles = async ({ guid_file }) => {
+    const response = await dispatch(delFileInTasks(guid_file)).unwrap();
     if (response.result == 1) {
-      const filesUser = obj?.filesUser?.filter((item) => item?.guid !== guid);
+      const filesUser = obj?.filesUser?.filter(
+        (item) => item?.guid_file !== guid_file
+      );
       setObj({ ...obj, filesUser });
     }
   };
@@ -169,9 +164,9 @@ const AddTasks = (props) => {
     ),
     2: (
       <ul>
-        {obj?.filesUser?.map((file, index) => (
+        {obj?.localFilesUser?.map((file, index) => (
           <li key={index}>
-            <p>{file?.name}</p>
+            <p>Файл {index + 1}</p>
             <button onClick={() => removeFiles(file)}>
               {/* удаление файла через запрос */}
               <DeleteIcon width={19} height={19} color={"red"} />

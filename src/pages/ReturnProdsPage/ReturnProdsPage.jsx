@@ -86,58 +86,62 @@ const ReturnProdsPage = () => {
   }, []);
 
   return (
-    <div className="returnProds">
-      <div className="returnProds__main">
-        <div className="listTAInfo">
-          <div className="date inputSend">
-            <p>Сортировка по дате</p>
-            <DatePicker
-              selectsRange={true}
-              startDate={dateRange?.[0]}
-              endDate={dateRange?.[1]}
-              onChange={onChangeDate}
-              isClearable={true}
-              maxDate={new Date()}
-            />
-            <EventIcon />
-          </div>
-          <div className="line"></div>
-          {/* <h6>Торговые агенты</h6>
+    <>
+      <div className="returnProds">
+        <div className="returnProds__main">
+          <div className="listTAInfo">
+            <div className="date inputSend">
+              <p>Сортировка по дате</p>
+              <DatePicker
+                selectsRange={true}
+                startDate={dateRange?.[0]}
+                endDate={dateRange?.[1]}
+                onChange={onChangeDate}
+                isClearable={true}
+                maxDate={new Date()}
+              />
+              <EventIcon />
+            </div>
+            <div className="line"></div>
+            {/* <h6>Торговые агенты</h6>
           <div className="line"></div> */}
-          <div className="listTAInfo__inner scroll_table">
-            {listTA?.map((i) => (
-              <button
-                key={i?.guid}
-                onClick={() => clickAgent(i?.guid)}
-                className={active == i?.guid ? "active" : ""}
-              >
-                <div className="logo">
-                  <Tooltip
-                    title={
-                      <div style={{ borderRadius: "50%" }}>
-                        <img src={user} alt="user" style={styleTooltip} />
-                      </div>
-                    }
-                    placement="right"
-                    disableInteractive
-                  >
-                    <img src={i?.photo || user} alt="" />
-                  </Tooltip>
-                </div>
-                <div className="content">
-                  <p>{i?.fio}</p>
-                  <span>{i?.phone || "0700754454"} </span>
-                </div>
-              </button>
-            ))}
+            <div className="listTAInfo__inner scroll_table">
+              {listTA?.map((i) => (
+                <button
+                  key={i?.guid}
+                  onClick={() => clickAgent(i?.guid)}
+                  className={active == i?.guid ? "active" : ""}
+                >
+                  <div className="logo">
+                    <Tooltip
+                      title={
+                        <div style={{ borderRadius: "50%" }}>
+                          <img src={user} alt="user" style={styleTooltip} />
+                        </div>
+                      }
+                      placement="right"
+                      disableInteractive
+                    >
+                      <img src={i?.photo || user} alt="" />
+                    </Tooltip>
+                  </div>
+                  <div className="content">
+                    <p>{i?.fio}</p>
+                    <span>{i?.phone || "0700754454"} </span>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
+          <TableReturn
+            activeInvoice={activeInvoice}
+            setActiveInvoice={setActiveInvoice}
+            active={active}
+            dateRange={dateRange}
+          />
         </div>
-        <TableReturn
-          activeInvoice={activeInvoice}
-          setActiveInvoice={setActiveInvoice}
-        />
       </div>
-    </div>
+    </>
   );
 };
 

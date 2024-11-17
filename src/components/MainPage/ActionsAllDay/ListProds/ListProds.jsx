@@ -9,6 +9,8 @@ import { TableRow, Paper } from "@mui/material";
 import { roundingNum, sumCountsFN, totalSum } from "../../../../helpers/totals";
 
 const ListProds = ({ list }) => {
+  console.log(list, "list");
+
   return (
     <div>
       <TableContainer
@@ -22,15 +24,12 @@ const ListProds = ({ list }) => {
               <TableCell align="center" style={{ width: "5%" }}>
                 №
               </TableCell>
-              <TableCell style={{ width: "44%" }}>Продукт</TableCell>
+              <TableCell style={{ width: "61%" }}>Продукт</TableCell>
               <TableCell align="left" style={{ width: "17%" }}>
-                Цена
+                Кол-во (шт)
               </TableCell>
               <TableCell align="left" style={{ width: "17%" }}>
-                Вес
-              </TableCell>
-              <TableCell align="left" style={{ width: "17%" }}>
-                Кол-во
+                Вес (кг)
               </TableCell>
             </TableRow>
           </TableHead>
@@ -45,17 +44,15 @@ const ListProds = ({ list }) => {
                 >
                   {index + 1}
                 </TableCell>
-                <TableCell component="th" scope="row" style={{ width: "44%" }}>
+                <TableCell component="th" scope="row" style={{ width: "61%" }}>
                   {row?.product_name}
                 </TableCell>
+
                 <TableCell align="left" style={{ width: "17%" }}>
-                  {roundingNum(row?.total_price)} сом
+                  {roundingNum(row?.total_count)} шт
                 </TableCell>
                 <TableCell align="left" style={{ width: "17%" }}>
-                  {roundingNum(row?.total_count)} кг
-                </TableCell>
-                <TableCell align="left" style={{ width: "17%" }}>
-                  {roundingNum(row?.count_per)} шт
+                  {roundingNum(row?.total_count_kg)} кг
                 </TableCell>
               </TableRow>
             ))}
@@ -64,22 +61,23 @@ const ListProds = ({ list }) => {
                 Итого
               </TableCell>
               <TableCell align="left" className="footerTable">
-                {roundingNum(totalSum(list, "total_count", "total_price"))} сом
+                {/* {roundingNum(totalSum(list, "total_count", "total_price"))} сом */}
+                {roundingNum(sumCountsFN(list, "total_count"))} шт
               </TableCell>
               <TableCell
                 colSpan={1}
                 align="left"
                 style={{ fontWeight: "bold" }}
               >
-                {roundingNum(sumCountsFN(list, "total_count"))} кг
+                {roundingNum(sumCountsFN(list, "total_count_kg"))} кг
               </TableCell>
-              <TableCell
+              {/* <TableCell
                 colSpan={1}
                 align="left"
                 style={{ fontWeight: "bold" }}
               >
                 {roundingNum(sumCountsFN(list, "count_per"))} шт
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           </TableBody>
         </Table>

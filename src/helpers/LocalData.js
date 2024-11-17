@@ -324,19 +324,7 @@ export const menuProduction = [
   },
 ];
 
-export const menuSGP = [
-  //// склад готовой прожукции
-  {
-    id: 1,
-    name: "Cклад",
-    icons: <AddHomeWorkIcon sx={{ color: "#fff", width: 18 }} />,
-  },
-  {
-    id: 2,
-    name: "Реестр отпускных накладных",
-    icons: <HistoryIcon sx={{ color: "#fff", width: 18 }} />,
-  },
-];
+
 
 export const objStatusInvoice = {
   0: { text: "В ожидании", color: "red" },

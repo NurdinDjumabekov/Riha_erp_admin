@@ -100,5 +100,16 @@
   .standartTable {
     box-shadow: none !important;
     height: calc(100% - 80px);
+
+    .counts {
+      height: 24px;
+    }
+
+    button {
+      > svg {
+        width: 25px;
+        height: 25px;
+      }
+    }
   }
 }

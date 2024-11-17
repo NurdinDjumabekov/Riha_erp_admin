@@ -25,6 +25,7 @@ import { setActiveCategs } from "../../../store/reducers/selectsSlice";
 import {
   createInvoice,
   getListCategs,
+  getListOrders,
   setListTA,
 } from "../../../store/reducers/mainSlice";
 import { getListProds } from "../../../store/reducers/mainSlice";
@@ -51,13 +52,10 @@ const ListInvoice = () => {
   const { activeWorkShop } = useSelector((state) => state.selectsSlice);
   const { activeCategs } = useSelector((state) => state.selectsSlice);
   const { checkInvoice } = useSelector((state) => state.mainSlice);
-  const { dataSave } = useSelector((state) => state.saveDataSlice);
 
   const workShop = transformLists(listWorkshop, "guid", "name");
   const categs = transformLists(listCategs, "category_guid", "category_name");
   const TAListCateg = transformLists(listTA, "guid", "fio");
-
-  const adminCheck = dataSave?.user_type == 2;
 
   const onChangeWS = (item) => {
     dispatch(setActiveWorkShop(item)); ///// выбор селекта цехов
@@ -76,9 +74,7 @@ const ListInvoice = () => {
 
   const onChangeComm = (e) => {
     const value = e.target.value;
-    if (value?.includes("'")) {
-      return;
-    }
+    if (value?.includes("'")) return;
     setComment(value);
   };
 
@@ -101,7 +97,7 @@ const ListInvoice = () => {
     }
   };
 
-  const actionsProdInInvoice = () => {
+  const actionsProdInInvoice = async () => {
     ///// создание и редактирование твоаров в заявке
     if (checkBoolFN(listProds)) {
       myAlert("Выберите товар", "error");
@@ -114,30 +110,29 @@ const ListInvoice = () => {
     }
 
     //// если это админ и он не выбрал никакого ТА
-    if (adminCheck && guid == "временно создан") {
+    if (guid == "временно создан") {
       myAlert("Выберите торгового агента", "error");
       return;
     }
 
     const forCreate = { listProds, comment };
 
-    const newListTA = adminCheck
-      ? [...listTA, { is_checked: 1, guid: activeTA?.guid }]
-      : listTA;
+    const newListTA = [...listTA, { is_checked: 1, guid: activeTA?.guid }];
 
     const forGetInvoice = { activeDate, listTA: newListTA };
     const obj = { forGetInvoice, forCreate };
     const invoiceInfo = { guid, action: 1 }; //// добавление товара(action: 1)
-    dispatch(createEditProdInInvoice({ ...obj, invoiceInfo }));
+    const send = { ...obj, invoiceInfo };
+    const res = await dispatch(createEditProdInInvoice(send)).unwrap();
     ///// добавление и редактирование товаров в заявке
-
-    if (adminCheck) {
-      // у админа checkbox в true и отправляю запроca
+    if (res == 1) {
+      // checkbox в true у админа в список ТА (делаю это локально)
       dispatch(setListTA(activeTA?.guid));
+      const agents_guid = searchActiveOrdersTA(listTA);
+      dispatch(getListOrders({ ...activeDate, agents_guid }));
+      //// обновляю список заявок
     }
   };
-
-  // console.log(listTA, "listTA"); /// is_checked
 
   //// только для админа
   const onChangeTA = (item) => {
@@ -154,7 +149,7 @@ const ListInvoice = () => {
       <div className="selectsAll selectsAllActive">
         <div className="selectsAll__inner">
           <div className="choiceSel">
-            {adminCheck && action == 1 && (
+            {action == 1 && (
               <div className="myInputs selectPosition noMobile">
                 <h6>Торговые агенты</h6>
                 <Select

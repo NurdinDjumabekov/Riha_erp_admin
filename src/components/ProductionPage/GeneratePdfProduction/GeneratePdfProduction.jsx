@@ -37,7 +37,7 @@ const GeneratePdfProduction = ({ activeInvoice }) => {
           <Document>
             <Page size="A4" style={styles.page}>
               <View style={styles.section}>
-                <Text style={styles.header}>Отправитель:</Text>
+                <Text style={styles.header}>Накладная производства</Text>
               </View>
               <View style={styles.table}>
                 <View style={styles.tableRow}>

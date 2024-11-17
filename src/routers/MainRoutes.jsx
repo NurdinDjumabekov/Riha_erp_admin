@@ -17,12 +17,12 @@ import ListApplicationPage from "../pages/ListApplicationPage/ListApplicationPag
 import HistoryApplicationPage from "../pages/HistoryApplicationPage/HistoryApplicationPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
 import ProductionPage from "../pages/ProductionPage/ProductionPage";
-import WareHomePage from "../pages/WareHomePage/WareHomePage";
 import RouterPage from "../pages/RouterPage/RouterPage";
 import PayPage from "../pages/PayPage/PayPage";
 import ReturnProdsPage from "../pages/ReturnProdsPage/ReturnProdsPage";
 import TasksPage from "../pages/TasksPage/TasksPage";
 import SpendingPage from "../pages/SpendingPage/SpendingPage";
+import WareHomePages from "../pages/WareHomePages/WareHomePages";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -35,7 +35,6 @@ const MainRoutes = () => {
   const { listOrders, invoiceInfo } = useSelector((state) => state.mainSlice);
   const { activeRouteList } = useSelector((state) => state.photoSlice);
   const { mapGeo, listRouteAllTA } = useSelector((state) => state.mapSlice);
-  /// dataSave?.user_type == 2
 
   return (
     <Routes>
@@ -50,7 +49,7 @@ const MainRoutes = () => {
               element={<HistoryApplicationPage />}
             />
             <Route path="/production" element={<ProductionPage />} />
-            <Route path="/ware_home" element={<WareHomePage />} />
+            <Route path="/ware_home/*" element={<WareHomePages />} />
             <Route path="/route" element={<RouterPage />} />
             <Route path="/pay" element={<PayPage />} />
             <Route path="/return_prod" element={<ReturnProdsPage />} />
@@ -64,15 +63,3 @@ const MainRoutes = () => {
 };
 
 export default MainRoutes;
-/// user_type 2 - админ, 1 - агент
-
-// useEffect(() => {
-//   (async () => {
-//     try {
-//       const data = await dispatch(TestTest()).unwrap();
-//       console.log(data, "data");
-//     } catch (error) {
-//       // обработка ошибки
-//     }
-//   })();
-// }, []);

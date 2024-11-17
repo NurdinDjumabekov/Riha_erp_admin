@@ -35,12 +35,11 @@ import "./style.scss";
 
 /////// icons
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { addDateFN } from "../../../../helpers/transformDate";
 
 const AddProdInDay = ({ invoiceGuid }) => {
   const dispatch = useDispatch();
 
-  const guidStandartAgent = "88F8CF21-F5D0-4F55-BC33-B168D739D1D4";
+  const guidStandartAgent = "B534B4C2-FBE4-47AD-92D2-E7A5EB2C2D27";
 
   const [search, setSearch] = useState("");
 
@@ -51,7 +50,7 @@ const AddProdInDay = ({ invoiceGuid }) => {
   const { activeWorkShop } = useSelector((state) => state.selectsSlice);
   const { activeCategs } = useSelector((state) => state.selectsSlice);
   const { checkInvoice } = useSelector((state) => state.mainSlice);
-  const { listTA, activeDate } = useSelector((state) => state.mainSlice);
+  const { listTA } = useSelector((state) => state.mainSlice);
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
   const workShop = transformLists(listWorkshop, "guid", "name");
@@ -91,13 +90,9 @@ const AddProdInDay = ({ invoiceGuid }) => {
 
   const addProdInvoice = async (obj) => {
     const { product_guid, count, workshop_price } = obj;
-    if (!!!invoiceGuid) {
-      myAlert("Выберите торгового агента!", "error");
-      return;
-    }
 
     if (obj?.count == "" || obj?.count == 0) {
-      myAlert("Введите количество товара", "error");
+      myAlert("Введите вес товара", "error");
       return;
     }
 
@@ -108,9 +103,9 @@ const AddProdInDay = ({ invoiceGuid }) => {
     }; //// для добавление товара по олному в заявку
 
     const res = await dispatch(addEveryProd({ data })).unwrap();
-    //// добавление товаров в заявку по одному(внутр есть хапрос на обновление)
+    //// добавление товаров в заявку по одному
 
-    if (res?.result) {
+    if (!!res) {
       dispatch(getDefaultList()); //// очищаю counts всего списка
 
       //// для обновлнния накладной заявки
@@ -175,19 +170,29 @@ const AddProdInDay = ({ invoiceGuid }) => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: "60%" }}>Продукт</TableCell>
+              <TableCell style={{ width: "5%", textAlign: "center" }}>
+                №
+              </TableCell>
+              <TableCell style={{ width: "55%" }}>Продукт</TableCell>
               <TableCell align="left" style={{ width: "20%" }}>
                 Цена
               </TableCell>
               <TableCell align="left" style={{ width: "20%" }}>
-                Кол-во (кг)
+                Кол-во (шт)
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {listProds?.map((row) => (
+            {listProds?.map((row, index) => (
               <TableRow key={row?.product_guid}>
-                <TableCell component="th" scope="row" style={{ width: "60%" }}>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  style={{ width: "5%", textAlign: "center" }}
+                >
+                  {index + 1}
+                </TableCell>
+                <TableCell component="th" scope="row" style={{ width: "55%" }}>
                   {row?.product_name}
                 </TableCell>
                 <TableCell align="left" style={{ width: "20%" }}>

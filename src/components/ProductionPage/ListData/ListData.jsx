@@ -8,6 +8,7 @@ import GeneratePdfProduction from "../GeneratePdfProduction/GeneratePdfProductio
 import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
+import LeftoversProduction from "../LeftoversProduction/LeftoversProduction";
 
 ////// fns
 import { changeCountProduction } from "../../../store/reducers/productionSlice";
@@ -39,24 +40,20 @@ const ListData = () => {
   );
 
   const onChangeCount = (e, item) => {
-    const count = e?.target?.value?.replace(",", ".");
+    const count_kg = e?.target?.value?.replace(",", ".");
 
-    if (validNums(count)) {
+    if (validNums(count_kg)) {
       //// валидцаия на числа
       return;
     }
 
-    // if (count > item?.countOld) {
-    //   return;
-    // }
-
-    dispatch(changeCountProduction({ ...item, count }));
+    dispatch(changeCountProduction({ ...item, count_kg }));
     /////изменение ключа count в списке товаров производства
   };
 
   const clickInvoice = (item) => {
     setActiveInvoice(item);
-    const list = item?.products?.map((i) => ({ ...i, countOld: i.count }));
+    const list = item?.products?.map((i) => ({ ...i, countOld: i?.count_kg }));
     dispatch(setListProduction(list));
   };
 
@@ -72,11 +69,11 @@ const ListData = () => {
       return;
     }
 
-    const products = listProduction?.map(({ product_guid, count, price }) => ({
-      product_guid,
-      count,
-      workshop_price: price,
-    }));
+    const products = listProduction?.map(
+      ({ product_guid, count_kg, price }) => {
+        return { product_guid, count: count_kg, workshop_price: price };
+      }
+    );
 
     const data = { products, invoice_guid: activeInvoice?.invoice_guid };
     dispatch(sendInWareHomeFN({ data, listTA, activeDate, setActiveInvoice }));
@@ -93,6 +90,8 @@ const ListData = () => {
     const obj = { date_from: "", date_to: "", setActiveInvoice };
     dispatch(getListProdProduction(obj));
   }, []);
+
+  console.log(listProduction, "listProduction");
 
   return (
     <div div className="productionData">
@@ -124,102 +123,98 @@ const ListData = () => {
           )}
         </div>
 
-        <div className="prods">
-          <div className="prods__sortDate">
-            <GeneratePdfProduction activeInvoice={activeInvoice} />
-            <button onClick={sendInWareHome} className="sendData">
-              <AddBusinessIcon sx={{ width: 16 }} />
-              <p>Отправить на склад</p>
-            </button>
-          </div>
-          <TableContainer
-            component={Paper}
-            sx={{ maxHeight: "100%" }}
-            className="scroll_table standartTable"
-          >
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center" style={{ width: "5%" }}>
-                    №
-                  </TableCell>
-                  <TableCell style={{ width: "35%" }}>Продукт</TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Цена
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Вес/Кол-во
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "10%" }}>
-                    Разница
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
-                    Дата начала изготовления
-                  </TableCell>
-                  <TableCell align="left" style={{ width: "15%" }}>
-                    Дата окончания изготовления
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {listProduction?.map((row, index) => (
-                  <TableRow key={row?.product_guid}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ width: "5%" }}
-                      align="center"
-                    >
-                      {index + 1}
+        <div className="mainList">
+          <div className="prods">
+            <div className="prods__sortDate">
+              {/* <GeneratePdfProduction activeInvoice={activeInvoice} /> */}
+              <button onClick={sendInWareHome} className="sendData">
+                <AddBusinessIcon sx={{ width: 16 }} />
+                <p>Отправить на склад</p>
+              </button>
+            </div>
+            <TableContainer
+              component={Paper}
+              sx={{ maxHeight: "100%" }}
+              className="scroll_table standartTable"
+            >
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" style={{ width: "5%" }}>
+                      №
                     </TableCell>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ width: "35%" }}
-                    >
-                      {row?.product_name}
+                    <TableCell style={{ width: "35%" }}>Продукт</TableCell>
+                    <TableCell align="left" style={{ width: "12%" }}>
+                      Вес (кг)
                     </TableCell>
-                    <TableCell align="left" style={{ width: "10%" }}>
-                      {roundingNum(row?.price)} сом
+                    <TableCell align="left" style={{ width: "12%" }}>
+                      Разница (кг)
                     </TableCell>
-
-                    <TableCell align="left" style={{ width: "10%" }}>
-                      {roundingNum(+row?.countOld)} {row?.unit}
+                    <TableCell align="left" style={{ width: "18%" }}>
+                      Дата начала изготовления
                     </TableCell>
-                    <TableCell align="left" style={{ width: "10%" }}>
-                      <div className="countsBlock">
-                        <input
-                          type="text"
-                          onChange={(e) => onChangeCount(e, row)}
-                          value={row?.count}
-                          maxLength={10}
-                          className="counts"
-                        />
-                        <div>
-                          {row?.count != row?.countOld && (
-                            <Tooltip
-                              title={"Кол-во не сходится"}
-                              placement="right-start"
-                            >
-                              <ErrorOutlineIcon
-                                sx={{ color: "rgba(228, 30, 30, 0.719)" }}
-                              />
-                            </Tooltip>
-                          )}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell align="left" style={{ width: "15%" }}>
-                      {activeInvoice?.date_from}
-                    </TableCell>
-                    <TableCell align="left" style={{ width: "15%" }}>
-                      {activeInvoice?.date_to}
+                    <TableCell align="left" style={{ width: "18%" }}>
+                      Дата окончания изготовления
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {listProduction?.map((row, index) => (
+                    <TableRow key={row?.product_guid}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{ width: "5%" }}
+                        align="center"
+                      >
+                        {index + 1}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{ width: "35%" }}
+                      >
+                        {row?.product_name}
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "12%" }}>
+                        {roundingNum(+row?.countOld)} кг
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "12%" }}>
+                        <div className="countsBlock">
+                          <input
+                            type="text"
+                            onChange={(e) => onChangeCount(e, row)}
+                            value={row?.count_kg}
+                            maxLength={10}
+                            className="counts"
+                          />
+                          <div>
+                            {row?.count_kg != row?.countOld && (
+                              <Tooltip
+                                title={"Кол-во не сходится"}
+                                placement="right-start"
+                              >
+                                <ErrorOutlineIcon
+                                  sx={{ color: "rgba(228, 30, 30, 0.719)" }}
+                                />
+                              </Tooltip>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "18%" }}>
+                        {activeInvoice?.date_from}
+                      </TableCell>
+                      <TableCell align="left" style={{ width: "18%" }}>
+                        {activeInvoice?.date_to}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+          <LeftoversProduction />
         </div>
       </div>
     </div>

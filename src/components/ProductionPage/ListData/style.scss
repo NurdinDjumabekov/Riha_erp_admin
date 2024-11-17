@@ -56,112 +56,122 @@
       }
     }
 
-    .prods {
+    .mainList {
       height: 100%;
       width: 100%;
-      padding: 10px 0 0px 0;
-      border-radius: 3px;
-      background: #fff;
-      box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.144) !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
 
-      &__sortDate {
-        display: flex;
-        // justify-content: space-between;
-        align-items: flex-end;
-        gap: 13px;
-        margin: 0px 0 10px 0;
-        padding: 0 10px;
+      .prods {
+        height: 60%;
+        width: 100%;
+        padding: 10px 0 0px 0;
+        border-radius: 3px;
+        background: #fff;
+        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.144) !important;
 
-        .myInputs {
-          width: 250px;
-          cursor: pointer;
-          position: relative;
-          z-index: 10;
+        &__sortDate {
+          display: flex;
+          align-items: flex-end;
+          gap: 13px;
+          margin: 0px 0 10px 0;
+          padding: 0 10px;
 
-          h6 {
-            font-size: 13px;
-            font-weight: 500;
-            margin: 0 0 3px 0;
-          }
+          .myInputs {
+            width: 250px;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
 
-          .select {
-            .css-qbdosj-Input {
-              height: 30px;
-              cursor: pointer;
+            h6 {
+              font-size: 13px;
+              font-weight: 500;
+              margin: 0 0 3px 0;
             }
 
-            .css-13cymwt-control {
-              border: 1px solid #e1dede !important;
-              box-shadow: none !important;
-              cursor: pointer;
+            .select {
+              .css-qbdosj-Input {
+                height: 30px;
+                cursor: pointer;
+              }
 
-              &:hover {
+              .css-13cymwt-control {
+                border: 1px solid #e1dede !important;
+                box-shadow: none !important;
+                cursor: pointer;
+
+                &:hover {
+                  border: 1px solid #6361615b !important;
+                  cursor: pointer;
+                }
+              }
+
+              .css-t3ipsp-control {
                 border: 1px solid #6361615b !important;
+                box-shadow: none !important;
                 cursor: pointer;
               }
             }
+          }
 
-            .css-t3ipsp-control {
-              border: 1px solid #6361615b !important;
-              box-shadow: none !important;
-              cursor: pointer;
+          .sendData {
+            height: 38px;
+            background: #00ab55;
+            padding: 2px 10px 3px 10px;
+            border-radius: 5px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            p {
+              font-size: 14px;
             }
           }
-        }
 
-        .sendData {
-          height: 38px;
-          background: #00ab55;
-          padding: 2px 10px 3px 10px;
-          border-radius: 5px;
-          color: #fff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 5px;
-
-          p {
-            font-size: 14px;
+          .generatePdf {
+            background: #1976d2;
           }
         }
 
-        .generatePdf {
-          background: #1976d2;
-        }
-      }
+        > div:nth-child(2) {
+          height: calc(100% - 48px);
 
-      > div {
-        .countsBlock {
-          display: flex;
-          align-items: flex-end;
-          gap: 5px;
+          .countsBlock {
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
 
-          > div {
-            width: 23px;
-            height: 23px;
-            cursor: pointer;
+            > div {
+              width: 23px;
+              height: 23px;
+              cursor: pointer;
+            }
+
+            .counts {
+              height: 23px;
+            }
           }
 
-          .counts {
-            height: 23px;
+          .actionsDel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+          }
+
+          .footerTable {
+            font-weight: bold !important;
+            height: 30px !important;
           }
         }
 
-        .actionsDel {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: transparent;
+        .standartTable {
+          box-shadow: none !important;
         }
-
-        .footerTable {
-          font-weight: bold !important;
-          height: 30px !important;
-        }
-      }
-
-      .standartTable {
-        box-shadow: none !important;
       }
     }
   }

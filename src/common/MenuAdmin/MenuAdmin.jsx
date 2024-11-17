@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Fragment } from "react";
 
 ////// style
 import "./style.scss";
@@ -47,7 +48,7 @@ const MenuAdmin = ({ active, setActive }) => {
           <span>Меню</span>
         </div>
         {listMenu?.map(({ title, icon, id, link }) => (
-          <>
+          <Fragment key={id}>
             {active ? (
               <div
                 className={pathname == link ? "activeMenu" : ""}
@@ -73,7 +74,7 @@ const MenuAdmin = ({ active, setActive }) => {
                 </div>
               </Tooltip>
             )}
-          </>
+          </Fragment>
         ))}
       </div>
       <LogOut active={active} />

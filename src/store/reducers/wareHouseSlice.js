@@ -7,6 +7,8 @@ import { setInvoiceInfo } from "./mainSlice";
 
 const { REACT_APP_API_URL } = process.env;
 
+/////// WH - Ware House (склад)
+
 const initialState = {
   listWorkshopWH: [],
   listCategsWH: [],
@@ -15,7 +17,51 @@ const initialState = {
   listTA: [],
   invoiceGuid: "", /// guid накладной отпуска для ТА
   listHistoryInvoice: [],
+
+  //////////////////////
+  listOrdersTA: [], //// список заказов ТА
+  activeSort: 1, //// для сортировки заказов агентов
+  activeOrder: {}, //// для активного заказа агентов
+  listProdsEveryOrder: [], //// список товаров каждого заказа для отпуска
 };
+
+////// getListOrdersWH_Req - список заказов от ТА для отпуска
+export const getListOrdersWH_Req = createAsyncThunk(
+  "getListOrdersWH_Req",
+  async function (codeid, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_otpusk_agent?sort=${codeid}`;
+    try {
+      const response = await axiosInstance(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getEveryOrderTA - get guid накладной и список товаров отпределенного ТА для отпуска товара
+export const getEveryOrderTA = createAsyncThunk(
+  "getEveryOrderTA",
+  async function (agent_guid, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/get_otpusk_invoice?agent_guid=${agent_guid}`;
+    try {
+      const response = await axiosInstance(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data?.products;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////////////////////////////////////////////////////////
 
 //// getListWorkShopWH - get список цехов
 export const getListWorkShopWH = createAsyncThunk(
@@ -87,67 +133,6 @@ export const getListProdsWH = createAsyncThunk(
   }
 );
 
-////// getListTAForWH - список Тоговых агентов
-export const getListTAForWH = createAsyncThunk(
-  "getListTAForWH",
-  async function (props, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_otpusk_agent`;
-    try {
-      const response = await axiosInstance(url);
-      if (response.status >= 200 && response.status < 300) {
-        return response?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-//// createInvoiceSendTA - создания накладной для отпуска ТА
-export const createInvoiceSendTA = createAsyncThunk(
-  "createInvoiceSendTA",
-  async function ({ data, agent_guid }, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/create_invoice`;
-    try {
-      const response = await axiosInstance.post(url, data);
-      if (response.status >= 200 && response.status < 300) {
-        dispatch(setInvoiceGuid(response.data?.invoice_guid));
-        ///// подставляю guid для дальнейшей работы
-        dispatch(getPastProdsTa(agent_guid));
-        // get товары отпредленного ТА для подставки
-        return response?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-////// getPastProdsTa - get guid накладной и товаров отпредленного ТА для подставки его
-////// товаров для отпускной
-export const getPastProdsTa = createAsyncThunk(
-  "getPastProdsTa",
-  async function (agent_guid, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_otpusk_invoice?agent_guid=${agent_guid}`;
-    try {
-      const response = await axiosInstance(url);
-      if (response.status >= 200 && response.status < 300) {
-        dispatch(setInvoiceGuid(response.data?.invoice_guid));
-        ///// подставляю guid для дальнейшей работы
-        return response?.data?.products;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 //// addProdInInvoiceTA - добавление товара в накланую отпуска для ТА
 export const addProdInInvoiceTA = createAsyncThunk(
   "addProdInInvoiceTA",
@@ -157,10 +142,6 @@ export const addProdInInvoiceTA = createAsyncThunk(
     try {
       const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(getPastProdsTa(agent_guid));
-        // get товары отпредленного ТА для подставки
-        const send = { guid: obj?.guid, guidCateg: obj?.category_guid };
-        dispatch(getListProdsWH(send));
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -180,11 +161,6 @@ export const editProdInInvoiceTA = createAsyncThunk(
     try {
       const response = await axiosInstance.put(url, data);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(getPastProdsTa(activeTA?.guid));
-        // get товары отпредленного ТА для подставки
-        const send = { guid: obj?.guid, guidCateg: obj?.category_guid };
-        dispatch(getListProdsWH(send));
-        //// обновляю список товаров со склада
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -264,6 +240,10 @@ const wareHouseSlice = createSlice({
       state.listTA = [];
     },
 
+    clearListWHProdTA: (state, action) => {
+      state.listWHProdTA = action.payload;
+    },
+
     setInvoiceGuid: (state, action) => {
       state.invoiceGuid = action.payload;
     },
@@ -287,9 +267,44 @@ const wareHouseSlice = createSlice({
     setAllProdsWH: (state, action) => {
       state.allProdsWH = action.payload;
     },
+
+    /////////////////////////////////////
+    activeSortFN: (state, action) => {
+      state.activeSort = action.payload;
+    },
+
+    activeOrderFN: (state, action) => {
+      state.activeOrder = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
+    ////////////// getListOrdersWH_Req
+    builder.addCase(getListOrdersWH_Req.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listOrdersTA = action.payload;
+    });
+    builder.addCase(getListOrdersWH_Req.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getListOrdersWH_Req.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    /////////////// getEveryOrderTA
+    builder.addCase(getEveryOrderTA.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listProdsEveryOrder = action.payload;
+    });
+    builder.addCase(getEveryOrderTA.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getEveryOrderTA.pending, (state, action) => {
+      state.preloader = true;
+    });
+
     ////////////// getListWorkShopWH
     builder.addCase(getListWorkShopWH.fulfilled, (state, action) => {
       state.preloader = false;
@@ -334,32 +349,6 @@ const wareHouseSlice = createSlice({
       state.preloader = true;
     });
 
-    ////////////// getListTAForWH
-    builder.addCase(getListTAForWH.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listTA = action.payload;
-    });
-    builder.addCase(getListTAForWH.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(getListTAForWH.pending, (state, action) => {
-      state.preloader = true;
-    });
-
-    /////////////// getPastProdsTa
-    builder.addCase(getPastProdsTa.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listWHProdTA = action.payload;
-    });
-    builder.addCase(getPastProdsTa.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(getPastProdsTa.pending, (state, action) => {
-      state.preloader = true;
-    });
-
     ///////////////// getHistoryInvoice
     builder.addCase(getHistoryInvoice.fulfilled, (state, action) => {
       state.preloader = false;
@@ -375,7 +364,10 @@ const wareHouseSlice = createSlice({
   },
 });
 export const {
+  activeSortFN,
+  activeOrderFN,
   clearAllWareHome,
+  clearListWHProdTA,
   setInvoiceGuid,
   changeCountAllListWH,
   changeCountListInvoiceTA,

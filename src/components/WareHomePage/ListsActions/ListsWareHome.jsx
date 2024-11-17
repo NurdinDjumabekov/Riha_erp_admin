@@ -6,9 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
+import SortSendProds from "../SortSendProds/SortSendProds";
+
+////// fns
 import { setAllProdsWH } from "../../../store/reducers/wareHouseSlice";
 import { changeCountAllListWH } from "../../../store/reducers/wareHouseSlice";
-import SortSendProds from "../SortSendProds/SortSendProds";
 
 ////// helpers
 import { validNums } from "../../../helpers/validations";
@@ -52,6 +54,8 @@ const ListsWareHome = () => {
     dispatch(setAllProdsWH(newList));
   };
 
+  console.log(allProdsWH);
+
   return (
     <div className="listsWareHome">
       <SortSendProds />
@@ -72,7 +76,7 @@ const ListsWareHome = () => {
                   Цена
                 </TableCell>
                 <TableCell align="left" style={{ width: "15%" }}>
-                  Вес в заявках
+                  Кол-во в заявках
                 </TableCell>
                 <TableCell align="left" style={{ width: "10%" }}>
                   Выпущено
@@ -110,13 +114,13 @@ const ListsWareHome = () => {
                     {row?.price} сом
                   </TableCell>
                   <TableCell align="left" style={{ width: "15%" }}>
-                    {row?.made} кг
+                    {row?.made} шт
                   </TableCell>
                   <TableCell
                     align="left"
                     style={{ width: "10%", color: "#299b31" }}
                   >
-                    {row?.amount} кг
+                    {row?.amount} шт
                   </TableCell>
                   {/* <TableCell align="left" style={{ width: "10%" }}>
                     {row?.available} {row?.unit}
@@ -160,7 +164,7 @@ const ListsWareHome = () => {
                   align="left"
                   style={{ fontWeight: "bold" }}
                 >
-                  {roundingNum(sumCountsFN(allProdsWH, "count"))} кг
+                  {roundingNum(sumCountsFN(allProdsWH, "count"))} шт
                 </TableCell>
               </TableRow>
             </TableBody>
