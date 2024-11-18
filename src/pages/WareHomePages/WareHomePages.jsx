@@ -13,6 +13,7 @@ import {
   activeOrderFN,
   getListOrdersWH_Req,
 } from "../../store/reducers/wareHouseSlice";
+import SearchProdsWH_Page from "./SearchProdsWH_Page/SearchProdsWH_Page";
 
 const WareHomePages = () => {
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const WareHomePages = () => {
     <Routes>
       <Route path="/" element={<WareHomePage />} />
       <Route path="/orders" element={<OrdersWH_Page />} />
+      <Route path="/search" element={<SearchProdsWH_Page />} />
     </Routes>
   );
 };

@@ -1,6 +1,6 @@
 ////// hooks
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 ////// components
@@ -11,11 +11,16 @@ import ModalAddProd from "../../../components/WareHomePages/ModalAddProd/ModalAd
 
 ////// fns
 import { getEveryOrderTA } from "../../../store/reducers/wareHouseSlice";
+import { addProdInInvoiceReq } from "../../../store/reducers/wareHouseSlice";
 
 ////// icons
+import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 
 ////// style
 import "./style.scss";
+
+////// helpers
+import { myAlert } from "../../../helpers/MyAlert";
 
 const OrdersWH_Page = () => {
   const dispatch = useDispatch();
@@ -24,14 +29,19 @@ const OrdersWH_Page = () => {
 
   const [active, setActive] = useState({});
   const [modal, setModal] = useState({});
+  const [comment, setComment] = useState("");
+  const refComment = useRef(null);
 
   const { listProdsEveryOrder } = useSelector((state) => state.wareHouseSlice);
 
   const getData = async () => {
     const res = await dispatch(getEveryOrderTA(state?.guid)).unwrap();
     /// get список заказов от ТА для отпуска
-    setActive(res?.[0] || {});
+    setActive(res?.products?.[0] || {});
+    setComment(res?.comment);
   };
+
+  const list = listProdsEveryOrder?.products;
 
   useEffect(() => {
     getData();
@@ -39,31 +49,41 @@ const OrdersWH_Page = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (!!modal?.product_guid || listProdsEveryOrder?.length === 0) {
+      if (!!modal?.product_guid || list?.length === 0) {
         if (event.key === "Escape") {
           closeModal();
         }
         return;
       }
 
-      const index = listProdsEveryOrder?.findIndex(
+      const index = list?.findIndex(
         (item) => item?.product_guid == active?.product_guid
       );
 
-      if (
-        event.key === "ArrowDown" &&
-        index < listProdsEveryOrder?.length - 1
-      ) {
-        setActive(listProdsEveryOrder?.[index + 1]);
+      if (event.key === "ArrowDown" && index < list?.length - 1) {
+        setActive(list?.[index + 1]);
       }
       if (event.key === "ArrowUp" && index > 0) {
-        setActive(listProdsEveryOrder?.[index - 1]);
+        setActive(list?.[index - 1]);
       }
       if (event.key === "Enter") {
-        enterClick(active);
+        if (document.activeElement === refComment.current) {
+          addComment();
+        } else {
+          enterClick(active);
+        }
       }
       if (event.key === "Escape") {
         navigate(-1);
+      }
+      if (event.ctrlKey && (event.key === "x" || event.key === "ч")) {
+        event.preventDefault();
+        refComment.current.focus();
+      }
+
+      if (event.ctrlKey && (event.key === "z" || event.key === "я")) {
+        event.preventDefault();
+        navSearch();
       }
     };
 
@@ -71,7 +91,7 @@ const OrdersWH_Page = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [listProdsEveryOrder, active, modal?.product_guid]);
+  }, [list, active, modal?.product_guid]);
 
   const enterClick = (obj) => {
     setActive(obj);
@@ -80,10 +100,42 @@ const OrdersWH_Page = () => {
 
   const closeModal = () => setModal({});
 
+  const addComment = async () => {
+    const send = {
+      invoice_guid: listProdsEveryOrder?.invoice_guid,
+      products: [],
+      comment: refComment.current.value,
+    };
+    const res = await dispatch(addProdInInvoiceReq(send)).unwrap();
+    if (!!res?.result) {
+      refComment.current.blur();
+      myAlert("Ваш комментарий добавлен");
+    }
+  };
+
+  const navSearch = () => {
+    navigate("/ware_home/search", { state: { ...listProdsEveryOrder } });
+  };
+
   return (
     <div className="ordersWH">
       <div className="headerSort">
-        <h6>Заявки торгового агента: {state?.fio}</h6>
+        <h6>Торговый агент: {state?.fio}</h6>
+        <div className="inputs">
+          <div className="inputSend">
+            <p>Комментарий</p>
+            <input
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              name={"comment"}
+              ref={refComment}
+            />
+          </div>
+          <button onClick={navSearch}>
+            <AddToPhotosIcon />
+            <p>Добавить товар</p>
+          </button>
+        </div>
       </div>
       <div className="ordersWH__inner">
         <TableContainer
@@ -118,7 +170,7 @@ const OrdersWH_Page = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {listProdsEveryOrder?.map((row, index) => (
+              {list?.map((row, index) => (
                 <TableRow
                   key={`${row?.product_guid}`}
                   className={

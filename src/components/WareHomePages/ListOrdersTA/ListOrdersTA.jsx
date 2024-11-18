@@ -26,7 +26,7 @@ const ListOrdersTA = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log(location?.pathname == "/ware_home", "location");
+  // console.log(location?.pathname == "/ware_home", "location");
 
   const { listOrdersTA } = useSelector((state) => state.wareHouseSlice);
   const { activeOrder } = useSelector((state) => state.wareHouseSlice);

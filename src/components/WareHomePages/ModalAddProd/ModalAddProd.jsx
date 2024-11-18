@@ -1,11 +1,15 @@
+/////// hooks
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+
+////// components
 import Modals from "../../../common/Modals/Modals";
-import {
-  addProdInInvoiceReq,
-  getEveryOrderTA,
-} from "../../../store/reducers/wareHouseSlice";
+
+////// fns
+import { getEveryOrderTA } from "../../../store/reducers/wareHouseSlice";
+import { addProdInInvoiceReq } from "../../../store/reducers/wareHouseSlice";
+
+///// style
 import "./style.scss";
 
 const ModalAddProd = (props) => {
@@ -14,28 +18,32 @@ const ModalAddProd = (props) => {
   const dispatch = useDispatch();
   const [obj, setObj] = useState({});
   const inputRefs = useRef([]);
+  const objRef = useRef(obj);
+
+  useEffect(() => {
+    objRef.current = obj;
+  }, [obj]);
 
   const setRef = (el, index) => {
     inputRefs.current[index] = el;
   };
 
   const addProdInOrder = async () => {
-    console.log("asdasd");
     const send = {
       invoice_guid: modal?.invoice_guid,
       products: [
         {
           product_guid: modal?.product_guid,
-          count: obj?.count || 0,
+          count: objRef.current.count || 0,
           workshop_price: modal?.price,
-          count_kg: obj?.ves || 0,
-          tara: obj?.tara || 0,
+          count_kg: objRef.current.ves || 0,
+          tara: objRef.current.tara || 0,
         },
       ],
       comment: "",
     };
+
     const res = await dispatch(addProdInInvoiceReq(send)).unwrap();
-    console.log(res);
     if (res?.result == 1) {
       dispatch(getEveryOrderTA(state?.guid));
       closeModal();
@@ -78,7 +86,11 @@ const ModalAddProd = (props) => {
       event.preventDefault();
     }
 
-    if (event.key === "Enter") {
+    if (
+      event.key === "Enter" &&
+      document.activeElement !== inputRefs.current?.[2]
+      // inputRefs.current[2] — это кнопка "Отмена"
+    ) {
       addProdInOrder();
     }
   };
@@ -94,11 +106,17 @@ const ModalAddProd = (props) => {
     if (!!modal?.product_guid && inputRefs.current[1]) {
       setTimeout(() => {
         inputRefs.current[1]?.focus();
-      }, 300);
+      }, 100);
     }
   }, [modal?.product_guid]);
 
-  const onChange = (e) => setObj({ ...obj, [e.target.name]: e.target.value });
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setObj((prevObj) => ({
+      ...prevObj,
+      [name]: value,
+    }));
+  };
 
   return (
     <Modals
