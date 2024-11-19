@@ -8,13 +8,21 @@ import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 import ModalAddProd from "../../../components/WareHomePages/ModalAddProd/ModalAddProd";
+import MyConfirmModal from "../../../common/MyConfirmModal/MyConfirmModal";
+import GeneratePdf_SGP from "../../../components/Pdfs/GeneratePdf_SGP/GeneratePdf_SGP";
 
 ////// fns
-import { getEveryOrderTA } from "../../../store/reducers/wareHouseSlice";
-import { addProdInInvoiceReq } from "../../../store/reducers/wareHouseSlice";
+import {
+  editStatusOrders,
+  getEveryOrderTA,
+  getListOrdersWH_Req,
+  addProdInInvoiceReq,
+} from "../../../store/reducers/wareHouseSlice";
 
 ////// icons
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
+import ReplyAllIcon from "@mui/icons-material/ReplyAll";
+import PdfIcon from "@mui/icons-material/PictureAsPdf";
 
 ////// style
 import "./style.scss";
@@ -29,14 +37,18 @@ const OrdersWH_Page = () => {
 
   const [active, setActive] = useState({});
   const [modal, setModal] = useState({});
+  const [sendInvoice, setSendInvoice] = useState(false);
   const [comment, setComment] = useState("");
+
   const refComment = useRef(null);
+  const activeRowRef = useRef(null);
+  const sendInvoiceRef = useRef(null);
 
   const { listProdsEveryOrder } = useSelector((state) => state.wareHouseSlice);
+  const { activeSort } = useSelector((state) => state.wareHouseSlice);
 
   const getData = async () => {
-    const res = await dispatch(getEveryOrderTA(state?.guid)).unwrap();
-    /// get список заказов от ТА для отпуска
+    const res = await dispatch(getEveryOrderTA(state?.agent_guid)).unwrap();
     setActive(res?.products?.[0] || {});
     setComment(res?.comment);
   };
@@ -45,37 +57,43 @@ const OrdersWH_Page = () => {
 
   useEffect(() => {
     getData();
-  }, [state?.guid]);
+  }, [state?.agent_guid]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (!!modal?.product_guid || list?.length === 0) {
-        if (event.key === "Escape") {
-          closeModal();
-        }
-        return;
-      }
-
       const index = list?.findIndex(
         (item) => item?.product_guid == active?.product_guid
       );
 
       if (event.key === "ArrowDown" && index < list?.length - 1) {
         setActive(list?.[index + 1]);
+        sendInvoiceRef.current?.blur();
       }
       if (event.key === "ArrowUp" && index > 0) {
         setActive(list?.[index - 1]);
+        sendInvoiceRef.current?.blur();
       }
       if (event.key === "Enter") {
         if (document.activeElement === refComment.current) {
+          sendInvoiceRef.current?.blur();
           addComment();
+        } else if (!!sendInvoice) {
+          sendInvoiceFN();
         } else {
+          sendInvoiceRef.current?.blur();
           enterClick(active);
         }
       }
       if (event.key === "Escape") {
-        navigate(-1);
+        if (!!sendInvoice) {
+          setSendInvoice(false);
+        } else if (!!modal?.product_guid || list?.length === 0) {
+          closeModal();
+        } else {
+          navigate(-1);
+        }
       }
+
       if (event.ctrlKey && (event.key === "x" || event.key === "ч")) {
         event.preventDefault();
         refComment.current.focus();
@@ -91,7 +109,17 @@ const OrdersWH_Page = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [list, active, modal?.product_guid]);
+  }, [list, active, modal?.product_guid, sendInvoice]);
+
+  // Скроллим активный элемент в центр
+  useEffect(() => {
+    if (activeRowRef.current) {
+      activeRowRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [active]);
 
   const enterClick = (obj) => {
     setActive(obj);
@@ -110,11 +138,27 @@ const OrdersWH_Page = () => {
     if (!!res?.result) {
       refComment.current.blur();
       myAlert("Ваш комментарий добавлен");
+      dispatch(getListOrdersWH_Req(activeSort));
     }
   };
 
   const navSearch = () => {
-    navigate("/ware_home/search", { state: { ...listProdsEveryOrder } });
+    navigate("/ware_home/search", { state: listProdsEveryOrder });
+  };
+
+  const sendInvoiceFN = async () => {
+    setSendInvoice(false);
+    const send = {
+      status: 1,
+      invoice_guids: [listProdsEveryOrder?.invoice_guid],
+    };
+    const res = await dispatch(editStatusOrders(send)).unwrap();
+    //// отпус накладной для ТА
+    if (!!res?.result) {
+      navigate(-1);
+      myAlert(`Накладная торговому агенту ${state?.fio} отпущена!`);
+      dispatch(getListOrdersWH_Req(activeSort));
+    }
   };
 
   return (
@@ -123,18 +167,29 @@ const OrdersWH_Page = () => {
         <h6>Торговый агент: {state?.fio}</h6>
         <div className="inputs">
           <div className="inputSend">
-            <p>Комментарий</p>
             <input
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               name={"comment"}
               ref={refComment}
+              placeholder="Комментарий"
             />
           </div>
           <button onClick={navSearch}>
             <AddToPhotosIcon />
             <p>Добавить товар</p>
           </button>
+          <button
+            ref={sendInvoiceRef}
+            onClick={() => setSendInvoice(true)}
+            className="sendInvoice"
+          >
+            <ReplyAllIcon />
+            <p>Отпустить накладную</p>
+          </button>
+          <GeneratePdf_SGP
+            activeInvoice={{ ...listProdsEveryOrder, fio: state?.fio, comment }}
+          />
         </div>
       </div>
       <div className="ordersWH__inner">
@@ -179,6 +234,11 @@ const OrdersWH_Page = () => {
                       : ""
                   }
                   onClick={() => enterClick(row)}
+                  ref={
+                    row?.product_guid == active?.product_guid
+                      ? activeRowRef
+                      : null
+                  }
                 >
                   <TableCell
                     align="center"
@@ -226,6 +286,13 @@ const OrdersWH_Page = () => {
         closeModal={closeModal}
         modal={modal}
         setModal={setModal}
+      />
+      <MyConfirmModal
+        visible={sendInvoice}
+        onYes={sendInvoiceFN}
+        onNo={() => setSendInvoice(false)}
+        message={"Отпустить накладную?"}
+        onClose={() => setSendInvoice(false)}
       />
     </div>
   );

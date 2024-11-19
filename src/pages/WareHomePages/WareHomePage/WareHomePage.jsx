@@ -8,8 +8,6 @@ import ListOrdersTA from "../../../components/WareHomePages/ListOrdersTA/ListOrd
 
 ////// fns
 
-import { setActiveTA } from "../../../store/reducers/selectsSlice";
-
 ////// helpers
 
 ////// style

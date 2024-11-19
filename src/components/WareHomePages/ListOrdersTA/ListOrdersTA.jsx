@@ -26,8 +26,6 @@ const ListOrdersTA = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // console.log(location?.pathname == "/ware_home", "location");
-
   const { listOrdersTA } = useSelector((state) => state.wareHouseSlice);
   const { activeOrder } = useSelector((state) => state.wareHouseSlice);
 
@@ -37,7 +35,7 @@ const ListOrdersTA = () => {
         return;
       }
       const currentIndex = listOrdersTA?.findIndex(
-        (item) => item?.guid == activeOrder?.guid
+        (item) => item?.agent_guid == activeOrder?.agent_guid
       );
       if (
         event.key === "ArrowDown" &&
@@ -124,8 +122,12 @@ const ListOrdersTA = () => {
             <TableBody>
               {listOrdersTA?.map((row, index) => (
                 <TableRow
-                  key={`${row?.guid}${index}`}
-                  className={row?.guid == activeOrder?.guid ? "activeGuid" : ""}
+                  key={`${row?.agent_guid}${index}`}
+                  className={
+                    row?.agent_guid == activeOrder?.agent_guid
+                      ? "activeGuid"
+                      : ""
+                  }
                   onClick={() => enterClick(row)}
                 >
                   <TableCell

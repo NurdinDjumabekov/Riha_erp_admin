@@ -91,6 +91,24 @@ export const searchProdsWH_Req = createAsyncThunk(
   }
 );
 
+//// editStatusOrders - изменение статуса заказов для отпуска ТА
+export const editStatusOrders = createAsyncThunk(
+  "editStatusOrders",
+  async function (data, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/application_status`;
+    try {
+      const response = await axiosInstance.put(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const wareHouseSlice = createSlice({
   name: "wareHouseSlice",
   initialState,

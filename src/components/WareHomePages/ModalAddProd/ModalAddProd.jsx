@@ -43,9 +43,14 @@ const ModalAddProd = (props) => {
       comment: "",
     };
 
-    const res = await dispatch(addProdInInvoiceReq(send)).unwrap();
-    if (res?.result == 1) {
-      dispatch(getEveryOrderTA(state?.guid));
+    if (!!objRef.current.count) {
+      const res = await dispatch(addProdInInvoiceReq(send)).unwrap();
+      if (res?.result == 1) {
+        dispatch(getEveryOrderTA(state?.agent_guid));
+        closeModal();
+        setObj({});
+      }
+    } else {
       closeModal();
       setObj({});
     }

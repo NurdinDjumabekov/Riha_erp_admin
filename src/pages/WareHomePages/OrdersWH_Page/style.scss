@@ -21,17 +21,17 @@
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      gap: 20px;
+      gap: 10px;
 
       .inputSend {
-        width: 400px;
+        width: 300px;
 
         p {
           font-size: 14px;
         }
 
         input {
-          height: 30px;
+          height: 38px;
         }
       }
 
@@ -39,7 +39,7 @@
         width: 300px;
       }
 
-      button {
+      > button {
         align-items: center;
         background: rgba(0, 0, 0, 0);
         border: 1px solid #d5d2d2;
@@ -50,7 +50,7 @@
         padding: 7px 15px;
         height: 38px;
         margin: 7px 0px;
-        background: #1976d2;
+        background: #805dca;
 
         p {
           color: #fff;
@@ -64,11 +64,20 @@
           height: 20px;
         }
       }
+
+      .sendInvoice {
+        background: #00ab55;
+      }
+
+      .activePdf {
+        background: #1976d2;
+        margin: 7px 0px;
+      }
     }
   }
 
   &__inner {
-    height: calc(100% - 76px);
+    height: calc(100% - 65px);
     background: #fff;
     border-radius: 5px 5px;
 
