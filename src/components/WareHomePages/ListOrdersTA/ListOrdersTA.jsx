@@ -141,7 +141,7 @@ const ListOrdersTA = () => {
                     scope="row"
                     style={{ width: "10%" }}
                   >
-                    {row?.date}
+                    {row?.date_from}
                   </TableCell>
                   <TableCell align="left" style={{ width: "30%" }}>
                     {row?.fio}
@@ -150,7 +150,7 @@ const ListOrdersTA = () => {
                     № {row?.codeid}
                   </TableCell>
                   <TableCell align="left" style={{ width: "15%" }}>
-                    {row?.status_date}
+                    № Агент. Отгрузка {row?.codeid} от {row?.status_date}
                   </TableCell>
                   <TableCell align="left" style={{ width: "25%" }}>
                     {row?.comment || "..."}

@@ -29,7 +29,23 @@ const MenuAdmin = ({ active, setActive }) => {
 
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
-  const clickPage = (link) => navigate(link);
+  const clickPage = (link) => {
+    console.log(link);
+    navigate(link);
+  };
+
+  const serachPage = (link) => {
+    if (link == "/") {
+      if (pathname == link) {
+        return true;
+      }
+    } else {
+      if (pathname?.includes(link)) {
+        return true;
+      }
+    }
+    return false;
+  };
 
   return (
     <div className="actionSettings">
@@ -51,7 +67,7 @@ const MenuAdmin = ({ active, setActive }) => {
           <Fragment key={id}>
             {active ? (
               <div
-                className={pathname == link ? "activeMenu" : ""}
+                className={serachPage(link) ? "activeMenu" : ""}
                 onClick={() => clickPage(link)}
               >
                 <button>{icon}</button>

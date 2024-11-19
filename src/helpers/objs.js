@@ -225,24 +225,24 @@ export const listMenu = [
     icon: <ChecklistRtlIcon sx={{ color: "#fff" }} />,
     link: "/spending",
   },
-  {
-    id: 10,
-    title: "Настройки",
-    icon: <SettingsSuggestOutlinedIcon sx={{ color: "#fff" }} />,
-    link: "",
-  },
-  {
-    id: 15,
-    title: "Отчеты",
-    icon: <SummarizeOutlinedIcon sx={{ color: "#fff" }} />,
-    link: "",
-  },
-  {
-    id: 26,
-    title: "Справочники",
-    icon: <AccountTreeOutlinedIcon sx={{ color: "#fff" }} />,
-    link: "",
-  },
+  // {
+  //   id: 10,
+  //   title: "Настройки",
+  //   icon: <SettingsSuggestOutlinedIcon sx={{ color: "#fff" }} />,
+  //   link: "",
+  // },
+  // {
+  //   id: 15,
+  //   title: "Отчеты",
+  //   icon: <SummarizeOutlinedIcon sx={{ color: "#fff" }} />,
+  //   link: "",
+  // },
+  // {
+  //   id: 26,
+  //   title: "Справочники",
+  //   icon: <AccountTreeOutlinedIcon sx={{ color: "#fff" }} />,
+  //   link: "",
+  // },
 ];
 
 export const listActionRoute = [
