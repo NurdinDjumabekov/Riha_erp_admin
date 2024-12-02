@@ -27,7 +27,6 @@ const initialState = {
   dateRoute: transformActionDate(new Date()), /// для активной даты (выбор маршрутов)
   listPointsEveryTA: [], /// сипсок точек каждого агента
   listRouteEveryTA: [], /// сипсок координат каждого агента
-  listRouteAllTA: [], /// сипсок координат всех агентов
   listRoadRouteEveryTA: [], /// список маршрутов для обьезда каждого ТА
   routeCRUD: {
     //// список дней маршрута (1-30)
@@ -60,8 +59,6 @@ const initialState = {
   //// check
   everyRoutes_TA: [], /// каждый маршрут для ТА (от первой точки до последней)
   listTA_RouteNoPlan: [], //// список коориднат по которым ехал Та(типо сам, не по плану)
-  stateLoad: true, /// всегда меняю его с true на false и наоборот (нужен для перезагрузки карт)
-  //// check
 };
 
 ////// getPointsRouteAgent - get данных координат точек для каждого ТА
@@ -276,7 +273,7 @@ export const editCoordsPoint = createAsyncThunk(
   }
 );
 
-////// getListRoutes_TA - get данных координат точек определенного агента
+////// getListRoutes_TA - get данных координат точек определенного агента (магаз продуктовый, магазин Улан...)
 export const getListRoutes_TA = createAsyncThunk(
   "getListRoutes_TA",
   async function (props, { dispatch, rejectWithValue }) {
@@ -306,7 +303,7 @@ export const getEveryRoutes_TA = createAsyncThunk(
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
-        return { list: response.data, user_type };
+        return response.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -342,10 +339,6 @@ const mapSlice = createSlice({
 
     setActiveViewMap: (state, action) => {
       state.activeViewMap = action?.payload;
-    },
-
-    setStateLoad: (state, action) => {
-      state.stateLoad = !state.stateLoad;
     },
   },
 
@@ -404,19 +397,6 @@ const mapSlice = createSlice({
       state.preloader = true;
     });
 
-    ////////////// getAllRouteAgent
-    builder.addCase(getAllRouteAgent.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listRouteAllTA = action.payload;
-    });
-    builder.addCase(getAllRouteAgent.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(getAllRouteAgent.pending, (state, action) => {
-      state.preloader = true;
-    });
-
     /////////////// getListRoute
     builder.addCase(getListRoute.fulfilled, (state, action) => {
       state.preloader = false;
@@ -466,8 +446,14 @@ const mapSlice = createSlice({
     //////////////// getListRoutes_TA
     builder.addCase(getListRoutes_TA.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listTA_RouteNoPlan = action.payload;
+
+      // Добавляем существующие данные из action.payload
+      const list = action.payload?.map((item) => {
+        return { ...item, lng: +item?.lon, lat: +item?.lat };
+      });
+      state.listTA_RouteNoPlan = list;
     });
+
     builder.addCase(getListRoutes_TA.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
@@ -479,25 +465,15 @@ const mapSlice = createSlice({
 
     //////////////// getEveryRoutes_TA
     builder.addCase(getEveryRoutes_TA.fulfilled, (state, action) => {
-      const user_type = action.payload?.user_type; // 1 - Та, 2 - админ
-      const list = action.payload?.list; /// geo TA
-      const lat = state.mapGeo?.latitude; /// geo TA
-      const lon = state.mapGeo?.longitude;
-      const firstObj = action.payload?.list?.[0];
-
-      const myData = { ...firstObj, lat, lon, ...pastGeoData };
-      const sortList = list?.slice(1); /// заменяю первый элемент массива на координату откуда должен начать путь ТА
-
-      const checkSides = list?.some((item) => item?.sides == true);
-      /// если уже есть стартовая точка
-
-      if (checkSides) {
-        state.everyRoutes_TA = list;
-      } else {
-        state.everyRoutes_TA = [myData, ...list];
-      }
+      state.everyRoutes_TA = action.payload
+        // ?.slice(1, 10) // Исключаем объекты с пустыми `lon` или `lat`
+        ?.filter((item) => item?.lon && item?.lat) // Исключаем объекты с пустыми `lon` или `lat`
+        ?.map((item) => {
+          return { ...item, lng: +item?.lon, lat: +item?.lat };
+        });
       state.preloader = false;
     });
+
     builder.addCase(getEveryRoutes_TA.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
@@ -516,7 +492,6 @@ export const {
   setEveryListRouteCRUD,
   clearEveryListRouteCRUD,
   setActiveViewMap,
-  setStateLoad,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

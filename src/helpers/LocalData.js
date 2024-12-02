@@ -254,63 +254,6 @@ export const pastGeoData = {
   point: "Стартовая точка",
 };
 
-export const listHistory = [
-  {
-    start_time: "19:54",
-    end_time: "21:00",
-    ordering: 6,
-    status: 1,
-    comment: "",
-    set_start_time: null,
-    set_end_time: null,
-    point_guid: "81FA6EB6-1C38-11E7-82A3-000C2986F897",
-    point: "к. Чокморова ",
-    route_sheet_guid: "F91962EC-B652-4C00-8B11-6C64E3E92FCB",
-    guid: "25336B1C-3644-4A34-9EB4-4818FEA4C832",
-    lat: "42.81142114159352",
-    lon: "74.5273598201789",
-    seller_fio: "Молофеева Любовь Васильевна ",
-    seller_number: "555071699",
-    seller_photo: "",
-  },
-  {
-    start_time: "15:20",
-    end_time: "15:39",
-    ordering: 3,
-    status: 1,
-    comment: "",
-    set_start_time: null,
-    set_end_time: null,
-    point_guid: "74AE9AB8-1C3D-11E7-82A3-000C2986F897",
-    point: "к. Шота Руставели ",
-    route_sheet_guid: "F91962EC-B652-4C00-8B11-6C64E3E92FCB",
-    guid: "20B7D600-DFA6-488D-B8C3-2BC63E4E2356",
-    lat: "42.83734968574616",
-    lon: "74.5463284110156",
-    seller_fio: "Дмитриева Лилия",
-    seller_number: "79054718874",
-    seller_photo: "",
-  },
-  {
-    start_time: "19:00",
-    end_time: "19:20",
-    ordering: 5,
-    status: 1,
-    comment: "",
-    set_start_time: null,
-    set_end_time: null,
-    point_guid: "51EF353E-1C3D-11E7-82A3-000C2986F897",
-    point: "к. Айни ",
-    route_sheet_guid: "F91962EC-B652-4C00-8B11-6C64E3E92FCB",
-    guid: "983332BB-008F-4514-B813-2746275A9DAC",
-    lat: "42.858311942455596",
-    lon: "74.5651078124427",
-    seller_fio: "аманова айгерим",
-    seller_number: "000",
-    seller_photo: "",
-  },
-];
-
 export const menuProduction = [
   {
     id: 1,
@@ -323,8 +266,6 @@ export const menuProduction = [
     icons: <HistoryIcon sx={{ color: "#fff" }} />,
   },
 ];
-
-
 
 export const objStatusInvoice = {
   0: { text: "В ожидании", color: "red" },

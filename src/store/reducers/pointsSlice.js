@@ -3,7 +3,6 @@ import { clearAddPoints, clearPositionPoints } from "../../helpers/clear";
 import axios from "axios";
 import axiosInstance from "../../axiosInstance";
 import { myAlert } from "../../helpers/MyAlert";
-import { setStateLoad } from "./mapSlice";
 
 const { REACT_APP_API_URL, REACT_APP_MAP_KEY } = process.env;
 
@@ -24,9 +23,6 @@ export const addNewPonts = createAsyncThunk(
     try {
       const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
-        if (response.data?.result == 1) {
-          dispatch(setStateLoad()); // (нужен для перезагрузки карт)
-        }
         return {
           result: response.data?.result,
           navigate: props?.navigate,
@@ -51,7 +47,6 @@ export const addNewPontToday = createAsyncThunk(
         if (response.data?.result == 1) {
           myAlert("Новый маршрут был построен");
           data?.navigate("/maps");
-          dispatch(setStateLoad()); // (нужен для перезагрузки карт)
         }
         if (response.data?.result == 0) {
           myAlert("Маршрут с такой точкой уже построен!", "error");

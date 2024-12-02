@@ -22,7 +22,6 @@ import {
 ////// icons
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import ReplyAllIcon from "@mui/icons-material/ReplyAll";
-import PdfIcon from "@mui/icons-material/PictureAsPdf";
 
 ////// style
 import "./style.scss";

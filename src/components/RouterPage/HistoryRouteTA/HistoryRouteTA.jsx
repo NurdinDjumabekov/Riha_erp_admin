@@ -28,11 +28,11 @@ const HistoryRouteTA = () => {
     try {
       dispatch(setListPhotos());
       const list = await dispatch(getListTA({ first: true })).unwrap();
-      const obj = { label: list?.[0]?.fio, value: list?.[0]?.guid };
+      const obj = { label: list?.[39]?.fio, value: list?.[39]?.guid };
       dispatch(setActiveTA(obj));
-      const data = { agent_guid: list?.[0]?.guid, user_type, activeDate };
-      await dispatch(getListRoutes_TA(data)).unwrap(); // get историб маршрутов
-      dispatch(getActiveRouteList(list?.[0]?.guid));
+      const data = { agent_guid: list?.[39]?.guid, user_type, activeDate };
+      await dispatch(getListRoutes_TA(data)).unwrap(); // get историю маршрутов
+      await dispatch(getActiveRouteList(list?.[39]?.guid)).unwrap();
       //// отправляю запрос для получения точек каждого агента
     } catch (error) {}
   };
