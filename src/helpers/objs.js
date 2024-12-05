@@ -23,6 +23,7 @@ import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import AvTimerOutlinedIcon from "@mui/icons-material/AvTimerOutlined";
 import TaxiAlertIcon from "@mui/icons-material/TaxiAlert";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 
 /////// icons
 import RoomIcon from "@mui/icons-material/Room";
@@ -177,7 +178,7 @@ export const listMenu = [
   },
   {
     id: 1,
-    title: "Реестр заявок",
+    title: "История заявок",
     icon: <ReceiptLongIcon sx={{ color: "#fff" }} />,
     iconActive: <ReceiptLongIcon sx={{ color: "#988c7d" }} />,
     link: "/history_application",
@@ -196,10 +197,16 @@ export const listMenu = [
     link: "/ware_home",
   },
   {
-    id: 6,
+    id: 60,
     title: "Маршруты ТА",
     icon: <TaxiAlertIcon sx={{ color: "#fff" }} />,
     link: "/route",
+  },
+  {
+    id: 6,
+    title: "Отчеты ТА",
+    icon: <ListAltIcon sx={{ color: "#fff" }} />,
+    link: "/report_ta/agents",
   },
   {
     id: 7,

@@ -30,7 +30,6 @@ const MenuAdmin = ({ active, setActive }) => {
   const { invoiceInfo } = useSelector((state) => state.mainSlice);
 
   const clickPage = (link) => {
-    console.log(link);
     navigate(link);
   };
 

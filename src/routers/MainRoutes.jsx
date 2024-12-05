@@ -23,6 +23,7 @@ import ReturnProdsPage from "../pages/ReturnProdsPage/ReturnProdsPage";
 import TasksPage from "../pages/TasksPage/TasksPage";
 import SpendingPage from "../pages/SpendingPage/SpendingPage";
 import WareHomePages from "../pages/WareHomePages/WareHomePages";
+import ReportsAgentPage from "../pages/ReportsAgentPages/ReportsAgentPages";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,7 @@ const MainRoutes = () => {
             <Route path="/production" element={<ProductionPage />} />
             <Route path="/ware_home/*" element={<WareHomePages />} />
             <Route path="/route" element={<RouterPage />} />
+            <Route path="/report_ta/*" element={<ReportsAgentPage />} />
             <Route path="/pay" element={<PayPage />} />
             <Route path="/return_prod" element={<ReturnProdsPage />} />
             <Route path="/tasks" element={<TasksPage />} />

@@ -1,0 +1,55 @@
+.listAgentsPage {
+  height: calc(100% - 10px);
+  width: calc(100% - 20px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  background: #fff;
+  margin: 0 10px;
+  padding: 10px 0px;
+
+  .header {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+
+    input {
+      height: 35px;
+      padding: 0px 10px;
+      border-radius: 5px;
+      width: 400px;
+      border: 1px solid rgba(89, 89, 89, 0.209);
+
+      &::placeholder {
+        color: #6b728045;
+      }
+
+      &:focus {
+        border: 1px solid rgba(89, 89, 89, 0.209);
+        outline: none;
+      }
+    }
+  }
+
+  .body {
+    width: 100%;
+    height: calc(100% - 50px);
+    margin: 10px 0 0 0;
+
+    .standartTable {
+      box-shadow: none !important;
+      border-radius: 0px !important;
+
+      tbody {
+        tr {
+          cursor: pointer;
+          td,
+          th {
+            padding: 10px 8px !important;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,236 @@
+.everyAgentPage {
+  height: calc(100% - 10px);
+  width: calc(100% - 20px);
+  // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  margin: 0 10px;
+  padding: 0px 0px 10px;
+  position: relative;
+
+  .header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 12px 0 12px;
+    gap: 10px;
+    justify-content: space-between;
+
+    .sortDateTime {
+      position: absolute;
+      left: 0px;
+      top: -63px;
+      display: flex;
+      align-items: center;
+      width: 85%;
+      z-index: 10;
+      height: 50px;
+      gap: 10px;
+
+      input {
+        height: 38px;
+        padding: 0px 10px;
+        border-radius: 5px;
+        width: 400px;
+        border: 1px solid rgba(89, 89, 89, 0.209);
+
+        &::placeholder {
+          color: #6b728045;
+        }
+
+        &:focus {
+          border: 1px solid rgba(89, 89, 89, 0.209);
+          outline: none;
+        }
+      }
+
+      .date {
+        width: 250px;
+        padding: 3px 10px 3px 10px;
+        z-index: 10;
+        position: relative;
+        height: 35px;
+        cursor: pointer;
+
+        p {
+          position: absolute;
+          left: 2px;
+          top: -22px;
+          font-size: 14px;
+        }
+
+        .react-datepicker-wrapper {
+          position: absolute;
+          left: 0;
+          top: 0;
+          z-index: 3;
+          background: transparent;
+        }
+
+        input:last-child {
+          border-radius: 5px;
+          border: 1px solid #e1dede !important;
+          padding: 2px 10px;
+          width: 100%;
+          font-size: 14px;
+          background: transparent;
+
+          &::placeholder {
+            color: #6b72809e;
+          }
+
+          &:focus {
+            border: 1px solid rgba(89, 89, 89, 0.529);
+            outline: none;
+          }
+        }
+
+        svg {
+          width: 19px;
+          height: 19px;
+          position: absolute;
+          top: 8px;
+          right: 10px;
+          color: #2222228a;
+          z-index: 1;
+        }
+
+        .react-datepicker-wrapper {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .body {
+    width: 100%;
+    height: calc(100% - 0px);
+    margin: 5px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .reportVisit {
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      padding: 10px 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+
+      .times {
+        width: calc(100% - 200px);
+
+        > div {
+          align-items: center;
+          // border-bottom: 1px solid #e0e6ed66;
+          cursor: pointer;
+          display: flex;
+          gap: 5px;
+          align-items: center;
+          // padding: 10px;
+
+          span,
+          p {
+            color: #888ea8;
+            font-weight: 600;
+            font-size: 15px;
+          }
+
+          span {
+            font-size: 13px;
+            line-height: 20px;
+            margin: 2px 0 0 0;
+            font-weight: 600;
+          }
+        }
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      button {
+        background: #fff;
+        align-items: center;
+        border: 1px solid #d5d2d2;
+        border-radius: 5px;
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        padding: 7px 15px;
+        height: 38px;
+        width: 140px;
+        border: 1px solid rgba(25, 118, 210, 0.578);
+
+        p {
+          color: #1976d2;
+          font-size: 14px;
+          font-weight: 500;
+          display: block;
+        }
+
+        svg {
+          fill: #1976d2;
+        }
+      }
+
+      button:nth-child(3) {
+        width: 170px;
+      }
+
+      .active {
+        background: #1976d2;
+
+        p {
+          color: #fff;
+        }
+
+        svg {
+          fill: #fff;
+        }
+      }
+    }
+
+    .listProds {
+      width: 100%;
+      display: flex;
+      gap: 10px;
+      height: calc(62% - 70px);
+    }
+
+    .listReturnProds {
+      .reportRealization {
+        width: 100%;
+      }
+    }
+
+    .standartTable {
+      box-shadow: none !important;
+      border-radius: 0px !important;
+      border-left: 1px solid #edf2f9;
+
+      tbody {
+        tr {
+          cursor: pointer;
+          td,
+          th {
+            padding: 10px 8px !important;
+          }
+        }
+      }
+    }
+
+    .graphisc {
+      height: 38%;
+      background: #fff;
+      width: 100%;
+      padding: 20px 0 0 0;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+}

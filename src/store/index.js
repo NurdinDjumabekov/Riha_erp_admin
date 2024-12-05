@@ -23,6 +23,7 @@ import invoiceSlice from "./reducers/invoiceSlice";
 import paySlice from "./reducers/paySlice";
 import pointsSlice from "./reducers/pointsSlice";
 import taskExpensesSlice from "./reducers/taskExpensesSlice";
+import reportsSlice from "./reducers/reportsSlice";
 
 const reducer = combineReducers({
   mainSlice,
@@ -36,6 +37,7 @@ const reducer = combineReducers({
   paySlice,
   pointsSlice,
   taskExpensesSlice,
+  reportsSlice,
 });
 
 const persistConfig = {

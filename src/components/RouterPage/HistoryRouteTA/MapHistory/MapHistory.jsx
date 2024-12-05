@@ -52,7 +52,7 @@ const MapHistory = ({}) => {
   //   dispatch(getListRoutes_TA(obj)); /// get данных координат точек определенного агента
   // };
 
-  console.log(listTA_RouteNoPlan, "listTA_RouteNoPlan");
+  // console.log(listTA_RouteNoPlan, "listTA_RouteNoPlan");
 
   const list_TA = transformLists(listTA, "guid", "fio");
 

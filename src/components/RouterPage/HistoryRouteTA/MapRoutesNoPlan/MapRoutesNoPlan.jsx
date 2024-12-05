@@ -148,7 +148,7 @@ const MapRoutesNoPlan = () => {
     }
   }, [isLoaded, renderRoutes]);
 
-  console.log(activeTA, "activeTA");
+  // console.log(activeTA, "activeTA");
 
   return (
     <div className="mapHistory">
