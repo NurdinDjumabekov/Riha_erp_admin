@@ -1,0 +1,10 @@
+.reportPay {
+  height: calc(100% - 38%);
+  width: 100%;
+  display: flex;
+  gap: 10px;
+
+  .reportPayList {
+    height: 100%;
+  }
+}

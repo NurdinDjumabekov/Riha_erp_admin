@@ -9,6 +9,7 @@ const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
   listSales: { sell: [], pickUp: [] }, //pickUp - сколько взял, sell - сколько продал
+  reportPays: {}, /// отчет долгов и оплат ТТ для ТА
 };
 
 ////// getSaleAgentReq - get список товаров, которые ТА продал за какаю-то дату
@@ -18,6 +19,27 @@ export const getSaleAgentReq = createAsyncThunk(
     const { agent_guid, date } = props;
     const dateNew = transformActionDate(date);
     const url = `${REACT_APP_API_URL}/ta/report_sale?agent_guid=${agent_guid}&date=${dateNew}`;
+    try {
+      const response = await axiosInstance(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getReportPayReq - отчет долгов и оплат ТТ для ТА
+export const getReportPayReq = createAsyncThunk(
+  "getReportPayReq",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { agent_guid, date } = props;
+    const dateNew = transformActionDate(date);
+    const url = `${REACT_APP_API_URL}/ta/agent_point_report?agent_guid=${agent_guid}`;
+    /// &date=${dateNew}
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
@@ -51,6 +73,20 @@ const reportsSlice = createSlice({
       state.listSales = { sell: [], pickUp: [] };
     });
     builder.addCase(getSaleAgentReq.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///////////////// getReportPayReq
+    builder.addCase(getReportPayReq.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.reportPays = action.payload;
+    });
+    builder.addCase(getReportPayReq.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      state.reportPays = {};
+    });
+    builder.addCase(getReportPayReq.pending, (state, action) => {
       state.preloader = true;
     });
   },

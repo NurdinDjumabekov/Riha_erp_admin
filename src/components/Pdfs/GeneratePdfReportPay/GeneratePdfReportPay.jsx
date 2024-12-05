@@ -19,10 +19,12 @@ import { View, PDFViewer } from "@react-pdf/renderer";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { roundingNum } from "../../../helpers/totals";
 
-const GeneratePdfReportEveryAgent = ({ list, dateTime, title }) => {
+const GeneratePdfReportPay = ({ list, dateTime, title }) => {
   const { state } = useLocation();
 
   const [active, setActive] = useState(false);
+
+  console.log(list, "list");
 
   const realizDate = formatDateMonth(transformActionDate(dateTime));
 
@@ -30,7 +32,7 @@ const GeneratePdfReportEveryAgent = ({ list, dateTime, title }) => {
     <div className="generateBlock">
       <button className="activePdf" onClick={() => setActive(true)}>
         <FileCopyIcon />
-        <p>Сгенерировать документ</p>
+        <p>Сгенерировать документ долгов</p>
       </button>
       <Modals
         openModal={active}
@@ -54,16 +56,10 @@ const GeneratePdfReportEveryAgent = ({ list, dateTime, title }) => {
                     <Text style={styles.textTitle}>Наименование</Text>
                   </View>
                   <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>Цена</Text>
+                    <Text style={styles.textTitle}>Адрес</Text>
                   </View>
                   <View style={[styles.tableCol, styles.headersOther]}>
                     <Text style={styles.textTitle}>Сумма</Text>
-                  </View>
-                  <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>Вес(кг)</Text>
-                  </View>
-                  <View style={[styles.tableCol, styles.headersOther]}>
-                    <Text style={styles.textTitle}>шт</Text>
                   </View>
                 </View>
                 {list?.map((i, index) => (
@@ -75,27 +71,17 @@ const GeneratePdfReportEveryAgent = ({ list, dateTime, title }) => {
                     </View>
                     <View style={[styles.tableCol, styles.namesInner]}>
                       <Text style={[styles.tableCell, styles.numsInnerText]}>
-                        {i?.product_name}
+                        {i?.name}
                       </Text>
                     </View>
                     <View style={[styles.tableCol, styles.headersOther]}>
                       <Text style={styles.tableCell}>
-                        {roundingNum(i?.price) || 0} сом
+                        {i?.address || "..."}
                       </Text>
                     </View>
                     <View style={[styles.tableCol, styles.headersOther]}>
                       <Text style={styles.tableCell}>
-                        {roundingNum(i?.total_price) || 0} сом
-                      </Text>
-                    </View>
-                    <View style={[styles.tableCol, styles.headersOther]}>
-                      <Text style={styles.tableCell}>
-                        {roundingNum(i?.count_kg) || 0}
-                      </Text>
-                    </View>
-                    <View style={[styles.tableCol, styles.headersOther]}>
-                      <Text style={styles.tableCell}>
-                        {roundingNum(i?.count) || 0}
+                        {roundingNum(i?.balance) || 0} сом
                       </Text>
                     </View>
                   </View>
@@ -106,37 +92,11 @@ const GeneratePdfReportEveryAgent = ({ list, dateTime, title }) => {
                 <View style={styles.resultInner}>
                   <Text style={styles.resultContent}>Сумма: </Text>
                   <Text style={styles.resultContent}>
-                    {list?.[0]?.total_price_all || 0} сом
-                  </Text>
-                </View>
-                <View style={styles.resultInner}>
-                  <Text style={styles.resultContent}>Масса: </Text>
-                  <Text style={styles.resultContent}>
-                    {list?.[0]?.total_count_kg || 0}
-                  </Text>
-                </View>
-                <View style={styles.resultInner}>
-                  <Text style={styles.resultContent}>Кол-во: </Text>
-                  <Text style={styles.resultContent}>
-                    {list?.[0]?.total_count || 0}
+                    {list?.[0]?.total_balance || 0} сом
                   </Text>
                 </View>
               </View>
               <View style={styles.footer}>
-                {/* <View style={styles.accept}>
-                  <View style={styles.acceptSend}>
-                    <View style={styles.acceptText}>
-                      <Text style={styles.linetext}>Отпустил</Text>
-                      <Text style={styles.line}></Text>
-                    </View>
-                  </View>
-                  <View style={styles.acceptSend}>
-                    <View style={styles.acceptText}>
-                      <Text style={styles.linetext}>Получил</Text>
-                      <Text style={styles.line}></Text>
-                    </View>
-                  </View>
-                </View> */}
                 <View style={[styles.acceptText, styles.acceptTextMore]}>
                   <Text style={styles.linetext}>Комментарий</Text>
                   <Text style={styles.line}></Text>
@@ -150,4 +110,4 @@ const GeneratePdfReportEveryAgent = ({ list, dateTime, title }) => {
   );
 };
 
-export default GeneratePdfReportEveryAgent;
+export default GeneratePdfReportPay;

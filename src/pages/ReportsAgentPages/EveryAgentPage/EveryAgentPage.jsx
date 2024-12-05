@@ -11,9 +11,13 @@ import ReactDatePicker from "react-datepicker";
 import ReportRealization from "../../../components/ReportsAgentPages/ReportRealization/ReportRealization";
 import GraphicsProds from "../../../components/ReportsAgentPages/GraphicsProds/GraphicsProds";
 import GeneratePdfReportEveryAgent from "../../../components/Pdfs/GeneratePdfReportEveryAgent/GeneratePdfReportEveryAgent";
+import ReportPay from "../../../components/ReportsAgentPages/ReportPay/ReportPay";
 
 ////// fns
-import { getSaleAgentReq } from "../../../store/reducers/reportsSlice";
+import {
+  getReportPayReq,
+  getSaleAgentReq,
+} from "../../../store/reducers/reportsSlice";
 
 ////// icons
 import EventIcon from "@mui/icons-material/EventNoteTwoTone";
@@ -23,6 +27,8 @@ import PriceCheckIcon from "@mui/icons-material/AttachMoney";
 
 ///// helpers
 import { ru } from "date-fns/locale";
+import { roundingNum } from "../../../helpers/totals";
+import GeneratePdfReportPay from "../../../components/Pdfs/GeneratePdfReportPay/GeneratePdfReportPay";
 
 const EveryAgentPage = () => {
   const dispatch = useDispatch();
@@ -32,18 +38,19 @@ const EveryAgentPage = () => {
   const [dateTime, setDateTime] = useState(new Date());
   const [active, setActive] = useState(1);
 
-  const { listSales } = useSelector((state) => state.reportsSlice);
+  const { listSales, reportPays } = useSelector((state) => state.reportsSlice);
 
   const onChangeDate = async (date) => {
     setDateTime(date);
     const send = { agent_guid: state?.guid, date };
-    dispatch(getSaleAgentReq(send));
-    ///// сортировка заявок по дате
+    dispatch(getSaleAgentReq(send)); //список товаров, которые ТА продал за какаю-то дату
+    dispatch(getReportPayReq(send)); //отчет долгов и оплат ТТ для ТА
   };
 
   useEffect(() => {
     const send = { agent_guid: state?.guid, date: dateTime };
-    dispatch(getSaleAgentReq(send));
+    dispatch(getSaleAgentReq(send)); //список товаров, которые ТА продал за какаю-то дату
+    dispatch(getReportPayReq(send)); //отчет долгов и оплат ТТ для ТА
   }, []);
 
   const listActions = [
@@ -74,17 +81,56 @@ const EveryAgentPage = () => {
       <>
         <div className="listProds listReturnProds">
           <ReportRealization
-            list={listSales?.sell || []}
+            list={listSales?.return || []}
             title={`Возврат точек агенту "${state?.fio}"`}
           />
         </div>
         <div className="graphisc">
-          <GraphicsProds list={listSales?.sell || []} />
+          <GraphicsProds list={listSales?.return || []} />
         </div>
       </>
     ),
-    3: "",
+    3: <ReportPay />,
   };
+
+  const objPdf = {
+    1: (
+      <GeneratePdfReportEveryAgent
+        list={listSales?.sell}
+        dateTime={dateTime}
+        title={"продаж"}
+      />
+    ),
+    2: (
+      <GeneratePdfReportEveryAgent
+        list={listSales?.return}
+        dateTime={dateTime}
+        title={"возврата"}
+      />
+    ),
+    3: (
+      <GeneratePdfReportPay
+        list={reportPays?.list_point}
+        dateTime={dateTime}
+        title={"долгов точек"}
+      />
+    ),
+  };
+
+  const listInfo = [
+    {
+      name: "Время начала работы агента: ",
+      more: listSales?.sell?.[0]?.start_time || "-",
+    },
+    {
+      name: "Время окончания работы агента: ",
+      more: listSales?.sell?.[0]?.end_time || "-",
+    },
+    {
+      name: "Баланс агента: ",
+      more: roundingNum(reportPays?.money_agent) || "временно недоступно",
+    },
+  ];
 
   return (
     <div className="everyAgentPage">
@@ -104,23 +150,18 @@ const EveryAgentPage = () => {
             />
             <EventIcon />
           </div>
-          <GeneratePdfReportEveryAgent
-            list={listSales?.sell}
-            dateTime={dateTime}
-          />
+          {objPdf?.[active]}
         </div>
       </div>
       <div className="body">
         <div className="reportVisit">
           <div className="times">
-            <div>
-              <p>Время начала работы агента:</p>
-              <span>{listSales?.sell?.[0]?.start_time || "-"}</span>
-            </div>
-            <div>
-              <p>Время окончания работы агента:</p>
-              <span>{listSales?.sell?.[0]?.end_time || "-"}</span>
-            </div>
+            {listInfo?.map((i) => (
+              <div>
+                <p>{i?.name}</p>
+                <span>{i?.more}</span>
+              </div>
+            ))}
           </div>
           <div className="actions">
             {listActions?.map((item) => (
