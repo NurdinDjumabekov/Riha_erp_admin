@@ -29,7 +29,7 @@ const EverySlide = ({ active, setActive }) => {
           <div className="every">
             <a href={item?.file_path} target="_blank">
               <input type="checkbox" checked={true} />
-              <p> Файл № {index + 1}</p>
+              <p>Файл № {index + 1}</p>
             </a>
           </div>
         ))}
