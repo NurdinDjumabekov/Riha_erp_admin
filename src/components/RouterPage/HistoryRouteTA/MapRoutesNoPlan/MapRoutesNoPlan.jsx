@@ -63,7 +63,7 @@ const MapRoutesNoPlan = () => {
     if (!isLoaded || filteredListTA_RouteNoPlan?.length < 2) return;
 
     const segments = [];
-    const maxWaypoints = 20; // Максимум промежуточных точек
+    const maxWaypoints = 40; // Максимум промежуточных точек
 
     // Разделение маршрута на сегменты
     for (
@@ -77,11 +77,11 @@ const MapRoutesNoPlan = () => {
           Math.min(i + maxWaypoints, filteredListTA_RouteNoPlan?.length - 1)
         ];
       const waypoints = filteredListTA_RouteNoPlan
-        .slice(
+        ?.slice(
           i + 1,
           Math.min(i + maxWaypoints, filteredListTA_RouteNoPlan?.length - 1)
         )
-        .map((location) => ({
+        ?.map((location) => ({
           location,
           stopover: true,
         }));
@@ -172,7 +172,7 @@ const MapRoutesNoPlan = () => {
             return <CustomMarkerRoute key={index} position={pos} />;
           })} */}
 
-          {directionsSegments.map((directions, index) => (
+          {directionsSegments?.map((directions, index) => (
             <DirectionsRenderer
               key={index}
               directions={directions}

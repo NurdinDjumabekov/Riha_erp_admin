@@ -38,8 +38,7 @@ export const getReportPayReq = createAsyncThunk(
   async function (props, { dispatch, rejectWithValue }) {
     const { agent_guid, date } = props;
     const dateNew = transformActionDate(date);
-    const url = `${REACT_APP_API_URL}/ta/agent_point_report?agent_guid=${agent_guid}`;
-    /// &date=${dateNew}
+    const url = `${REACT_APP_API_URL}/ta/agent_point_report?agent_guid=${agent_guid}&date=${dateNew}`;
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {

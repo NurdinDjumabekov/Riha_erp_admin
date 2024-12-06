@@ -1,5 +1,5 @@
 ////// hooks
-import React from "react";
+import React, { useState } from "react";
 import { useRef } from "react";
 
 ///// icons
@@ -13,60 +13,29 @@ import "./style.scss";
 
 ////// helpers
 import { checkIsFile } from "../../../../helpers/validations";
+import Modals from "../../../../common/Modals/Modals";
 
-const EverySlide = ({ i }) => {
-  let sliderRef = useRef(null);
+const EverySlide = ({ active, setActive }) => {
+  console.log(active, "active");
 
-  //////////////////// Slider
-  const settings = {
-    dots: false,
-    infinite: i.length > 1,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: i.length > 1,
-  };
-
-  if (i?.files?.length > 0) {
-    return (
-      <div className="mapMenuSlider">
-        <Slider
-          ref={(slider) => {
-            sliderRef = slider;
-          }}
-          {...settings}
-        >
-          {i?.files?.map((photo, index) => (
-            <div className="everySlide" key={index}>
-              {checkIsFile(photo?.file_path) === "image" ? (
-                <div className="photoBlock">
-                  <img src={photo?.file_path} alt="###" />
-                  <div className="dateTime">
-                    <p>{photo?.date}</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="videoBlock">
-                  <video controls>
-                    <source src={photo?.file_path} type="video/mp4" />
-                  </video>
-                  <div className="dateTime">
-                    <p>{photo?.date}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </Slider>
-        <button className="prev" onClick={() => sliderRef.slickPrev()}>
-          <ArrowIcon />
-        </button>
-        <button className="next" onClick={() => sliderRef.slickNext()}>
-          <ArrowIcon />
-        </button>
+  return (
+    <Modals
+      openModal={active?.guid}
+      closeModal={() => setActive(false)}
+      title={`Фото и видео отчёт`}
+    >
+      <div className="listFiles">
+        {active?.files?.map((item, index) => (
+          <div className="every">
+            <a href={item?.file_path} target="_blank">
+              <input type="checkbox" checked={true} />
+              <p> Файл № {index + 1}</p>
+            </a>
+          </div>
+        ))}
       </div>
-    );
-  }
+    </Modals>
+  );
 };
 
 export default EverySlide;

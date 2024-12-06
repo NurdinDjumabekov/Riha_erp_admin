@@ -40,7 +40,7 @@ const MapRoutes = () => {
     if (!isLoaded || everyRoutes_TA?.length < 2) return;
 
     const segments = [];
-    const maxWaypoints = 20; // Максимум промежуточных точек
+    const maxWaypoints = 40; // Максимум промежуточных точек
 
     // Разделение маршрута на сегменты
     for (let i = 0; i < everyRoutes_TA?.length - 1; i += maxWaypoints) {
@@ -50,8 +50,8 @@ const MapRoutes = () => {
           Math.min(i + maxWaypoints, everyRoutes_TA?.length - 1)
         ];
       const waypoints = everyRoutes_TA
-        .slice(i + 1, Math.min(i + maxWaypoints, everyRoutes_TA?.length - 1))
-        .map((location) => ({
+        ?.slice(i + 1, Math.min(i + maxWaypoints, everyRoutes_TA?.length - 1))
+        ?.map((location) => ({
           location,
           stopover: true,
         }));
@@ -136,7 +136,7 @@ const MapRoutes = () => {
             }
           })}
 
-          {directionsSegments.map((directions, index) => (
+          {directionsSegments?.map((directions, index) => (
             <DirectionsRenderer
               key={index}
               directions={directions}

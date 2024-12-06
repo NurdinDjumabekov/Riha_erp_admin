@@ -20,10 +20,14 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 
 ////// fns
-import { setActiveTA } from "../../../../store/reducers/selectsSlice";
+import {
+  setActiveDate,
+  setActiveTA,
+} from "../../../../store/reducers/selectsSlice";
 import { getListRoutes_TA } from "../../../../store/reducers/mapSlice";
 import MapRoutes from "../MapRoutes/MapRoutes";
 import MapRoutesNoPlan from "../MapRoutesNoPlan/MapRoutesNoPlan";
+import ViewReportVisit from "../ViewReportVisit/ViewReportVisit";
 
 const MapHistory = ({}) => {
   const dispatch = useDispatch();
@@ -42,15 +46,15 @@ const MapHistory = ({}) => {
     //// отправляю запрос для получения точек каждого агента
   };
 
-  // const onChangeDate = (item) => {
-  //   dispatch(setActiveDate(transformActionDate(item))); /// активный state для селекта даты
-  //   const obj = {
-  //     agent_guid: activeTA?.value,
-  //     user_type,
-  //     activeDate: transformActionDate(item),
-  //   };
-  //   dispatch(getListRoutes_TA(obj)); /// get данных координат точек определенного агента
-  // };
+  const onChangeDate = (item) => {
+    dispatch(setActiveDate(transformActionDate(item))); /// активный state для селекта даты
+    const obj = {
+      agent_guid: activeTA?.value,
+      user_type,
+      activeDate: transformActionDate(item),
+    };
+    dispatch(getListRoutes_TA(obj)); /// get данных координат точек определенного агента
+  };
 
   // console.log(listTA_RouteNoPlan, "listTA_RouteNoPlan");
 
@@ -69,7 +73,7 @@ const MapHistory = ({}) => {
           />
         </div>
 
-        {/* <div className="date">
+        <div className="date">
           <DatePicker
             selected={reverseTransformActionDate(activeDate)}
             onChange={onChangeDate}
@@ -81,7 +85,7 @@ const MapHistory = ({}) => {
             locale={ru}
             maxDate={new Date()}
           />
-        </div> */}
+        </div>
 
         <div className="infoRoute">
           <div>
@@ -100,10 +104,14 @@ const MapHistory = ({}) => {
           <p>Общее расстояние маршрута: {totalDistance.toFixed(2)} км</p>
         </div> */}
       </div>
-
-      {/* <MapRoutes /> */}
-      <MapRoutesNoPlan />
-      {/* <MapMenuInfo totalDistance={totalDistance} /> */}
+      <div className="mapHistory__body">
+        <MapRoutes />
+        {/* <div className="mapsVisit">
+        <MapRoutesNoPlan />
+      </div> */}
+        {/* <MapMenuInfo totalDistance={totalDistance} /> */}
+        <ViewReportVisit />
+      </div>
     </div>
   );
 };

@@ -467,7 +467,7 @@ const mapSlice = createSlice({
     builder.addCase(getEveryRoutes_TA.fulfilled, (state, action) => {
       state.everyRoutes_TA = action.payload
         // ?.slice(1, 10) // Исключаем объекты с пустыми `lon` или `lat`
-        ?.filter((item) => item?.lon && item?.lat) // Исключаем объекты с пустыми `lon` или `lat`
+        // ?.filter((item) => item?.lon && item?.lat) // Исключаем объекты с пустыми `lon` или `lat`
         ?.map((item) => {
           return { ...item, lng: +item?.lon, lat: +item?.lat };
         });

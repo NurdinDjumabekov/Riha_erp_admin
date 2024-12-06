@@ -18,6 +18,9 @@ import HeaderInfo from "../../common/HeaderInfo/HeaderInfo";
 
 const MainLayouts = () => {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
+
+  // console.log(pathname, "location");
 
   const [active, setActive] = useState(true);
 
@@ -38,7 +41,7 @@ const MainLayouts = () => {
     <div className="layouts">
       <MenuAdmin active={active} setActive={setActive} />
       <HeaderInfo active={active} setActive={setActive} />
-      <div className="pages">
+      <div className={`pages ${pathname == "/route" ? "routePages" : ""}`}>
         <Outlet />
       </div>
     </div>
