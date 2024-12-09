@@ -12,6 +12,7 @@ const MapForChoicePoints = () => {
   const [map, setMap] = useState(null);
   const [directions, setDirections] = useState(null);
   const [markers, setMarkers] = useState([]);
+  //// check
 
   const { mapGeo, key, activeViewMap } = useSelector((state) => state.mapSlice);
 

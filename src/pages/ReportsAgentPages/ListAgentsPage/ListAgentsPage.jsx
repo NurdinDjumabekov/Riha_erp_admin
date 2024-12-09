@@ -66,7 +66,7 @@ const ListAgentsPage = () => {
             </TableHead>
             <TableBody>
               {filteredList?.map((row, index) => (
-                <TableRow key={`${row?.guid}`} onClick={() => clickAgent(row)}>
+                <TableRow key={index} onClick={() => clickAgent(row)}>
                   <TableCell
                     align="center"
                     component="th"

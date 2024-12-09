@@ -24,7 +24,6 @@ const ReportsAgentPages = () => {
 
   return (
     <Routes>
-      {/* <Route path="/" element={<ReportsAgentPages />} /> */}
       <Route path="/agents" element={<ListAgentsPage />} />
       <Route path="/agent_every" element={<EveryAgentPage />} />
     </Routes>

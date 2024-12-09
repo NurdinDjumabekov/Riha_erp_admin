@@ -9,6 +9,7 @@ import "./style.scss";
 ////// helpers
 import { transformActionDate } from "../../../helpers/transformDate";
 import { formatDateMonth } from "../../../helpers/transformDate";
+import { roundingNum } from "../../../helpers/totals";
 
 ////// components
 import Modals from "../../../common/Modals/Modals";
@@ -17,7 +18,6 @@ import { View, PDFViewer } from "@react-pdf/renderer";
 
 ////// icons
 import FileCopyIcon from "@mui/icons-material/FileCopy";
-import { roundingNum } from "../../../helpers/totals";
 
 const GeneratePdfReportEveryAgent = ({ list, dateTime, title }) => {
   const { state } = useLocation();

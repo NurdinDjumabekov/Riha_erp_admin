@@ -21,13 +21,11 @@ import CustomMarker from "../CustomMarker/CustomMarker";
 ////// env
 const { REACT_APP_MAP_KEY } = process.env;
 
-const MapRoutes = () => {
+const MapRoutes = ({ setInitialSlide, refSlider, mapRef }) => {
   const [center, setCenter] = useState({ lat: 42.8540827, lng: 74.6283202 }); // начальная позиция
   const [zoom, setZoom] = useState(12);
   const [directionsSegments, setDirectionsSegments] = useState([]); // Сегменты маршрутов
   const { everyRoutes_TA } = useSelector((state) => state.mapSlice);
-
-  const mapRef = useRef(null);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -118,6 +116,13 @@ const MapRoutes = () => {
     }
   };
 
+  const centerMapOnMarker = useCallback((position) => {
+    if (mapRef.current) {
+      mapRef.current.panTo(position); // Перемещаем карту в заданное положение
+      mapRef.current.setZoom(13);
+    }
+  }, []);
+
   return (
     <div className="mapHistory">
       <button className="findBtn" onClick={findMe}>
@@ -132,7 +137,16 @@ const MapRoutes = () => {
         >
           {everyRoutes_TA?.map((pos, index) => {
             if (!!pos?.point) {
-              return <CustomMarker key={index} position={pos} index={index} />;
+              return (
+                <CustomMarker
+                  key={index}
+                  position={pos}
+                  index={index}
+                  setInitialSlide={setInitialSlide}
+                  refSlider={refSlider}
+                  centerMapOnMarker={centerMapOnMarker}
+                />
+              );
             }
           })}
 

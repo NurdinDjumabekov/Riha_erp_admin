@@ -15,6 +15,7 @@ import "./style.scss";
 
 ////// helpers
 import { clearActiveMap } from "../../../../helpers/clear";
+import AddNewPoints from "../AddNewPoints/AddNewPoints";
 
 const ActionMapRoute = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,11 @@ const ActionMapRoute = () => {
 
   const closeModal = () => dispatch(setActiveViewMap(clearActiveMap));
 
-  const obj = { 1: <MapForChoiceTT />, 2: <MapForChoicePoints /> };
+  const obj = {
+    1: <MapForChoiceTT />,
+    2: <MapForChoicePoints />,
+    3: <AddNewPoints />,
+  };
 
   return (
     <div className={!!activeViewMap?.guid ? "actionMapRoute" : ""}>

@@ -15,13 +15,29 @@ import { myAlert } from "../../../../helpers/MyAlert";
 
 ///// fns
 
-const CustomMarker = ({ position, index, setCenter, setZoom }) => {
+const CustomMarker = (props) => {
+  const {
+    position,
+    index,
+    setCenter,
+    setZoom,
+    setInitialSlide,
+    refSlider,
+    centerMapOnMarker,
+  } = props;
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const refIcon = useRef(null);
 
   const clickPoint = async () => {
     const { lat, lng } = position;
+
+    if (refSlider.current) {
+      centerMapOnMarker(position);
+      setInitialSlide(index);
+      refSlider.current?.slickGoTo(index); // переходим к указанному слайду
+    }
 
     // if (!!position?.guid) {
     //   navigate("/points/history", { state: position });

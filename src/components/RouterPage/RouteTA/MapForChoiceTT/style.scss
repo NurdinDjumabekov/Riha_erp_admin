@@ -2,11 +2,6 @@
   position: relative;
   height: 102%;
 
-  #mapTT {
-    height: 100% !important;
-    width: 100% !important;
-  }
-
   .marker {
     position: relative;
 
@@ -38,7 +33,7 @@
   &__actions {
     position: absolute;
     z-index: 20;
-    left: 15px;
+    right: 15px;
     top: 15px;
     display: flex;
     align-items: center;

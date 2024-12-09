@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 
 ////// components
-import { Table, TableBody, TableCell } from "@mui/material";
+import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
+import SendInput from "../../../../common/SendInput/SendInput";
+import Modals from "../../../../common/Modals/Modals";
 
 ////// style
 import "./style.scss";
@@ -18,6 +20,7 @@ import { transformLists } from "../../../../helpers/transformLists";
 import { setActiveTA } from "../../../../store/reducers/selectsSlice";
 import {
   ListRouteCRUD,
+  changeRouteSheetTodayReq,
   getEveryRouteWithTT,
   getListRoute,
   getListRoutesForMap,
@@ -30,6 +33,7 @@ import {
 import EditIcon from "../../../../assets/MyIcons/EditIcon";
 import DeleteIcon from "../../../../assets/MyIcons/DeleteIcon";
 import MapIcon from "../../../../assets/MyIcons/MapIcon";
+import { myAlert } from "../../../../helpers/MyAlert";
 
 const EveryRouteTA = () => {
   const dispatch = useDispatch();
@@ -40,14 +44,16 @@ const EveryRouteTA = () => {
     (state) => state.mapSlice
   );
 
+  const [modal, setModal] = useState({});
+
   const list_TA = transformLists(listTA, "guid", "fio");
 
   const onChange = (item) => {
     dispatch(setActiveTA(item));
     dispatch(getListRoute({ agent_guid: item?.guid }));
-    /// get список маршрутов за 30 зней
+    /// get список маршрутных листов за 30 зней
     dispatch(getPointsRouteAgent({ guid: item?.guid }));
-    /// get список маршрутов за каждый день
+    /// get список точек за каждый маршрут
   };
 
   useEffect(() => {
@@ -87,6 +93,26 @@ const EveryRouteTA = () => {
   const lookListRoute = (item) => dispatch(getListRoutesForMap(item?.guid));
   /// get список точек для полного маршрута
 
+  const openModalFN = (e, { guid, is_today }) => {
+    if (!!is_today) {
+      return myAlert("Этот Маршуртный лист уже активный");
+    }
+    /// открытие модалки для изменение маршрута на сегодня
+    setModal({ ...modal, route_sheet_guid: guid, agent_guid: activeTA?.value });
+  };
+
+  const changeRouteSheetToday = async () => {
+    /// изменение маршрута на сегодня
+    const send = { data: modal, setModal };
+    const res = await dispatch(changeRouteSheetTodayReq(send)).unwrap();
+    if (res == 1) {
+      dispatch(getListRoute({ agent_guid: activeTA?.value }));
+      /// get список маршрутных листов за 30 зней
+      dispatch(getPointsRouteAgent({ guid: modal?.route_sheet_guid }));
+      /// get список точек за каждый маршрут
+    }
+  };
+
   return (
     <div className="everyRouteTA">
       <div className="choice">
@@ -99,7 +125,7 @@ const EveryRouteTA = () => {
           />
         </div>
 
-        <button onClick={() => openRouteModalCRUD(1)}>+ Создать</button>
+        <button onClick={() => openRouteModalCRUD(1)}>+ Создать маршрут</button>
       </div>
       <TableContainer
         component={Paper}
@@ -112,7 +138,7 @@ const EveryRouteTA = () => {
               <TableCell align="center" style={{ width: "5%" }}>
                 №
               </TableCell>
-              <TableCell style={{ width: "50%" }}>Комментарий</TableCell>
+              <TableCell style={{ width: "40%" }}>Комментарий</TableCell>
               <TableCell align="left" style={{ width: "20%" }}>
                 Дата создания
               </TableCell>
@@ -121,7 +147,7 @@ const EveryRouteTA = () => {
               </TableCell>
               <TableCell
                 align="center"
-                style={{ width: "15%" }}
+                style={{ width: "25%" }}
                 className="titleCheckbox"
               >
                 *
@@ -130,51 +156,97 @@ const EveryRouteTA = () => {
           </TableHead>
           <TableBody>
             {listRoadRouteEveryTA?.map((row) => (
-              <TableRow key={row?.product_guid}>
-                <TableCell
-                  align="center"
-                  component="th"
-                  scope="row"
-                  style={{ width: "5%" }}
+              <Tooltip
+                title={!!row?.is_today && "Активный маршрут на сегодня"}
+                placement="top"
+              >
+                <TableRow
+                  key={row?.product_guid}
+                  className={!!row?.is_today ? "activeIsToday" : ""}
                 >
-                  {row?.number}
-                </TableCell>
-                <TableCell component="th" scope="row" style={{ width: "50%" }}>
-                  {row?.comment}
-                </TableCell>
-                <TableCell align="left" style={{ width: "20%" }}>
-                  {row?.date}
-                </TableCell>
-                <TableCell align="center" style={{ width: "10%" }}>
-                  <div className="checkboxTable">
-                    <input
-                      type="checkbox"
-                      onClick={(e) => clickCheckBoxForEdit(e, row)}
-                      className="checkboxInner"
-                      name="is_active"
-                      // checked={!!row?.is_active}
-                      checked={row?.guid == activeRoute?.guid}
-                    />
-                  </div>
-                </TableCell>
-                <TableCell align="left" style={{ width: "15%" }}>
-                  <div className="actions">
-                    <button onClick={() => lookListRoute(row)}>
-                      <MapIcon width={16} height={16} />
-                    </button>
-                    <button onClick={() => openRouteModalCRUD(2, row)}>
-                      <EditIcon width={17} height={17} />
-                    </button>
-                    <button onClick={() => clickDelRoute(row)}>
-                      <DeleteIcon width={19} height={19} color={"red"} />
-                    </button>
-                  </div>
-                </TableCell>
-              </TableRow>
+                  <TableCell
+                    align="center"
+                    component="th"
+                    scope="row"
+                    style={{ width: "5%" }}
+                    onClick={(e) => clickCheckBoxForEdit(e, row)}
+                  >
+                    {row?.number}
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    style={{ width: "40%" }}
+                    onClick={(e) => clickCheckBoxForEdit(e, row)}
+                  >
+                    {row?.comment}
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{ width: "20%" }}
+                    onClick={(e) => clickCheckBoxForEdit(e, row)}
+                  >
+                    {row?.date}
+                  </TableCell>
+                  <TableCell align="center" style={{ width: "10%" }}>
+                    <div className="checkboxTable">
+                      <input
+                        type="checkbox"
+                        onClick={(e) => clickCheckBoxForEdit(e, row)}
+                        className="checkboxInner"
+                        name="is_active"
+                        checked={row?.guid == activeRoute?.guid}
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell align="left" style={{ width: "25%" }}>
+                    <div className="actions">
+                      <button onClick={() => lookListRoute(row)}>
+                        <MapIcon width={16} height={16} />
+                      </button>
+                      <button onClick={() => openRouteModalCRUD(2, row)}>
+                        <EditIcon width={17} height={17} />
+                      </button>
+                      <button onClick={() => clickDelRoute(row)}>
+                        <DeleteIcon width={19} height={19} color={"red"} />
+                      </button>
+                      <div className="checkboxTable isTodayInput">
+                        <input
+                          type="checkbox"
+                          className="checkboxInner"
+                          name="is_active"
+                          checked={!!row?.is_today}
+                          onClick={(e) => openModalFN(e, row)}
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              </Tooltip>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Modals
+        openModal={!!modal?.route_sheet_guid}
+        closeModal={() => setModal({})}
+        title={`Изменение маршрута для агента`}
+      >
+        <div className="addTasks__inner">
+          <SendInput
+            value={modal?.comment}
+            onChange={(e) => setModal({ ...modal, comment: e.target.value })}
+            title={"Комментарий"}
+            name={"comment"}
+            typeInput={"textarea"}
+          />
+
+          <div className="sendBlock">
+            <button onClick={changeRouteSheetToday}> Обновить</button>
+          </div>
+        </div>
+      </Modals>
     </div>
   );
 };

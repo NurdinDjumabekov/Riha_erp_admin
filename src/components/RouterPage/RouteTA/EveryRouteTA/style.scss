@@ -39,6 +39,16 @@
         }
       }
     }
+
+    .activeIsToday {
+      background: #2195f36d !important;
+    }
+
+    tbody {
+      tr {
+        cursor: pointer;
+      }
+    }
   }
 
   .standartTable {
@@ -66,5 +76,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .isTodayInput {
+    width: 23px;
+    height: 23px;
+    min-width: 23px;
+    min-height: 23px;
+    padding-bottom: 4px;
   }
 }

@@ -126,10 +126,10 @@ const EveryAgentPage = () => {
       name: "Время окончания работы агента: ",
       more: listSales?.sell?.[0]?.end_time || "-",
     },
-    {
-      name: "Баланс агента: ",
-      more: roundingNum(reportPays?.money_agent) || "временно недоступно",
-    },
+    // {
+    //   name: "Баланс агента: ",
+    //   more: roundingNum(reportPays?.money_agent) || "временно недоступно",
+    // },
   ];
 
   return (

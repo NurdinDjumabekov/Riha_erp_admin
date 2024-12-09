@@ -313,6 +313,54 @@ export const getEveryRoutes_TA = createAsyncThunk(
   }
 );
 
+////// changeRouteSheetTodayReq - изменение сегодняшнего маршрута для ТА
+export const changeRouteSheetTodayReq = createAsyncThunk(
+  "changeRouteSheetTodayReq",
+  async function ({ data, setModal }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/set_new_route_sheet`;
+    try {
+      const response = await axiosInstance.put(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        if (response.data?.result == 1) {
+          setModal({});
+          myAlert("Маршрут успешно обновлён");
+        } else if (response.data?.result == -1) {
+          myAlert(response.data?.msg, "error");
+        }
+        return response.data?.result;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// addNewPointsReq - изменение сегодняшнего маршрута для ТА
+export const addNewPointsReq = createAsyncThunk(
+  "addNewPointsReq",
+  async function ({ data, clearRoute }, { dispatch, rejectWithValue }) {
+    const url = `${REACT_APP_API_URL}/ta/create_point`;
+    try {
+      const response = await axiosInstance.post(url, data);
+      if (response.status >= 200 && response.status < 300) {
+        if (response.data?.result == 1) {
+          clearRoute();
+          myAlert("Маршрут успешно добавлен");
+        } else {
+          myAlert(response.data?.msg, "error");
+        }
+        return response.data?.result;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const mapSlice = createSlice({
   name: "mapSlice",
   initialState,

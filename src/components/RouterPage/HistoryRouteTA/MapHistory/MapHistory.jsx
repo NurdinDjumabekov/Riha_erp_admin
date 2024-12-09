@@ -28,9 +28,14 @@ import { getListRoutes_TA } from "../../../../store/reducers/mapSlice";
 import MapRoutes from "../MapRoutes/MapRoutes";
 import MapRoutesNoPlan from "../MapRoutesNoPlan/MapRoutesNoPlan";
 import ViewReportVisit from "../ViewReportVisit/ViewReportVisit";
+import { useRef } from "react";
 
 const MapHistory = ({}) => {
   const dispatch = useDispatch();
+
+  const [initialSlide, setInitialSlide] = useState(1);
+  const refSlider = useRef(null);
+  const mapRef = useRef(null);
 
   const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
   const { listTA_RouteNoPlan } = useSelector((state) => state.mapSlice);
@@ -105,12 +110,22 @@ const MapHistory = ({}) => {
         </div> */}
       </div>
       <div className="mapHistory__body">
-        <MapRoutes />
+        <MapRoutes
+          setInitialSlide={setInitialSlide}
+          initialSlide={initialSlide}
+          refSlider={refSlider}
+          mapRef={mapRef}
+        />
         {/* <div className="mapsVisit">
         <MapRoutesNoPlan />
       </div> */}
         {/* <MapMenuInfo totalDistance={totalDistance} /> */}
-        <ViewReportVisit />
+        <ViewReportVisit
+          setInitialSlide={setInitialSlide}
+          initialSlide={initialSlide}
+          refSlider={refSlider}
+          mapRef={mapRef}
+        />
       </div>
     </div>
   );

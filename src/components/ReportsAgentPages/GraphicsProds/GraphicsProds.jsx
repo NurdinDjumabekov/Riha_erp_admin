@@ -78,7 +78,6 @@ const GraphicsProds = (props) => {
             fontSize: 10, // Уменьшает шрифт для лучшей читаемости
           }}
         />
-        <YAxis domain={[0, 100]} />
         <Tooltip content={<CustomTooltip />} />
         <Bar dataKey="pv" barSize={30} fill="#8884d8" />
       </BarChart>

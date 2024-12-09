@@ -1,100 +1,47 @@
-///// hooks
-import React, { useEffect, useState } from "react";
-import { load } from "@2gis/mapgl";
+import React, { useRef, useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 
-//// style
+///// style
 import "./style.scss";
 
-///// icons
-import DeleteIcon from "../../../../assets/MyIcons/DeleteIcon";
-import AddIcon from "../../../../assets/MyIcons/AddIcon";
-
-////// fns
-import { setActiveViewMap } from "../../../../store/reducers/mapSlice";
-import { editCoordsPoint } from "../../../../store/reducers/mapSlice";
+///// fns
+import {
+  setActiveViewMap,
+  editCoordsPoint,
+} from "../../../../store/reducers/mapSlice";
 
 ///// helpers
 import { clearActiveMap } from "../../../../helpers/clear";
+import { myAlert } from "../../../../helpers/MyAlert";
+
+////// imgs
+import findIcon from "../../../../assets/icons/findMe.svg";
+
+////// env
+const { REACT_APP_MAP_KEY } = process.env;
 
 const MapForChoiceTT = () => {
   const dispatch = useDispatch();
+  const [listPoints, setListPoints] = useState([]);
+  const [input, setInput] = useState([]);
 
-  const [map, setMap] = useState(null);
-  const [mapglInstance, setMapglInstance] = useState(null); // Экземпляр mapgl
-  const [markers, setMarkers] = useState([]);
+  const mapRef = useRef(null);
 
-  const { mapGeo, key, activeViewMap } = useSelector((state) => state.mapSlice);
+  const { activeViewMap } = useSelector((state) => state.mapSlice);
   const { activeTA } = useSelector((state) => state.selectsSlice);
 
-  useEffect(() => {
-    load().then((mapgl) => {
-      const initializedMap = new mapgl.Map("mapTT", {
-        center: [
-          mapGeo?.longitude || 74.5975735,
-          mapGeo?.latitude || 42.8508686,
-        ],
-        zoom: 13,
-        key,
-      });
+  const { isLoaded, loadError } = useLoadScript({
+    id: "google-map-script",
+    googleMapsApiKey: REACT_APP_MAP_KEY,
+    libraries: useMemo(() => ["places"], []),
+  });
 
-      setMap(initializedMap);
-      setMapglInstance(mapgl);
-
-      // Устанавливаем маркер, если есть координаты в activeViewMap
-      if (activeViewMap?.lat && activeViewMap?.lon) {
-        const customMarker = document.createElement("div");
-        customMarker.className = "customMarker";
-        customMarker.innerHTML = `
-          <div class='customMarker__inner'><i></i></div>
-          <div class='customMarker__name'><p>${activeViewMap?.point}</p></div>
-        `;
-
-        const marker = new mapgl.HtmlMarker(initializedMap, {
-          coordinates: [activeViewMap.lon, activeViewMap.lat],
-          html: customMarker,
-          anchor: [0.5, 1],
-        });
-        setMarkers([marker]);
-      }
-
-      return () => {
-        if (initializedMap) {
-          initializedMap.destroy();
-        }
-      };
-    });
-  }, [key, mapGeo]);
-
-  const clickPoint = (e) => {
-    const coords = e.lngLat;
-
-    // Удаляем предыдущие маркеры
-    markers.forEach((m) => m.destroy());
-    setMarkers([]);
-
-    if (map && mapglInstance) {
-      const customMarker = document.createElement("div");
-      customMarker.className = "customMarker";
-      customMarker.innerHTML = `
-        <div class='customMarker__inner'><i></i></div>
-        <div class='customMarker__name'><p>${activeViewMap?.point}</p></div>
-      `;
-
-      // Создаем новый маркер по клику
-      const marker = new mapglInstance.HtmlMarker(map, {
-        coordinates: coords,
-        html: customMarker,
-        anchor: [0.5, 1],
-      });
-
-      // Обновляем состояние в activeViewMap
-      const obj = { ...activeViewMap, lat: coords[1], lon: coords[0] };
-      dispatch(setActiveViewMap(obj));
-
-      // Добавляем маркер в список
-      setMarkers([marker]);
-    }
+  const handleMapClick = (e) => {
+    const coords = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+    const obj = { ...activeViewMap, lat: coords.lat, lon: coords.lng };
+    dispatch(setActiveViewMap(obj));
+    setListPoints([{ lat: +coords.lat, lng: +coords.lng }]);
   };
 
   const saveData = () => {
@@ -103,6 +50,7 @@ const MapForChoiceTT = () => {
         ...activeViewMap,
         name: "",
         address: "",
+        name_owner: "",
         phone: "",
         type_guid: "0",
         lat: activeViewMap?.lat,
@@ -110,40 +58,66 @@ const MapForChoiceTT = () => {
         point_guid: activeViewMap?.point_guid,
         status: activeViewMap?.status,
         agent_guid: activeTA?.value,
+        actionType: 2,
       };
       dispatch(editCoordsPoint(send));
     }
   };
 
-  const clearRoute = () => {
-    // Сбрасываем состояние карты и удаляем маркеры
-    dispatch(setActiveViewMap(clearActiveMap));
-    markers.forEach((m) => m.destroy());
-    setMarkers([]);
+  const findMe = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          if (mapRef.current) {
+            mapRef.current.panTo({ lat: latitude, lng: longitude });
+            // mapRef.current.setZoom(13);
+          }
+        },
+        (error) => {
+          console.error("Ошибка получения геолокации:", error);
+          myAlert("Не удалось определить ваше местоположение.", "error");
+        }
+      );
+    } else {
+      alert("Геолокация не поддерживается вашим браузером.");
+    }
   };
 
-  useEffect(() => {
-    if (map) {
-      map.on("click", clickPoint);
-    }
+  const clearRoute = () => dispatch(setActiveViewMap(clearActiveMap));
 
-    return () => {
-      if (map) {
-        map.off("click", clickPoint);
-      }
-    };
-  }, [map, markers, mapglInstance]);
+  useEffect(() => {
+    setListPoints([{ lat: +activeViewMap?.lat, lng: +activeViewMap?.lon }]);
+  }, []);
+
+  if (loadError) return <p>Ошибка загрузки карты</p>;
+  if (!isLoaded) return <p>Загрузка карты...</p>;
 
   return (
     <div className="mapForChoiceTT">
-      <div id="mapTT" style={{ width: "100%", height: "500px" }}></div>
+      <button className="findBtn" onClick={findMe}>
+        <img src={findIcon} alt="#" />
+      </button>
+      <GoogleMap
+        mapContainerStyle={{ width: "100%", height: "100%" }}
+        center={{
+          lat: +activeViewMap?.lat || 42.8508686,
+          lng: +activeViewMap?.lon || 74.5975735,
+        }}
+        zoom={13}
+        onClick={handleMapClick}
+        onLoad={(map) => (mapRef.current = map)}
+        ref={mapRef}
+      >
+        {listPoints?.map((marker, index) => (
+          <Marker key={index} position={marker} />
+        ))}
+      </GoogleMap>
       <div className="mapForChoiceTT__actions">
         <button onClick={clearRoute} className="clearMapBtn">
-          {/* <DeleteIcon width={19} height={19} color={"#fff"} /> */}
           <p>Закрыть</p>
         </button>
         <button onClick={saveData} className="saveCoords">
-          {/* <AddIcon width={16} height={16} color={"#fff"} /> */}
           <p>Сохранить</p>
         </button>
       </div>
