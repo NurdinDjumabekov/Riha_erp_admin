@@ -52,6 +52,25 @@ export const getReportPayReq = createAsyncThunk(
   }
 );
 
+////// getListProdsPointReq - get список товаров, которые ТА продал какой-то точке
+export const getListProdsPointReq = createAsyncThunk(
+  "getListProdsPointReq",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { point_guid, date } = props;
+    const url = `${REACT_APP_API_URL}/ta/report_sale_point?point_guid=${point_guid}&date=${date}`;
+    try {
+      const response = await axiosInstance(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const reportsSlice = createSlice({
   name: "reportsSlice",
   initialState,

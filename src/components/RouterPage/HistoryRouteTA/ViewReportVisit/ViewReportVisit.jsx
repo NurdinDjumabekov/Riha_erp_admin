@@ -1,5 +1,5 @@
 ////// hooks
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 ////// fns
@@ -8,34 +8,30 @@ import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 
 ////// helpers
+import { roundingNum } from "../../../../helpers/totals";
 
 ///// icons
 import PhoneIcon from "@mui/icons-material/Phone";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import TimeIcon from "@mui/icons-material/AccessTime";
-import CarCrashIcon from "@mui/icons-material/CarCrash";
-import UserIcon from "@mui/icons-material/AccountCircle";
-import { logoSeller } from "../../../../helpers/LocalData";
 
 ////// components
 import Slider from "react-slick";
-import { roundingNum } from "../../../../helpers/totals";
-import EverySlide from "../EverySlide/EverySlide";
-import { useCallback } from "react";
+import ActionsPoints from "../ActionsPoints/ActionsPoints";
+import { getListProdsPointReq } from "../../../../store/reducers/reportsSlice";
 
 const ViewReportVisit = (props) => {
   const { initialSlide, setInitialSlide, refSlider, mapRef } = props;
   const dispatch = useDispatch();
 
   const [active, setActive] = useState({});
+  const [table, setTable] = useState({ rel: [], ret: [], guid: "" });
 
   const { everyRoutes_TA } = useSelector((state) => state.mapSlice);
 
-  var settings = {
-    // className: "centerSlide",
+  const settings = {
     dots: false,
     infinite: false,
-    // centerPadding: "60px",
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -43,8 +39,6 @@ const ViewReportVisit = (props) => {
     nextArrow: <NoneBtn />,
     prevArrow: <NoneBtn />,
     initialSlide,
-    // centerMode: true,
-    // variableWidth: true,
     responsive: [
       { breakpoint: 2240, settings: { slidesToShow: 3 } },
       { breakpoint: 1750, settings: { slidesToShow: 2 } },
@@ -57,6 +51,15 @@ const ViewReportVisit = (props) => {
       mapRef.current.setZoom(13);
     }
   }, []);
+
+  const viewProdPoints = async (item) => {
+    //// просмотр товаров возврата и реалихации каждой точки
+    const { point_guid, date, point } = item;
+    const send = { point_guid, date };
+    const data = await dispatch(getListProdsPointReq(send)).unwrap();
+    const past = { guid: point_guid, point };
+    setTable({ rel: data?.listRel, ret: data?.listRet, ...past });
+  };
 
   return (
     <div className="viewReportVisit">
@@ -104,13 +107,21 @@ const ViewReportVisit = (props) => {
                 <p>Комментарий агента: {i?.comment || "..."}</p>
               </div>
               <div className="time viewFiles" onClick={() => setActive(i)}>
-                <p>Посмотреть файлы</p>
+                <p>Посмотреть фото и видео</p>
+              </div>
+              <div className="time viewFiles" onClick={() => viewProdPoints(i)}>
+                <p>Посмотреть список товаров</p>
               </div>
             </div>
           </div>
         ))}
       </Slider>
-      <EverySlide active={active} setActive={setActive} />
+      <ActionsPoints
+        active={active}
+        setActive={setActive}
+        setTable={setTable}
+        table={table}
+      />
     </div>
   );
 };

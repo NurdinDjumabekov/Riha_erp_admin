@@ -124,7 +124,7 @@
 
         > div {
           align-items: center;
-          border-bottom: 1px solid #e0e6ed66;
+          // border-bottom: 1px solid #e0e6ed66;
           cursor: pointer;
           display: flex;
           gap: 5px;
@@ -136,6 +136,7 @@
             color: #888ea8;
             font-weight: 600;
             font-size: 14px;
+            color: transparent;
           }
 
           span {

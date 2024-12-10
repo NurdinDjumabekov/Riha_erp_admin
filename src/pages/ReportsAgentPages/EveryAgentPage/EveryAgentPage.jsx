@@ -12,6 +12,7 @@ import ReportRealization from "../../../components/ReportsAgentPages/ReportReali
 import GraphicsProds from "../../../components/ReportsAgentPages/GraphicsProds/GraphicsProds";
 import GeneratePdfReportEveryAgent from "../../../components/Pdfs/GeneratePdfReportEveryAgent/GeneratePdfReportEveryAgent";
 import ReportPay from "../../../components/ReportsAgentPages/ReportPay/ReportPay";
+import GeneratePdfReportPay from "../../../components/Pdfs/GeneratePdfReportPay/GeneratePdfReportPay";
 
 ////// fns
 import {
@@ -28,7 +29,6 @@ import PriceCheckIcon from "@mui/icons-material/AttachMoney";
 ///// helpers
 import { ru } from "date-fns/locale";
 import { roundingNum } from "../../../helpers/totals";
-import GeneratePdfReportPay from "../../../components/Pdfs/GeneratePdfReportPay/GeneratePdfReportPay";
 
 const EveryAgentPage = () => {
   const dispatch = useDispatch();
@@ -116,6 +116,8 @@ const EveryAgentPage = () => {
       />
     ),
   };
+
+  console.log(listSales, "listSales");
 
   const listInfo = [
     {
