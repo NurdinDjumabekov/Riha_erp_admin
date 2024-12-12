@@ -7,12 +7,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./style.scss";
 
 ////// components
-import ReactDatePicker from "react-datepicker";
 import ReportRealization from "../../../components/ReportsAgentPages/ReportRealization/ReportRealization";
 import GraphicsProds from "../../../components/ReportsAgentPages/GraphicsProds/GraphicsProds";
 import GeneratePdfReportEveryAgent from "../../../components/Pdfs/GeneratePdfReportEveryAgent/GeneratePdfReportEveryAgent";
 import ReportPay from "../../../components/ReportsAgentPages/ReportPay/ReportPay";
 import GeneratePdfReportPay from "../../../components/Pdfs/GeneratePdfReportPay/GeneratePdfReportPay";
+import ReportSummaryWeek from "../../../components/ReportsAgentPages/ReportSummaryWeek/ReportSummaryWeek";
+import SortCalendare from "../SortCalendare/SortCalendare";
 
 ////// fns
 import {
@@ -21,14 +22,12 @@ import {
 } from "../../../store/reducers/reportsSlice";
 
 ////// icons
-import EventIcon from "@mui/icons-material/EventNoteTwoTone";
 import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PriceCheckIcon from "@mui/icons-material/AttachMoney";
+import SummarizeIcon from "@mui/icons-material/Summarize";
 
 ///// helpers
-import { ru } from "date-fns/locale";
-import { roundingNum } from "../../../helpers/totals";
 
 const EveryAgentPage = () => {
   const dispatch = useDispatch();
@@ -40,23 +39,11 @@ const EveryAgentPage = () => {
 
   const { listSales, reportPays } = useSelector((state) => state.reportsSlice);
 
-  const onChangeDate = async (date) => {
-    setDateTime(date);
-    const send = { agent_guid: state?.guid, date };
-    dispatch(getSaleAgentReq(send)); //список товаров, которые ТА продал за какаю-то дату
-    dispatch(getReportPayReq(send)); //отчет долгов и оплат ТТ для ТА
-  };
-
-  useEffect(() => {
-    const send = { agent_guid: state?.guid, date: dateTime };
-    dispatch(getSaleAgentReq(send)); //список товаров, которые ТА продал за какаю-то дату
-    dispatch(getReportPayReq(send)); //отчет долгов и оплат ТТ для ТА
-  }, []);
-
   const listActions = [
     { codeid: 1, icon: <PlaylistAddIcon />, name: "Реализация" },
     { codeid: 2, icon: <PlaylistRemoveIcon />, name: "Возврат" },
     { codeid: 3, icon: <PriceCheckIcon />, name: "Точки и оплаты" },
+    { codeid: 4, icon: <SummarizeIcon />, name: "Сводные отчёты" },
   ];
 
   const objComp = {
@@ -91,6 +78,7 @@ const EveryAgentPage = () => {
       </>
     ),
     3: <ReportPay />,
+    4: <ReportSummaryWeek />,
   };
 
   const objPdf = {
@@ -117,8 +105,6 @@ const EveryAgentPage = () => {
     ),
   };
 
-  console.log(listSales, "listSales");
-
   const listInfo = [
     {
       name: "Время начала работы агента: ",
@@ -138,20 +124,11 @@ const EveryAgentPage = () => {
     <div className="everyAgentPage">
       <div className="header">
         <div className="sortDateTime">
-          <div className="date inputSend">
-            <ReactDatePicker
-              selected={dateTime}
-              onChange={onChangeDate}
-              yearDropdownItemNumber={100}
-              placeholderText="ДД.ММ.ГГГГ"
-              shouldCloseOnSelect={true}
-              scrollableYearDropdown
-              dateFormat="dd.MM.yyyy"
-              locale={ru}
-              maxDate={new Date()}
-            />
-            <EventIcon />
-          </div>
+          <SortCalendare
+            setDateTime={setDateTime}
+            dateTime={dateTime}
+            active={active}
+          />
           {objPdf?.[active]}
         </div>
       </div>

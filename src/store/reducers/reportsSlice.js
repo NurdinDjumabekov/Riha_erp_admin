@@ -10,6 +10,7 @@ const { REACT_APP_API_URL } = process.env;
 const initialState = {
   listSales: { sell: [], pickUp: [] }, //pickUp - сколько взял, sell - сколько продал
   reportPays: {}, /// отчет долгов и оплат ТТ для ТА
+  reportSummary: { week: [], bc_point: [] }, /// сводный недельный отчет
 };
 
 ////// getSaleAgentReq - get список товаров, которые ТА продал за какаю-то дату
@@ -71,6 +72,25 @@ export const getListProdsPointReq = createAsyncThunk(
   }
 );
 
+////// getReportSummaryWeek - get недельный сводный отчет
+export const getReportSummaryWeek = createAsyncThunk(
+  "getReportSummaryWeek",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { from, to, agent_guid } = props;
+    const url = `${REACT_APP_API_URL}/ta/report_summary?agent_guid=${agent_guid}&from=${from}&to=${to}`;
+    try {
+      const response = await axiosInstance(url);
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const reportsSlice = createSlice({
   name: "reportsSlice",
   initialState,
@@ -105,6 +125,20 @@ const reportsSlice = createSlice({
       state.reportPays = {};
     });
     builder.addCase(getReportPayReq.pending, (state, action) => {
+      state.preloader = true;
+    });
+
+    ///////////////// getReportSummaryWeek
+    builder.addCase(getReportSummaryWeek.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.reportSummary = action.payload;
+    });
+    builder.addCase(getReportSummaryWeek.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      state.reportSummary = {};
+    });
+    builder.addCase(getReportSummaryWeek.pending, (state, action) => {
       state.preloader = true;
     });
   },

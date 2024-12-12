@@ -48,7 +48,7 @@ const ViewReportVisit = (props) => {
   const clickTitle = useCallback(({ lat, lng }) => {
     if (mapRef.current) {
       mapRef.current.panTo({ lat, lng }); // Перемещаем карту в заданное положение
-      mapRef.current.setZoom(13);
+      mapRef.current.setZoom(16);
     }
   }, []);
 

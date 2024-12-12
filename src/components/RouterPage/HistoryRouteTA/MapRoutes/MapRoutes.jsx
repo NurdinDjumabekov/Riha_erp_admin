@@ -119,7 +119,7 @@ const MapRoutes = ({ setInitialSlide, refSlider, mapRef }) => {
   const centerMapOnMarker = useCallback((position) => {
     if (mapRef.current) {
       mapRef.current.panTo(position); // Перемещаем карту в заданное положение
-      mapRef.current.setZoom(13);
+      mapRef.current.setZoom(16);
     }
   }, []);
 

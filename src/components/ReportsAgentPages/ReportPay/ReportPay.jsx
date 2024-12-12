@@ -7,16 +7,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./style.scss";
 
 ////// components
+import ReportPayList from "../ReportPayList/ReportPayList";
+import GraphicsPayPoints from "../GraphicsPayPoints/GraphicsPayPoints";
 
 ////// fns
 
 ////// icons
-import EventIcon from "@mui/icons-material/EventNoteTwoTone";
-import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import PriceCheckIcon from "@mui/icons-material/AttachMoney";
-import ReportPayList from "../ReportPayList/ReportPayList";
-import GraphicsPayPoints from "../GraphicsPayPoints/GraphicsPayPoints";
 
 ///// helpers
 
