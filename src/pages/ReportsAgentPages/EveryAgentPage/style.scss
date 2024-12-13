@@ -117,35 +117,13 @@
       padding: 5px 10px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 20px;
+      height: 60px;
 
-      .times {
-        width: calc(100% - 200px);
-
-        > div {
-          align-items: center;
-          // border-bottom: 1px solid #e0e6ed66;
-          cursor: pointer;
-          display: flex;
-          gap: 5px;
-          align-items: center;
-          width: 300px;
-
-          span,
-          p {
-            color: #888ea8;
-            font-weight: 600;
-            font-size: 14px;
-            color: transparent;
-          }
-
-          span {
-            font-size: 12px;
-            line-height: 20px;
-            margin: 3px 0 0 0;
-            font-weight: 600;
-          }
-        }
+      h5 {
+        font-size: 16px;
+        padding: 0 0 0 10px;
       }
 
       .actions {

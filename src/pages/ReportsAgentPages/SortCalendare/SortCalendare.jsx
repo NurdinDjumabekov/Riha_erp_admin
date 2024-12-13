@@ -29,6 +29,7 @@ const SortCalendare = (props) => {
   const { state } = useLocation();
 
   const { dateTime, setDateTime, active } = props;
+  const { selectedDate, setSelectedDate } = props;
 
   const onChangeDate = async (date) => {
     setDateTime(date);
@@ -41,11 +42,18 @@ const SortCalendare = (props) => {
     const send = { agent_guid: state?.guid, date: dateTime };
     dispatch(getSaleAgentReq(send)); //список товаров, которые ТА продал за какаю-то дату
     dispatch(getReportPayReq(send)); //отчет долгов и оплат ТТ для ТА
+
+    const start = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const end = endOfWeek(new Date(), { weekStartsOn: 1 });
+    const data = {
+      from: format(start, "yyyy-MM-dd"),
+      to: format(end, "yyyy-MM-dd"),
+      agent_guid: state?.guid,
+    };
+    dispatch(getReportSummaryWeek(data));
   }, []);
 
   ////////////////////////
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleWeekChange = (date) => {
     setSelectedDate(date);

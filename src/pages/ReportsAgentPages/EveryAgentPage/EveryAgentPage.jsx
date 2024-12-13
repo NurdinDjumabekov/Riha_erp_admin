@@ -16,16 +16,13 @@ import ReportSummaryWeek from "../../../components/ReportsAgentPages/ReportSumma
 import SortCalendare from "../SortCalendare/SortCalendare";
 
 ////// fns
-import {
-  getReportPayReq,
-  getSaleAgentReq,
-} from "../../../store/reducers/reportsSlice";
 
 ////// icons
 import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PriceCheckIcon from "@mui/icons-material/AttachMoney";
 import SummarizeIcon from "@mui/icons-material/Summarize";
+import GeneratePdfSummaryReportPay from "../../../components/Pdfs/GeneratePdfSummaryReportPay/GeneratePdfSummaryReportPay";
 
 ///// helpers
 
@@ -36,6 +33,7 @@ const EveryAgentPage = () => {
 
   const [dateTime, setDateTime] = useState(new Date());
   const [active, setActive] = useState(1);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const { listSales, reportPays } = useSelector((state) => state.reportsSlice);
 
@@ -103,22 +101,8 @@ const EveryAgentPage = () => {
         title={"долгов точек"}
       />
     ),
+    4: <GeneratePdfSummaryReportPay selectedDate={selectedDate} />,
   };
-
-  const listInfo = [
-    {
-      name: "Время начала работы агента: ",
-      more: listSales?.sell?.[0]?.start_time || "-",
-    },
-    {
-      name: "Время окончания работы агента: ",
-      more: listSales?.sell?.[0]?.end_time || "-",
-    },
-    // {
-    //   name: "Баланс агента: ",
-    //   more: roundingNum(reportPays?.money_agent) || "временно недоступно",
-    // },
-  ];
 
   return (
     <div className="everyAgentPage">
@@ -128,20 +112,15 @@ const EveryAgentPage = () => {
             setDateTime={setDateTime}
             dateTime={dateTime}
             active={active}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
           />
           {objPdf?.[active]}
         </div>
       </div>
       <div className="body">
         <div className="reportVisit">
-          <div className="times">
-            {listInfo?.map((i) => (
-              <div>
-                <p>{i?.name}</p>
-                <span>{i?.more}</span>
-              </div>
-            ))}
-          </div>
+          <h5>{state?.fio}</h5>
           <div className="actions">
             {listActions?.map((item) => (
               <button

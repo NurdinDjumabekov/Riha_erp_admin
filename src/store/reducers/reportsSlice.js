@@ -131,7 +131,24 @@ const reportsSlice = createSlice({
     ///////////////// getReportSummaryWeek
     builder.addCase(getReportSummaryWeek.fulfilled, (state, action) => {
       state.preloader = false;
-      state.reportSummary = action.payload;
+      const ft_point = action.payload?.ft_point?.map((item, index) => ({
+        ...item,
+        index: index + 1,
+      }));
+      const market_point = action.payload?.market_point?.map((item, index) => ({
+        ...item,
+        index: index + 1,
+      }));
+      const bs_point = action.payload?.bs_point?.map((item, index) => ({
+        ...item,
+        index: index + 1,
+      }));
+      state.reportSummary = {
+        ...action.payload,
+        ft_point,
+        market_point,
+        bs_point,
+      };
     });
     builder.addCase(getReportSummaryWeek.rejected, (state, action) => {
       state.error = action.payload;
@@ -143,7 +160,6 @@ const reportsSlice = createSlice({
     });
   },
 });
-
 export const { setDebtEveryTA } = reportsSlice.actions;
 
 export default reportsSlice.reducer;

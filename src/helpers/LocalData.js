@@ -288,58 +288,6 @@ export const styleTooltip = {
   objectFit: "cover",
 };
 
-export const listWeelSummary = [
-  {
-    guid: "12",
-    date: "22.12.2024",
-    income: "100",
-    outcome: "1231",
-    kassa: "3242",
-    return: "2131",
-    spending: "21993",
-    leftovers_day: "12312",
-  },
-  {
-    guid: "11",
-    date: "22.12.2024",
-    income: "1321876600",
-    outcome: "11231",
-    kassa: "32342",
-    return: "212131",
-    spending: "21993",
-    leftovers_day: "12312",
-  },
-  {
-    guid: "131",
-    date: "22.12.2024",
-    income: "1020",
-    outcome: "123231",
-    kassa: "32442",
-    return: "2546131",
-    spending: "21993",
-    leftovers_day: "12312",
-  },
-  {
-    guid: "2221",
-    date: "22.12.2024",
-    income: "10412670",
-    outcome: "1123231",
-    kassa: "3242342",
-    return: "23212344131",
-    spending: "21993",
-    leftovers_day: "12312",
-  },
-  {
-    guid: "561",
-    date: "22.12.2024",
-    income: "10122134120",
-    outcome: "12123431",
-    kassa: "324122",
-    return: "2187631",
-    spending: "21993",
-    leftovers_day: "12312",
-  },
-];
 export const listWeelSummaryBC = [
   {
     guid_point: "asdasasda",

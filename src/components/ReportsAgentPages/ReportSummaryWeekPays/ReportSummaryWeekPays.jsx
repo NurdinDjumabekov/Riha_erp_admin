@@ -10,7 +10,7 @@ import "./style.scss";
 import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
-import { listWeelSummary } from "../../../helpers/LocalData";
+import {} from "../../../helpers/LocalData";
 
 ////// fns
 
@@ -22,7 +22,7 @@ const ReportSummaryWeekPays = () => {
   const { reportSummary } = useSelector((state) => state.reportsSlice);
 
   return (
-    <div className="reportRealization reportSummaryWeek">
+    <div className="reportRealization reportSummaryWeekPay">
       <TableContainer
         component={Paper}
         sx={{ maxHeight: "100%" }}
@@ -55,7 +55,7 @@ const ReportSummaryWeekPays = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {listWeelSummary?.map((row, index) => (
+            {reportSummary?.week?.map((row) => (
               <TableRow key={`${row?.guid}`}>
                 <TableCell align="left" style={{ width: "14%" }}>
                   {row?.date}
@@ -80,7 +80,7 @@ const ReportSummaryWeekPays = () => {
                 </TableCell>
               </TableRow>
             ))}
-            {listWeelSummary?.length == 0 ? (
+            {reportSummary?.week?.length == 0 ? (
               <TableRow>
                 <TableCell colSpan={7} align="center">
                   Нет данных для отображения
@@ -92,22 +92,22 @@ const ReportSummaryWeekPays = () => {
                   Итого
                 </TableCell>
                 <TableCell align="left" component="th" scope="row">
-                  {listWeelSummary?.income_total} сом
+                  {reportSummary?.week?.[0]?.income_total} сом
                 </TableCell>
                 <TableCell align="left" component="th" scope="row">
-                  {listWeelSummary?.outcome_total} сом
+                  {reportSummary?.week?.[0]?.outcome_total} сом
                 </TableCell>
                 <TableCell align="left" component="th" scope="row">
-                  {listWeelSummary?.kassa_total} сом
+                  {reportSummary?.week?.[0]?.kassa_total} сом
                 </TableCell>
                 <TableCell align="left" component="th" scope="row">
-                  {listWeelSummary?.return_total} сом
+                  {reportSummary?.week?.[0]?.return_total} сом
                 </TableCell>
                 <TableCell align="left" component="th" scope="row">
-                  {listWeelSummary?.spending_total} сом
+                  {reportSummary?.week?.[0]?.spending_total} сом
                 </TableCell>
                 <TableCell align="left" component="th" scope="row">
-                  {listWeelSummary?.leftovers_day_total} сом
+                  {reportSummary?.week?.[0]?.leftovers_day_total} сом
                 </TableCell>
               </TableRow>
             )}

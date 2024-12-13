@@ -40,3 +40,4 @@ export const transformListsProdsEdit = (list) => {
 
   return newList;
 };
+
