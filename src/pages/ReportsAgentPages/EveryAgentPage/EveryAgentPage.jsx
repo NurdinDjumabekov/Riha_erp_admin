@@ -14,6 +14,7 @@ import ReportPay from "../../../components/ReportsAgentPages/ReportPay/ReportPay
 import GeneratePdfReportPay from "../../../components/Pdfs/GeneratePdfReportPay/GeneratePdfReportPay";
 import ReportSummaryWeek from "../../../components/ReportsAgentPages/ReportSummaryWeek/ReportSummaryWeek";
 import SortCalendare from "../SortCalendare/SortCalendare";
+import GeneratePdfSummaryReportPay from "../../../components/Pdfs/GeneratePdfSummaryReportPay/GeneratePdfSummaryReportPay";
 
 ////// fns
 
@@ -22,7 +23,6 @@ import PlaylistRemoveIcon from "@mui/icons-material/PlaylistRemove";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PriceCheckIcon from "@mui/icons-material/AttachMoney";
 import SummarizeIcon from "@mui/icons-material/Summarize";
-import GeneratePdfSummaryReportPay from "../../../components/Pdfs/GeneratePdfSummaryReportPay/GeneratePdfSummaryReportPay";
 
 ///// helpers
 
@@ -35,7 +35,9 @@ const EveryAgentPage = () => {
   const [active, setActive] = useState(1);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const { listSales, reportPays } = useSelector((state) => state.reportsSlice);
+  const { listSales, reportPays, reportSummary } = useSelector(
+    (state) => state.reportsSlice
+  );
 
   const listActions = [
     { codeid: 1, icon: <PlaylistAddIcon />, name: "Реализация" },
@@ -120,7 +122,12 @@ const EveryAgentPage = () => {
       </div>
       <div className="body">
         <div className="reportVisit">
-          <h5>{state?.fio}</h5>
+          <h5>
+            {state?.fio}{" "}
+            {active == 4 && (
+              <> ( остаток: {reportSummary?.total_start_week} сом)</>
+            )}
+          </h5>
           <div className="actions">
             {listActions?.map((item) => (
               <button

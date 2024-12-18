@@ -66,8 +66,7 @@ const GeneratePdfSummaryReportPay = ({ selectedDate }) => {
 
               <View style={styles.section}>
                 <Text style={styles.header}>
-                  Остаток на начало:{" "}
-                  {reportSummary?.week?.[0]?.total_start_week}
+                  Остаток на начало: {reportSummary?.total_start_week} сом
                 </Text>
               </View>
               <View style={styles.table}>

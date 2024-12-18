@@ -210,7 +210,7 @@ export const listMenu = [
   },
   {
     id: 7,
-    title: "Долги и оплаты ТА",
+    title: "Касса",
     icon: <PaymentsIcon sx={{ color: "#fff" }} />,
     link: "/pay",
   },
@@ -312,23 +312,6 @@ export const listAcceptInvoiceTem = [
   },
 ];
 
-export const listActionsMap = [
-  {
-    id: 1,
-    name: "Добавить новую торговую точку",
-    color: "#4361ee",
-    icon: <AddHomeIcon />,
-    link: "/create_points",
-  },
-  {
-    id: 2,
-    name: "Добавить точку в маршрут",
-    color: "#805dca",
-    icon: <NearMeIcon />,
-    link: "/add_points_route",
-  },
-];
-
 export const objStatusTasks = {
   1: "Добавить задачу для торгового агента",
   2: "Редактировать",
@@ -350,4 +333,11 @@ export const styleIconDel = {
   color: "rgba(213, 42, 42, 0.848)",
   width: 20,
   height: 20,
+};
+
+
+export const statusStandart = {
+  0: { text: "Ожидание", color: "red" },
+  1: { text: "Принят", color: "green" },
+  2: { text: "Отклонён", color: "red" },
 };

@@ -303,3 +303,15 @@ export const listWeelSummaryBC = [
   },
   { guid_point: "s324ada", name: "к. Айни", adders: "к. Айни", dolg: "3423" },
 ];
+
+export const listStatusPay = [
+  { value: 1, label: "Ожидание" },
+  { value: 2, label: "Оплата принята" },
+  { value: 3, label: "Оплата отклонена" },
+];
+
+export const statusPayObj = {
+  0: "Ожидание",
+  1: "Оплата принята",
+  2: "Оплата отклонена",
+};

@@ -10,15 +10,14 @@ const initialState = {
   debtEveryTA: { vozvrat: [], dolg: [] }, /// долг каждого агента
 };
 
-////// getEveryDebt - get список долгов каждого ТА
-export const getEveryDebt = createAsyncThunk(
-  "getEveryDebt",
+////// getEveryDebtReq - get список долгов каждого ТА
+export const getEveryDebtReq = createAsyncThunk(
+  "getEveryDebtReq",
   async function ({ agent_guid }, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/account?agent_guid=${agent_guid}`;
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(getListTA({ first: false }));
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -56,17 +55,18 @@ const paySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    ////////////// getEveryDebt
-    builder.addCase(getEveryDebt.fulfilled, (state, action) => {
-      state.preloader = false;
+    ////////////// getEveryDebtReq
+    builder.addCase(getEveryDebtReq.fulfilled, (state, action) => {
+      // state.preloader = false;
       state.debtEveryTA = action.payload;
     });
-    builder.addCase(getEveryDebt.rejected, (state, action) => {
+    builder.addCase(getEveryDebtReq.rejected, (state, action) => {
       state.error = action.payload;
-      state.preloader = false;
+      // state.preloader = false;
+      state.debtEveryTA = [];
     });
-    builder.addCase(getEveryDebt.pending, (state, action) => {
-      state.preloader = true;
+    builder.addCase(getEveryDebtReq.pending, (state, action) => {
+      // state.preloader = true;
     });
   },
 });

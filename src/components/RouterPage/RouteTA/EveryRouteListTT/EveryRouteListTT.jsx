@@ -56,7 +56,13 @@ const EveryRouteListTT = () => {
     const send = { ...everyListRouteCRUD, ...item, actionType: 2 };
     const obj = { seller_select: { value: point_guid, label: point } };
     const checkedObj = { status: e.target.checked ? 1 : 0, route_guid: guid };
-    const data = { ...send, ...obj, ...checkedObj, noneAlert: true };
+    const data = {
+      ...send,
+      ...obj,
+      ...checkedObj,
+      noneAlert: true,
+      comment: ".",
+    };
     dispatch(everyRouteCRUD(data));
   };
 
