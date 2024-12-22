@@ -62,6 +62,7 @@ const PrihodPay = ({ active }) => {
       user_type: 1,
       user_guid_to: "B85094A9-D70A-46AB-A724-5F3D7A506B37",
       user_type_to: 2,
+      action: 2,
     };
     setObj(send);
   };

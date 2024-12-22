@@ -27,7 +27,7 @@ const GeneratePdfSummaryReportPay = ({ selectedDate }) => {
 
   ////// точки БЦ
   const { left: bs_point_left, right: bs_point_right } =
-    splitArrayIntoTwoEqualParts(reportSummary?.bs_point?.slice(0, 10) || []);
+    splitArrayIntoTwoEqualParts(reportSummary?.bs_point || []);
 
   ////// точки маркеты
   ////// точки БЦ
@@ -317,18 +317,20 @@ const GeneratePdfSummaryReportPay = ({ selectedDate }) => {
                   <View style={[styles.table]}>
                     {ta_spending_left?.map((row, index) => (
                       <View style={styles.tableRow} key={`first-${index}`}>
-                        <View style={[styles.tableColMarketMini]}>
-                          <Text style={[styles.tableCellBC]}>
-                            {row?.date_time}
-                          </Text>
+                        <View
+                          style={[styles.tableColMarketMini, { width: "30%" }]}
+                        >
+                          <Text style={[styles.tableCellBC]}>{row?.date}</Text>
                         </View>
                         <View style={[styles.tableColMarketMidle]}>
                           <Text style={[styles.tableCellBC]}>
-                            {row?.comment}
+                            {row?.comment || "тест"}
                           </Text>
                         </View>
                         <View style={[styles.tableColMarket]}>
-                          <Text style={[styles.tableCellBC]}>{row?.sum}</Text>
+                          <Text style={[styles.tableCellBC]}>
+                            {row?.sum} сом
+                          </Text>
                         </View>
                       </View>
                     ))}
@@ -336,7 +338,9 @@ const GeneratePdfSummaryReportPay = ({ selectedDate }) => {
                   <View style={[styles.table, styles.leftNonetable]}>
                     {ta_spending_right?.map((row, index) => (
                       <View style={styles.tableRow} key={`first-${index}`}>
-                        <View style={[styles.tableColMarketMini]}>
+                        <View
+                          style={[styles.tableColMarketMini, { width: "30%" }]}
+                        >
                           <Text style={[styles.tableCellBC]}>
                             {row?.date_time}
                           </Text>
