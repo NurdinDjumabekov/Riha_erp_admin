@@ -139,12 +139,12 @@ const reportsSlice = createSlice({
         ...item,
         index: index + 1,
       }));
-      const bs_point = action.payload?.bs_point
-        ?.filter((item) => item?.dolg != 0)
-        ?.map((item, index) => ({
-          ...item,
-          index: index + 1,
-        }));
+
+      const bs_point = action.payload?.bs_point?.map((item, index) => ({
+        ...item,
+        index: index + 1,
+      }));
+
       state.reportSummary = {
         ...action.payload,
         ft_point,

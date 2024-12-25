@@ -24,6 +24,8 @@ import {
 import EditIcon from "../../../../assets/MyIcons/EditIcon";
 import DeleteIcon from "../../../../assets/MyIcons/DeleteIcon";
 import MapIcon from "../../../../assets/MyIcons/MapIcon";
+import ConfirmModal from "../../../../common/ConfirmModal/ConfirmModal";
+import { myAlert } from "../../../../helpers/MyAlert";
 
 const EveryRouteListTT = () => {
   const dispatch = useDispatch();
@@ -31,6 +33,8 @@ const EveryRouteListTT = () => {
   const { roadRouteEveryTA, everyListRouteCRUD, activeRoute } = useSelector(
     (state) => state.mapSlice
   );
+
+  const [delRoute, setDelRoute] = useState({});
 
   const openRouteModalCRUD = (actionType, item) => {
     dispatch(setEveryListRouteCRUD({ ...everyListRouteCRUD, actionType }));
@@ -56,24 +60,22 @@ const EveryRouteListTT = () => {
     const send = { ...everyListRouteCRUD, ...item, actionType: 2 };
     const obj = { seller_select: { value: point_guid, label: point } };
     const checkedObj = { status: e.target.checked ? 1 : 0, route_guid: guid };
-    const data = {
-      ...send,
-      ...obj,
-      ...checkedObj,
-      noneAlert: true,
-      comment: ".",
-    };
-    dispatch(everyRouteCRUD(data));
+    const data = { ...send, ...obj, ...checkedObj, noneAlert: true };
+    dispatch(everyRouteCRUD({ ...data, comment: "." }));
   };
 
-  const clickDelRoute = (item) => {
+  const clickDelRoute = async () => {
     //// удаление
-    const { point_guid, point, guid } = item;
-    const send = { ...everyListRouteCRUD, ...item, actionType: 3 };
+    const { point_guid, point, guid } = delRoute;
+    const send = { ...everyListRouteCRUD, ...delRoute, actionType: 3 };
     const obj = { seller_select: { value: point_guid, label: point } };
-    const checkedObj = { route_guid: guid, status: -1 };
+    const checkedObj = { route_guid: guid, status: -1, comment: "." };
     const data = { ...send, ...obj, ...checkedObj, noneAlert: true };
-    dispatch(everyRouteCRUD(data));
+    const res = await dispatch(everyRouteCRUD(data)).unwrap();
+    if (!!res?.result) {
+      myAlert("Точка удалена");
+      setDelRoute({});
+    }
   };
 
   const editCoordsMap = (item) => {
@@ -170,7 +172,7 @@ const EveryRouteListTT = () => {
                     <button onClick={() => openRouteModalCRUD(2, row)}>
                       <EditIcon width={17} height={17} />
                     </button>
-                    <button onClick={(e) => clickDelRoute(row)}>
+                    <button onClick={(e) => setDelRoute(row)}>
                       <DeleteIcon width={19} height={19} color={"red"} />
                     </button>
                   </div>
@@ -180,6 +182,12 @@ const EveryRouteListTT = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <ConfirmModal
+        state={delRoute?.guid}
+        yesFN={clickDelRoute}
+        noFN={() => setDelRoute({})}
+        title={"Удалить ?"}
+      />
     </div>
   );
 };

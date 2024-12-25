@@ -324,7 +324,7 @@ const GeneratePdfSummaryReportPay = ({ selectedDate }) => {
                         </View>
                         <View style={[styles.tableColMarketMidle]}>
                           <Text style={[styles.tableCellBC]}>
-                            {row?.comment || "тест"}
+                            {row?.comment || "..."}
                           </Text>
                         </View>
                         <View style={[styles.tableColMarket]}>
