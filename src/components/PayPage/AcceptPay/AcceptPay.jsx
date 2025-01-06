@@ -40,8 +40,6 @@ const AcceptPay = (props) => {
     }
   };
 
-  console.log(obj, "obj");
-
   return (
     <div className="addTasks addSpending">
       <Modals
@@ -77,7 +75,7 @@ const AcceptPay = (props) => {
           />
 
           <div className="sendBlock">
-            <button onClick={addEditSpendingFN}>+ Добавить</button>
+            <button onClick={addEditSpendingFN}>Сохранить</button>
           </div>
         </div>
       </Modals>

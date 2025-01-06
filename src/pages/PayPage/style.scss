@@ -4,6 +4,14 @@
   position: relative;
   padding: 0px 8px 8px;
 
+  &__header {
+    background: red;
+    position: absolute;
+    left: 9px;
+    top: -50px;
+    z-index: 10;
+  }
+
   .listTAInfo {
     padding-top: 5px;
 
