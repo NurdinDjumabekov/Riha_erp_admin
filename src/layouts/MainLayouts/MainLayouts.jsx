@@ -40,7 +40,7 @@ const MainLayouts = () => {
   return (
     <div className="layouts">
       <MenuAdmin active={active} setActive={setActive} />
-      <HeaderInfo active={active} setActive={setActive} />
+      {/* <HeaderInfo active={active} setActive={setActive} /> */}
       <div className={`pages ${pathname == "/route" ? "routePages" : ""}`}>
         <Outlet />
       </div>

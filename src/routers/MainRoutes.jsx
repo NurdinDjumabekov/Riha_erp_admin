@@ -1,6 +1,12 @@
 ////hooks
 import React from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 //// pages
@@ -42,23 +48,19 @@ const MainRoutes = () => {
       {!!!dataSave?.guid ? (
         <Route path="/" element={<LoginPage />} />
       ) : (
-        <>
-          <Route element={<MainLayouts />}>
-            <Route path="/" element={<ListApplicationPage />} />
-            <Route
-              path="/history_application"
-              element={<HistoryApplicationPage />}
-            />
-            <Route path="/production" element={<ProductionPage />} />
-            <Route path="/ware_home/*" element={<WareHomePages />} />
-            <Route path="/route" element={<RouterPage />} />
-            <Route path="/report_ta/*" element={<ReportsAgentPage />} />
-            <Route path="/pay" element={<PayPage />} />
-            <Route path="/return_prod" element={<ReturnProdsPage />} />
-            <Route path="/tasks" element={<TasksPage />} />
-            <Route path="/spending" element={<SpendingPage />} />
-          </Route>
-        </>
+        <Route element={<MainLayouts />}>
+          <Route path="/" element={<Navigate to="/orders/main" replace />} />
+          <Route path="/orders/main" element={<ListApplicationPage />} />
+          <Route path="/orders/history" element={<HistoryApplicationPage />} />
+          <Route path="/production" element={<ProductionPage />} />
+          <Route path="/ware_home/*" element={<WareHomePages />} />
+          <Route path="/route" element={<RouterPage />} />
+          <Route path="/report_ta/*" element={<ReportsAgentPage />} />
+          <Route path="/pay" element={<PayPage />} />
+          <Route path="/return_prod" element={<ReturnProdsPage />} />
+          <Route path="/tasks" element={<TasksPage />} />
+          <Route path="/spending" element={<SpendingPage />} />
+        </Route>
       )}
     </Routes>
   );

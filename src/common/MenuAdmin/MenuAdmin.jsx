@@ -2,97 +2,179 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Fragment } from "react";
 
 ////// style
 import "./style.scss";
 
 ///// components
-import LogOut from "../../components/ActionSettings/LogOut/LogOut";
-import { Tooltip } from "@mui/material";
+import { Drawer, List, Collapse } from "@mui/material";
+import { ListItem, ListItemIcon } from "@mui/material";
+import { ListItemText, Typography } from "@mui/material";
+
+///// icons
+import logo from "../../assets/images/rihaLogo.png";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import UseIcons from "@mui/icons-material/AccountCircle";
 
 ////// helpers
 import { listMenu } from "../../helpers/objs";
 
 ////// fns
-import { setInvoiceInfo } from "../../store/reducers/mainSlice";
 
-///// icons
-import logo from "../../assets/images/rihaLogo.png";
-import twoArrow from "../../assets/icons/twoArrow.svg";
-import arrowRight from "../../assets/icons/arrowMenu.svg";
-
-const MenuAdmin = ({ active, setActive }) => {
-  const dispatch = useDispatch();
+const MenuAdmin = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const { invoiceInfo } = useSelector((state) => state.mainSlice);
+  const { dataSave } = useSelector((state) => state.saveDataSlice);
 
-  const clickPage = (link) => {
-    navigate(link);
-  };
+  const [openSections, setOpenSections] = useState({});
+  const [activeSubMenu, setActiveSubMenu] = useState({});
 
-  const serachPage = (link) => {
-    if (link == "/") {
-      if (pathname == link) {
-        return true;
+  const handleItemClick = ({ path, items, section }) => {
+    if (items && items?.length > 0) {
+      setOpenSections((prev) => ({ ...prev, [section]: !prev?.[section] }));
+      if (!openSections?.[section]) {
+        const selectedPath = activeSubMenu?.[section] || items?.[0]?.path;
+        navigate(selectedPath);
       }
     } else {
-      if (pathname?.includes(link)) {
-        return true;
-      }
+      navigate(path);
     }
-    return false;
+  };
+
+  const handleSubItemClick = ({ path }, { section }) => {
+    setActiveSubMenu((prev) => ({ ...prev, [section]: path }));
+    navigate(path);
+  };
+
+  useEffect(() => {
+    const expandedSections = {};
+    const selectedSubMenus = {};
+    listMenu?.forEach((menuItem) => {
+      if (
+        menuItem?.items?.some((subItem) => subItem.path === pathname) ||
+        menuItem?.path === pathname
+      ) {
+        expandedSections[menuItem?.section] = true;
+        const activeSubMenuItem = menuItem?.items?.find(
+          (subItem) => subItem?.path === pathname
+        );
+        if (activeSubMenuItem) {
+          selectedSubMenus[menuItem?.section] = activeSubMenuItem.path;
+        }
+      }
+    });
+    setOpenSections(expandedSections);
+    setActiveSubMenu(selectedSubMenus);
+  }, [pathname]);
+
+  const isActive = ({ path }) => pathname === path;
+
+  const logOut = () => {
+    navigate("/");
+    localStorage.clear();
+    window.location.reload();
   };
 
   return (
-    <div className="actionSettings">
-      <div className={`actionSettings__inner ${active ? "" : "activeHeader"}`}>
-        <h1 className={active ? "" : "activeLogo"}>
-          <img src={logo} alt="logo" />
-          <button onClick={() => setActive(!active)}>
-            {active ? (
-              <img src={twoArrow} alt="<<" />
-            ) : (
-              <img src={twoArrow} alt="<<" className="rotate" />
-            )}
-          </button>
-        </h1>
-        <div className={`menuBlocks ${active ? "" : "menuBlocksActive"}`}>
-          <span>Меню</span>
-        </div>
-        {listMenu?.map(({ title, icon, id, link }) => (
-          <Fragment key={id}>
-            {active ? (
-              <div
-                className={serachPage(link) ? "activeMenu" : ""}
-                onClick={() => clickPage(link)}
+    <div className="menuAdmin">
+      <Drawer
+        variant="permanent"
+        anchor="left"
+        PaperProps={{ sx: { width: 280, flexShrink: 0, zIndex: 50 } }}
+      >
+        <List>
+          <ListItem sx={{ padding: 2 }}>
+            <img src={logo} alt="Logo" style={{ width: 140, height: 40 }} />
+          </ListItem>
+
+          <ListItem sx={{ padding: 2, pt: 1 }}>
+            <ListItemIcon sx={{ minWidth: 32 }}>
+              <UseIcons />
+            </ListItemIcon>
+            <Typography variant="body2" color="textSecondary" align="center">
+              {dataSave?.fio}
+            </Typography>
+          </ListItem>
+
+          <ListItem sx={{ pl: 2, pb: 0 }}>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{ fontSize: "11px", fontWeight: 600 }}
+            >
+              Меню
+            </Typography>
+          </ListItem>
+
+          {listMenu?.map((menuItem, index) => (
+            <React.Fragment key={index}>
+              <ListItem
+                button
+                className={`everyItem ${isActive(menuItem) ? "active" : ""}`}
+                onClick={() => handleItemClick(menuItem)}
+                selected={isActive(menuItem)}
               >
-                <button>{icon}</button>
-                <p>{title}</p>
-                <img src={arrowRight} alt=">" className="navArrow" />
-              </div>
-            ) : (
-              <Tooltip
-                key={id}
-                title={<p style={{ fontSize: 15, padding: 5 }}>{title}</p>}
-                placement="left"
-                arrow
-                onClick={() => clickPage(link)}
-              >
-                <div
-                  className={pathname == link ? "activeMenu" : ""}
-                  onClick={() => clickPage(link)}
+                <ListItemIcon sx={{ minWidth: 32 }}>
+                  {isActive(menuItem) ? menuItem?.iconActive : menuItem?.icon}
+                </ListItemIcon>
+                <ListItemText primary={menuItem?.label} />
+                {menuItem?.items ? (
+                  openSections?.[menuItem?.section] ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  )
+                ) : null}
+              </ListItem>
+
+              {menuItem?.items && (
+                <Collapse
+                  in={openSections?.[menuItem?.section]}
+                  timeout="auto"
+                  unmountOnExit
                 >
-                  <button>{icon}</button>
-                </div>
-              </Tooltip>
-            )}
-          </Fragment>
-        ))}
-      </div>
-      <LogOut active={active} />
+                  <List component="div" disablePadding>
+                    {menuItem?.items?.map((subItem, subIndex) => (
+                      <ListItem
+                        button
+                        key={subIndex}
+                        className={`innerItem ${
+                          isActive(subItem) ? "active" : ""
+                        }`}
+                        onClick={() => handleSubItemClick(subItem, menuItem)}
+                        selected={isActive(subItem)}
+                        sx={{ pl: 4 }}
+                      >
+                        <ListItemIcon sx={{ minWidth: 32 }}>
+                          {isActive(subItem)
+                            ? subItem?.iconActive
+                            : subItem?.icon}
+                        </ListItemIcon>
+                        <ListItemText primary={subItem?.label} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Collapse>
+              )}
+            </React.Fragment>
+          ))}
+        </List>
+
+        {/* Выход */}
+        <List sx={{ marginTop: "auto" }}>
+          <ListItem
+            sx={{ padding: 2, justifyContent: "center", cursor: "pointer" }}
+            onClick={logOut}
+          >
+            <ListItemIcon sx={{ minWidth: 32 }}>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Выход"} />
+          </ListItem>
+        </List>
+      </Drawer>
     </div>
   );
 };
