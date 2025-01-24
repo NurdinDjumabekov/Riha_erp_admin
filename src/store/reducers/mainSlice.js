@@ -27,12 +27,11 @@ const initialState = {
   listsForProduction: {}, //// временный список для хранения ингредиентов
   invoiceInfo: { guid: "", action: 0, listInvoice: [] },
   /// guid заявки и действие 1 - создание, 2 - редактирование, 3 - простое чтение
-  activeDate: { date_from: "", date_to: "" },
+  activeDate: { ...generateNowWeek() },
   // Состояние для диапазона активной недели
   checkInvoice: true, //// можно ли редактировать накладную
   activeDateHistory: transformActionDate(new Date()), /// активная дата для историй заявок
   activeInvoiceHistory: "", /// активная накладная для историй заявок
-  mainActiveCheckBoxTA: true, //// главый CheckBox на главной страние, при нажатии у всех агентов разом меняются отображения заявок
 };
 
 ////// logInAccount - логинизация
@@ -153,16 +152,11 @@ export const searchListProds = createAsyncThunk(
 ////// getListTA - список Тоговых агентов
 export const getListTA = createAsyncThunk(
   "getListTA",
-  async function ({ first }, { dispatch, rejectWithValue }) {
+  async function (props, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_agent`;
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
-        if (first) {
-          const agents_guid = searchActiveOrdersTA(response?.data);
-          const weekNow = generateNowWeek();
-          dispatch(getListOrders({ ...weekNow, agents_guid })); /// данные заказов по часам в течении дня
-        }
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -194,14 +188,11 @@ export const searchTA = createAsyncThunk(
 ////// getListOrders - список заказов
 export const getListOrders = createAsyncThunk(
   "getListOrders",
-  async function (props, { dispatch, rejectWithValue }) {
-    const { agents_guid, date_from, date_to } = props;
+  async function (data, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_applications`;
-    const data = { agents_guid, date_from, date_to };
     try {
       const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(getListTitleOrders(data)); //// get данные целого дня
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -215,10 +206,8 @@ export const getListOrders = createAsyncThunk(
 ////// getListTitleOrders - список заголовков заказа
 export const getListTitleOrders = createAsyncThunk(
   "getListTitleOrders",
-  async function (props, { dispatch, rejectWithValue }) {
-    const { agents_guid, date_from, date_to } = props;
+  async function (data, { dispatch, rejectWithValue }) {
     const url = `${REACT_APP_API_URL}/ta/get_application_ingredient`;
-    const data = { agents_guid, date_from, date_to };
     try {
       const response = await axiosInstance.post(url, data);
       if (response.status >= 200 && response.status < 300) {
@@ -562,10 +551,6 @@ const mainSlice = createSlice({
     setActiveInvoiceHistory: (state, action) => {
       state.activeInvoiceHistory = action.payload;
     },
-
-    mainActiveCheckBoxTA_FN: (state, action) => {
-      state.mainActiveCheckBoxTA = action.payload;
-    },
   },
 
   extraReducers: (builder) => {
@@ -672,8 +657,9 @@ const mainSlice = createSlice({
       });
     });
     builder.addCase(getListOrders.rejected, (state, action) => {
-      state.error = action.payload;
       state.preloader = false;
+      state.listOrders = [];
+      state.error = action.payload;
     });
     builder.addCase(getListOrders.pending, (state, action) => {
       state.preloader = true;
@@ -682,15 +668,14 @@ const mainSlice = createSlice({
     ////////////// getListTitleOrders
     builder.addCase(getListTitleOrders.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listTitleOrders = action.payload?.map((i) => ({
-        ...i,
-        allDay: true,
-        start: i?.date_from,
-      }));
+      state.listTitleOrders = action.payload?.map((i) => {
+        return { ...i, allDay: true, start: i?.date_from };
+      });
     });
     builder.addCase(getListTitleOrders.rejected, (state, action) => {
-      state.error = action.payload;
       state.preloader = false;
+      state.listTitleOrders = [];
+      state.error = action.payload;
     });
     builder.addCase(getListTitleOrders.pending, (state, action) => {
       state.preloader = true;
@@ -758,7 +743,6 @@ export const {
   getDefaultList,
   setActiveDateHistory,
   setActiveInvoiceHistory,
-  mainActiveCheckBoxTA_FN,
 } = mainSlice.actions;
 
 export default mainSlice.reducer;

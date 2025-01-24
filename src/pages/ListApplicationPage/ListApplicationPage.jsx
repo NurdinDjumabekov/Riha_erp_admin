@@ -1,6 +1,7 @@
-/////// hooks
+////////
+///// hooks
 import { useDispatch, useSelector } from "react-redux";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 ////// components
 import FullCalendar from "@fullcalendar/react";
@@ -11,7 +12,7 @@ import ruLocale from "@fullcalendar/core/locales/ru";
 import ModalOrderCRUD from "../../components/MainPage/Modals/ModalOrderCRUD/ModalOrderCRUD";
 import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
 import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/ModaIngridients";
-import MenuLeft from "../../components/Menu/MenuLeft/MenuLeft";
+import MainMenuAgents from "../../components/Menu/MenuLeft/MainMenuAgents";
 
 ////// helpers
 import { confirmAllDay } from "../../helpers/LocalData";
@@ -22,7 +23,12 @@ import { getMonthRange, getMyWeek } from "../../helpers/weeks";
 import { listStatusOrders } from "../../helpers/objs";
 
 ////// fns
-import { editInvoice, setInvoiceInfo } from "../../store/reducers/mainSlice";
+import {
+  editInvoice,
+  getListTA,
+  getListTitleOrders,
+  setInvoiceInfo,
+} from "../../store/reducers/mainSlice";
 import { setActiveDate } from "../../store/reducers/mainSlice";
 import { getListOrders } from "../../store/reducers/mainSlice";
 import { createInvoice } from "../../store/reducers/mainSlice";
@@ -36,6 +42,8 @@ const ListApplicationPage = () => {
   const dispatch = useDispatch();
 
   const calendarRef = useRef(null);
+
+  const [mainCheckBox, setMainCheckBox] = useState(true);
 
   const { user_type } = useSelector((state) => state.saveDataSlice?.dataSave);
   const { listOrders, activeDate } = useSelector((state) => state.mainSlice);
@@ -78,32 +86,37 @@ const ListApplicationPage = () => {
     }
   };
 
-  // для диапазон для месяца или недели
-  const updateDateRange = () => {
+  ///// для диапазон месяца или недели
+  const updateDateRange = (e) => {
     if (calendarRef?.current) {
       const calendarApi = calendarRef.current?.getApi();
       const currentDate = calendarApi?.getDate(); // Получаем активную дату календаря
       const currentView = calendarApi?.view?.type; // Получаем текущее представление (день, неделя, месяц и т.д.)
 
       if (currentView === "dayGridMonth") {
-        // Если текущее представление - это месяц
         dispatch(setActiveDate(getMonthRange(currentDate)));
       } else {
-        // Иначе - неделя
         dispatch(setActiveDate(getMyWeek(currentDate)));
       }
     }
   };
 
   useEffect(() => {
-    updateDateRange();
-  }, []);
-
-  useEffect(() => {
     const agents_guid = searchActiveOrdersTA(listTA);
     dispatch(getListOrders({ ...activeDate, agents_guid }));
-    //// когда будет меняться диапозон надо get заявки с обновленным диапозоном
+    dispatch(getListTitleOrders({ ...activeDate, agents_guid })); //// get данные целой недели
   }, [activeDate?.date_from]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const res = await dispatch(getListTA()).unwrap();
+    const agents_guid = searchActiveOrdersTA(res);
+    setMainCheckBox(agents_guid?.length > 7 ? true : false);
+    // главый CheckBox на главной страние, при нажатии у всех агентов разом меняются отображения заявок
+  };
 
   const handleEventDrop = (content) => {
     const { invoice_guid, status } = content?.event?._def?.extendedProps;
@@ -177,7 +190,7 @@ const ListApplicationPage = () => {
             eventDrop={handleEventDrop}
             eventsSet={updateDateRange}
             slotMinTime="05:00:00"
-            slotMaxTime="22:00:00"
+            slotMaxTime="24:00:00"
             slotLabelInterval="01:00"
             slotDuration="01:00"
             slotLabelFormat={{
@@ -200,10 +213,13 @@ const ListApplicationPage = () => {
             ))}
           </div>
         </div>
-        <MenuLeft />
+        <MainMenuAgents
+          mainCheckBox={mainCheckBox}
+          setMainCheckBox={setMainCheckBox}
+        />
       </div>
-      <ModalOrderCRUD />
-      <ModaIngridients />
+      {/* <ModalOrderCRUD />
+      <ModaIngridients /> */}
     </div>
   );
 };

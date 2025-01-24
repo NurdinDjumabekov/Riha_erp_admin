@@ -1,3 +1,6 @@
+import { format, startOfWeek, endOfWeek } from "date-fns";
+import { ru } from "date-fns/locale";
+
 export const transformDate = (date) => {
   ///  2024-03-20T15:52:58.843Z  ===>  20.03.2024
   const newDate = new Date(date);
@@ -106,26 +109,20 @@ export const reverseExtractTimeFromDateTime = (timeString) => {
 
 export const generateNowWeek = () => {
   //// генерирую дату этой недели
-  const now = new Date();
 
-  const currentDay = now?.getDay();
-
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(
-    now?.getDate() - currentDay + (currentDay === 0 ? -6 : 1)
+  const date_from = format(
+    startOfWeek(new Date(), { weekStartsOn: 1 }),
+    "yyyy-MM-dd",
+    { locale: ru }
   );
-  startOfWeek.setHours(0, 0, 0, 0); // Устанавливаем время на начало дня
 
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek?.setDate(startOfWeek?.getDate() + 6);
-  endOfWeek?.setHours(23, 59, 59, 999); // Устанавливаем время на конец дня
-
-  const formatDate = (date) => date?.toISOString()?.split("T")[0];
-
-  return {
-    date_from: formatDate(startOfWeek),
-    date_to: formatDate(endOfWeek),
-  };
+  const date_to = format(
+    endOfWeek(new Date(), { weekStartsOn: 1 }),
+    "yyyy-MM-dd",
+    { locale: ru }
+  );
+  ///2025-01-26
+  return { date_from, date_to };
 };
 
 export const extractEndTime = (timeRange) => {

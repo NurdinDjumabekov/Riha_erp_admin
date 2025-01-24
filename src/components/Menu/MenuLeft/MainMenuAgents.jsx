@@ -13,29 +13,25 @@ import { Tooltip } from "@mui/material";
 import user from "../../../assets/images/iAm.jpg";
 
 ////// fns
-import {
-  getListOrders,
-  getListTA,
-  listTAfn,
-  mainActiveCheckBoxTA_FN,
-} from "../../../store/reducers/mainSlice";
+import { getListOrders, listTAfn } from "../../../store/reducers/mainSlice";
 import { editListAgents } from "../../../store/reducers/mainSlice";
 
 ////// helpers
 import { myAlert } from "../../../helpers/MyAlert";
 
-const MenuLeft = () => {
+const MainMenuAgents = (props) => {
+  const { mainCheckBox, setMainCheckBox } = props;
   const dispatch = useDispatch();
 
   const { listTA, activeDate } = useSelector((state) => state.mainSlice);
-  const { mainActiveCheckBoxTA } = useSelector((state) => state.mainSlice);
-  const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
 
   const [search, setSearch] = useState("");
 
-  const onChange = (obj, index) => {
+  const onChange = (obj) => {
     const error = "Нельзя менять статус тестового агента!";
-    if (index == 0) return myAlert(error, "error");
+    if (obj?.guid == "88F8CF21-F5D0-4F55-BC33-B168D739D1D4") {
+      return myAlert(error, "error");
+    }
     dispatch(editListAgents(obj?.guid));
 
     const sortList = listTA
@@ -54,7 +50,7 @@ const MenuLeft = () => {
 
   const viewAllApp = () => {
     const newListTA = listTA?.map((i) => {
-      return { ...i, is_checked: !mainActiveCheckBoxTA ? 1 : 0 };
+      return { ...i, is_checked: !mainCheckBox ? 1 : 0 };
     });
 
     newListTA?.shift();
@@ -68,39 +64,24 @@ const MenuLeft = () => {
     dispatch(getListOrders({ ...activeDate, agents_guid }));
     /// get обновленный список каждой заявки по часам
 
-    dispatch(mainActiveCheckBoxTA_FN(!mainActiveCheckBoxTA));
+    setMainCheckBox(!mainCheckBox);
     //// главый CheckBox на главной страние, при нажатии у всех агентов разом меняются отображения заявок
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = async () => {
-    const res = await dispatch(getListTA({ guid, first: true })).unwrap();
-    const newList = res?.filter((item) => {
-      if (item?.is_checked == 1) {
-        return item;
-      }
-    });
-    dispatch(mainActiveCheckBoxTA_FN(newList?.length > 7 ? true : false));
   };
 
   const filteredList = listTA?.filter((agent) =>
     agent?.fio?.toLowerCase()?.includes(search?.toLowerCase())
   );
-
   return (
     <div className="menuLeft">
       <div className="menuLeft__inner">
         <SearchShop search={search} setSearch={setSearch} />
         <div className="title" onClick={viewAllApp}>
           <h2>Торговые агенты</h2>
-          <input type="checkbox" checked={mainActiveCheckBoxTA} />
+          <input type="checkbox" checked={mainCheckBox} />
         </div>
         <ul>
-          {filteredList?.map((item, index) => (
-            <li key={item?.guid} onClick={() => onChange(item, index)}>
+          {filteredList?.map((item) => (
+            <li key={item?.guid} onClick={() => onChange(item)}>
               <label className="toggle-switch">
                 <input type="checkbox" checked={!!item?.is_checked} />
                 <span className="slider"></span>
@@ -131,4 +112,4 @@ const MenuLeft = () => {
   );
 };
 
-export default MenuLeft;
+export default MainMenuAgents;

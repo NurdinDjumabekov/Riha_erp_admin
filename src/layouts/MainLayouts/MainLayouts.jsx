@@ -10,7 +10,10 @@ import "./style.scss";
 import MenuAdmin from "../../common/MenuAdmin/MenuAdmin";
 
 /////// fns
-import { getListTA } from "../../store/reducers/mainSlice";
+import {
+  getListTA,
+  mainActiveCheckBoxTA_FN,
+} from "../../store/reducers/mainSlice";
 import { getListWorkShop } from "../../store/reducers/mainSlice";
 import { getPointsRouteAgent } from "../../store/reducers/mapSlice";
 import { getActiveRouteList } from "../../store/reducers/photoSlice";
@@ -30,12 +33,15 @@ const MainLayouts = () => {
   // console.log(dataSave, "dataSave");
 
   useEffect(() => {
+    // getData();
+  }, []);
+
+  const getData = async () => {
     dispatch(getListWorkShop());
-    dispatch(getListTA({ first: true }));
     dispatch(getPointsRouteAgent({ guid, first: true }));
     dispatch(getActiveRouteList(guid)); /// только для ТА
     //// отправляю запрос для получения точек каждого агента
-  }, []);
+  };
 
   return (
     <div className="layouts">
