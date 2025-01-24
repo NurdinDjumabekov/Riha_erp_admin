@@ -10,64 +10,99 @@ import SearchShop from "./SearchShop/SearchShop";
 import { Tooltip } from "@mui/material";
 
 ////// imgs
-import plus from "../../../assets/icons/plus-square.svg";
-import minus from "../../../assets/icons/minus-square.svg";
 import user from "../../../assets/images/iAm.jpg";
 
 ////// fns
-import { getListOrders, listTAfn } from "../../../store/reducers/mainSlice";
+import {
+  getListOrders,
+  getListTA,
+  listTAfn,
+  mainActiveCheckBoxTA_FN,
+} from "../../../store/reducers/mainSlice";
 import { editListAgents } from "../../../store/reducers/mainSlice";
 
 ////// helpers
-import { searchActiveOrdersTA } from "../../../helpers/searchActiveOrdersTA";
+import { myAlert } from "../../../helpers/MyAlert";
 
 const MenuLeft = () => {
   const dispatch = useDispatch();
 
   const { listTA, activeDate } = useSelector((state) => state.mainSlice);
+  const { mainActiveCheckBoxTA } = useSelector((state) => state.mainSlice);
+  const { guid } = useSelector((state) => state.saveDataSlice?.dataSave);
 
-  const [look, setLook] = useState(true);
-  const [checked, setChecked] = useState(true);
+  const [search, setSearch] = useState("");
 
-  const onChange = (guid) => {
-    dispatch(editListAgents(guid));
-    setChecked(!checked);
+  const onChange = (obj, index) => {
+    const error = "Нельзя менять статус тестового агента!";
+    if (index == 0) return myAlert(error, "error");
+    dispatch(editListAgents(obj?.guid));
+
+    const sortList = listTA
+      ?.filter((item) => item?.is_checked == 1)
+      ?.map((item) => item?.guid);
+
+    if (obj?.is_checked == 0) {
+      const agents_guid = [...sortList, obj?.guid];
+      dispatch(getListOrders({ ...activeDate, agents_guid }));
+    } else {
+      const agents_guid = sortList?.filter((guid) => guid !== obj?.guid);
+      dispatch(getListOrders({ ...activeDate, agents_guid }));
+    }
+    /// get обновленный список каждой заявки по часам
+  };
+
+  const viewAllApp = () => {
+    const newListTA = listTA?.map((i) => {
+      return { ...i, is_checked: !mainActiveCheckBoxTA ? 1 : 0 };
+    });
+
+    newListTA?.shift();
+    const newList = [{ ...listTA?.[0], is_checked: 1 }, ...newListTA];
+    dispatch(listTAfn(newList));
+
+    const agents_guid = newList
+      ?.filter((item) => item?.is_checked == 1)
+      ?.map((item) => item?.guid);
+
+    dispatch(getListOrders({ ...activeDate, agents_guid }));
+    /// get обновленный список каждой заявки по часам
+
+    dispatch(mainActiveCheckBoxTA_FN(!mainActiveCheckBoxTA));
+    //// главый CheckBox на главной страние, при нажатии у всех агентов разом меняются отображения заявок
   };
 
   useEffect(() => {
-    const agents_guid = searchActiveOrdersTA(listTA);
-    dispatch(getListOrders({ ...activeDate, agents_guid }));
-    /// get обновленный список каждой заявки по часам
-  }, [checked]);
+    getData();
+  }, []);
 
-  const viewAllApp = () => {
-    const newListTA = listTA?.map((i) => ({
-      ...i,
-      is_checked: checked ? 0 : 1,
-    }));
-    dispatch(listTAfn(newListTA));
-    setChecked(!checked);
+  const getData = async () => {
+    const res = await dispatch(getListTA({ guid, first: true })).unwrap();
+    const newList = res?.filter((item) => {
+      if (item?.is_checked == 1) {
+        return item;
+      }
+    });
+    dispatch(mainActiveCheckBoxTA_FN(newList?.length > 7 ? true : false));
   };
+
+  const filteredList = listTA?.filter((agent) =>
+    agent?.fio?.toLowerCase()?.includes(search?.toLowerCase())
+  );
 
   return (
     <div className="menuLeft">
       <div className="menuLeft__inner">
-        <SearchShop />
-        <div className="title">
-          <h2 onClick={viewAllApp}>Торговые агенты</h2>
-          <button onClick={() => setLook(!look)}>
-            <img src={look ? minus : plus} alt="-" />
-          </button>
+        <SearchShop search={search} setSearch={setSearch} />
+        <div className="title" onClick={viewAllApp}>
+          <h2>Торговые агенты</h2>
+          <input type="checkbox" checked={mainActiveCheckBoxTA} />
         </div>
-        <ul className={`content scroll_table ${look ? "show" : ""}`}>
-          {listTA?.map((item) => (
-            <li key={item?.guid} onClick={() => onChange(item?.guid)}>
+        <ul>
+          {filteredList?.map((item, index) => (
+            <li key={item?.guid} onClick={() => onChange(item, index)}>
               <label className="toggle-switch">
-                <input
-                  type="checkbox"
-                  checked={!!item?.is_checked}
-                  onChange={(e) => onChange(item?.guid, e)}
-                />
+                <input type="checkbox" checked={!!item?.is_checked} />
                 <span className="slider"></span>
               </label>
               <div className="logo">

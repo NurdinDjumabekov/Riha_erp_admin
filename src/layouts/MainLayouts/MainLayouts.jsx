@@ -41,7 +41,7 @@ const MainLayouts = () => {
     <div className="layouts">
       <MenuAdmin active={active} setActive={setActive} />
       {/* <HeaderInfo active={active} setActive={setActive} /> */}
-      <div className={`pages ${pathname == "/route" ? "routePages" : ""}`}>
+      <div className="pagesAll">
         <Outlet />
       </div>
     </div>

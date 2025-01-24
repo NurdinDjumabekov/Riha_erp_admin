@@ -30,6 +30,7 @@ import RoomIcon from "@mui/icons-material/Room";
 // import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
 import HistoryIcon from "@mui/icons-material/History";
 import AddHomeIcon from "@mui/icons-material/AddBusiness";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import time from "../assets/images/back-in-time.png";
 import calendare from "../assets/images/calendar.png";
@@ -46,7 +47,8 @@ import ChecklistIcon from "@mui/icons-material/Checklist";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import RestartAltIcon from "@mui/icons-material/EditCalendar";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-// import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
+import ManageSearchIcon from "@mui/icons-material/ManageSearch";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 
 export const objStatusOrders = {
   0: {
@@ -178,14 +180,14 @@ export const listMenu = [
     items: [
       {
         label: "Календарь заявок",
-        icon: <ReceiptLongIcon sx={{ color: "#0000008c" }} />,
-        iconActive: <ReceiptLongIcon sx={{ color: "#1565c0" }} />,
+        icon: <CalendarMonthIcon sx={{ color: "#0000008c" }} />,
+        iconActive: <CalendarMonthIcon sx={{ color: "#1565c0" }} />,
         path: `/orders/main`,
       },
       {
         label: "История заявок",
-        icon: <ReceiptLongIcon sx={{ color: "#0000008c" }} />,
-        iconActive: <ReceiptLongIcon sx={{ color: "#1565c0" }} />,
+        icon: <ManageSearchIcon sx={{ color: "#0000008c" }} />,
+        iconActive: <ManageSearchIcon sx={{ color: "#1565c0" }} />,
         path: `/orders/history`,
       },
     ],
@@ -193,13 +195,13 @@ export const listMenu = [
   {
     section: "Производство",
     label: "Производство",
-    icon: <AvTimerOutlinedIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <AvTimerOutlinedIcon sx={{ color: "#1565c0" }} />,
+    icon: <AddBusinessIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <AddBusinessIcon sx={{ color: "#1565c0" }} />,
     path: "/production",
   },
   {
-    section: "СГП",
-    label: "СГП",
+    section: "Склад",
+    label: "Склад",
     icon: <HomeWorkIcon sx={{ color: "#0000008c" }} />,
     iconActive: <HomeWorkIcon sx={{ color: "#1565c0" }} />,
     path: "/ware_home",

@@ -32,6 +32,7 @@ const initialState = {
   checkInvoice: true, //// можно ли редактировать накладную
   activeDateHistory: transformActionDate(new Date()), /// активная дата для историй заявок
   activeInvoiceHistory: "", /// активная накладная для историй заявок
+  mainActiveCheckBoxTA: true, //// главый CheckBox на главной страние, при нажатии у всех агентов разом меняются отображения заявок
 };
 
 ////// logInAccount - логинизация
@@ -471,11 +472,11 @@ const mainSlice = createSlice({
   initialState,
   reducers: {
     editListAgents: (state, action) => {
-      state.listTA = state.listTA?.map((item) =>
-        item?.guid === action.payload
-          ? { ...item, is_checked: item?.is_checked === 1 ? 0 : 1 }
-          : item
-      );
+      state.listTA = state.listTA?.map((item) => {
+        if (item?.guid == action.payload) {
+          return { ...item, is_checked: item?.is_checked == 1 ? 0 : 1 };
+        } else return item;
+      });
     },
 
     setListTA: (state, action) => {
@@ -560,6 +561,10 @@ const mainSlice = createSlice({
     /////  активная накладная для историй заявок
     setActiveInvoiceHistory: (state, action) => {
       state.activeInvoiceHistory = action.payload;
+    },
+
+    mainActiveCheckBoxTA_FN: (state, action) => {
+      state.mainActiveCheckBoxTA = action.payload;
     },
   },
 
@@ -753,6 +758,7 @@ export const {
   getDefaultList,
   setActiveDateHistory,
   setActiveInvoiceHistory,
+  mainActiveCheckBoxTA_FN,
 } = mainSlice.actions;
 
 export default mainSlice.reducer;
