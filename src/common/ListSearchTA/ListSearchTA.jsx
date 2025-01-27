@@ -10,20 +10,24 @@ import "./style.scss";
 
 ////// icons
 import arrow from "../../assets/icons/arrowMenu.svg";
+import { activeSearchAgentsFN } from "../../store/reducers/standartStateSlice";
 
 ////// fns
 
 ////// helpers
 
 const ListSearchTA = (props) => {
-  const { active, clickAgent } = props;
+  const { clickAgent } = props;
+
+  const dispatch = useDispatch();
 
   const { listTA } = useSelector((state) => state.mainSlice);
-
-  const [searchTerm, setSearchTerm] = useState("");
+  const { activeSearchAgents, activeAgent } = useSelector(
+    (state) => state.standartStateSlice
+  );
 
   const filteredList = listTA?.filter((item) =>
-    item?.fio?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+    item?.fio?.toLowerCase()?.includes(activeSearchAgents?.toLowerCase())
   );
 
   const checkLength = filteredList?.length > 14;
@@ -32,8 +36,8 @@ const ListSearchTA = (props) => {
     <div className={`listTAInfo searchAgent`}>
       <input
         placeholder="Поиск агентов"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        value={activeSearchAgents}
+        onChange={(e) => dispatch(activeSearchAgentsFN(e?.target?.value))}
         type="search"
       />
       <div className="line"></div>
@@ -45,8 +49,8 @@ const ListSearchTA = (props) => {
         {filteredList?.map((i) => (
           <button
             key={i?.guid}
-            onClick={() => clickAgent(i?.guid)}
-            className={active == i?.guid ? "active" : ""}
+            onClick={() => clickAgent(i)}
+            className={activeAgent?.guid == i?.guid ? "active" : ""}
           >
             <div className="content">
               <p>{i?.fio}</p>

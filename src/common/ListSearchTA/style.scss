@@ -1,4 +1,6 @@
 .searchAgent {
+  padding: 15px 10px 10px 15px !important;
+
   input {
     width: 100%;
     height: 38px;
@@ -33,6 +35,7 @@
     > button {
       border-top: 1px solid #e0e6ed66;
       border-radius: 0px;
+      justify-content: space-between;
     }
 
     .active {

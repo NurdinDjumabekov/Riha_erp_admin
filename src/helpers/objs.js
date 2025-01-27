@@ -1,13 +1,5 @@
 ///////
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
-import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
-import DoneOutlinedIcon from "@mui/icons-material/DoneOutlined";
-import HourglassEmptyIcon from "@mui/icons-material/Cached";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-
-///////
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 
 ///////
@@ -16,39 +8,125 @@ import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
 
 /////// icons
-import HomeOutlinedIcon from "@mui/icons-material/FormatListNumbered";
-import SettingsSuggestOutlinedIcon from "@mui/icons-material/SettingsSuggestOutlined";
-import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
-import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
-import AvTimerOutlinedIcon from "@mui/icons-material/AvTimerOutlined";
 import TaxiAlertIcon from "@mui/icons-material/TaxiAlert";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 
 /////// icons
 import RoomIcon from "@mui/icons-material/Room";
-// import ChecklistRtlIcon from "@mui/icons-material/ChecklistRtl";
 import HistoryIcon from "@mui/icons-material/History";
-import AddHomeIcon from "@mui/icons-material/AddBusiness";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import time from "../assets/images/back-in-time.png";
 import calendare from "../assets/images/calendar.png";
 import prod from "../assets/images/web-settings.png";
 import end from "../assets/images/good-signal.png";
-import ScheduleSendOutlinedIcon from "@mui/icons-material/ScheduleSendOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import PaymentsIcon from "@mui/icons-material/Payments";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import NearMeIcon from "@mui/icons-material/NearMe";
-import ChecklistIcon from "@mui/icons-material/Checklist";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import RestartAltIcon from "@mui/icons-material/EditCalendar";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import PeopleIcon from "@mui/icons-material/People";
+
+export const listMenu = [
+  {
+    section: "Заявки агентов",
+    label: "Заявки агентов",
+    icon: <TextSnippetIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <TextSnippetIcon sx={{ color: "#1565c0" }} />,
+    path: "/orders",
+    items: [
+      {
+        label: "Календарь заявок",
+        icon: <CalendarMonthIcon sx={{ color: "#0000008c" }} />,
+        iconActive: <CalendarMonthIcon sx={{ color: "#1565c0" }} />,
+        path: `/orders/main`,
+      },
+      {
+        label: "История заявок",
+        icon: <ManageSearchIcon sx={{ color: "#0000008c" }} />,
+        iconActive: <ManageSearchIcon sx={{ color: "#1565c0" }} />,
+        path: `/orders/history`,
+      },
+    ],
+  },
+  {
+    section: "Производство",
+    label: "Производство",
+    icon: <AddBusinessIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <AddBusinessIcon sx={{ color: "#1565c0" }} />,
+    path: "/production",
+    items: [
+      {
+        label: "Коптильщики",
+        icon: <PeopleIcon sx={{ color: "#0000008c" }} />,
+        iconActive: <PeopleIcon sx={{ color: "#1565c0" }} />,
+        path: `/production/coptil`,
+      },
+      {
+        label: "История производства",
+        icon: <ManageSearchIcon sx={{ color: "#0000008c" }} />,
+        iconActive: <ManageSearchIcon sx={{ color: "#1565c0" }} />,
+        path: `/production/invoice`,
+      },
+    ],
+  },
+  {
+    section: "Склад",
+    label: "Склад",
+    icon: <HomeWorkIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <HomeWorkIcon sx={{ color: "#1565c0" }} />,
+    path: "/ware_home",
+  },
+  {
+    section: "Маршруты ТА",
+    label: "Маршруты ТА",
+    icon: <TaxiAlertIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <TaxiAlertIcon sx={{ color: "#1565c0" }} />,
+    path: "/route",
+  },
+  {
+    section: "Отчеты ТА",
+    label: "Отчеты ТА",
+    icon: <ListAltIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <ListAltIcon sx={{ color: "#1565c0" }} />,
+    path: "/report_ta/agents",
+  },
+
+  {
+    section: "Касса",
+    label: "Касса",
+    icon: <PaymentsIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <PaymentsIcon sx={{ color: "#1565c0" }} />,
+    path: "/pay",
+  },
+
+  {
+    section: "Возврат товара",
+    label: "Возврат товара",
+    icon: <RestartAltIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <RestartAltIcon sx={{ color: "#1565c0" }} />,
+    path: "/return_prod",
+  },
+  {
+    section: "Задания от руководителя",
+    label: "Задания от руководителя",
+    icon: <AssignmentIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <AssignmentIcon sx={{ color: "#1565c0" }} />,
+    path: "/tasks",
+  },
+  {
+    section: "Траты",
+    label: "Траты",
+    icon: <ChecklistRtlIcon sx={{ color: "#0000008c" }} />,
+    iconActive: <ChecklistRtlIcon sx={{ color: "#1565c0" }} />,
+    path: "/spending",
+  },
+];
 
 export const objStatusOrders = {
   0: {
@@ -169,88 +247,6 @@ export const listActionsTitle = [
 ];
 
 export const objStatusText = { 1: "Товар добавлен!", 2: "Товар обновлён!" };
-
-export const listMenu = [
-  {
-    section: "Заявки",
-    label: "Заявки",
-    icon: <TextSnippetIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <TextSnippetIcon sx={{ color: "#1565c0" }} />,
-    path: "/orders",
-    items: [
-      {
-        label: "Календарь заявок",
-        icon: <CalendarMonthIcon sx={{ color: "#0000008c" }} />,
-        iconActive: <CalendarMonthIcon sx={{ color: "#1565c0" }} />,
-        path: `/orders/main`,
-      },
-      {
-        label: "История заявок",
-        icon: <ManageSearchIcon sx={{ color: "#0000008c" }} />,
-        iconActive: <ManageSearchIcon sx={{ color: "#1565c0" }} />,
-        path: `/orders/history`,
-      },
-    ],
-  },
-  {
-    section: "Производство",
-    label: "Производство",
-    icon: <AddBusinessIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <AddBusinessIcon sx={{ color: "#1565c0" }} />,
-    path: "/production",
-  },
-  {
-    section: "Склад",
-    label: "Склад",
-    icon: <HomeWorkIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <HomeWorkIcon sx={{ color: "#1565c0" }} />,
-    path: "/ware_home",
-  },
-  {
-    section: "Маршруты ТА",
-    label: "Маршруты ТА",
-    icon: <TaxiAlertIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <TaxiAlertIcon sx={{ color: "#1565c0" }} />,
-    path: "/route",
-  },
-  {
-    section: "Отчеты ТА",
-    label: "Отчеты ТА",
-    icon: <ListAltIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <ListAltIcon sx={{ color: "#1565c0" }} />,
-    path: "/report_ta/agents",
-  },
-
-  {
-    section: "Касса",
-    label: "Касса",
-    icon: <PaymentsIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <PaymentsIcon sx={{ color: "#1565c0" }} />,
-    path: "/pay",
-  },
-
-  {
-    section: "Возврат товара",
-    label: "Возврат товара",
-    icon: <RestartAltIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <RestartAltIcon sx={{ color: "#1565c0" }} />,
-    path: "/return_prod",
-  },
-  {
-    section: "Задания от руководителя",
-    label: "Задания от руководителя",
-    icon: <AssignmentIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <AssignmentIcon sx={{ color: "#1565c0" }} />,
-    path: "/tasks",
-  },
-  {
-    section: "Траты",
-    label: "Траты",
-    icon: <ChecklistRtlIcon sx={{ color: "#0000008c" }} />,
-    iconActive: <ChecklistRtlIcon sx={{ color: "#1565c0" }} />,
-    path: "/spending",
-  },
-];
 
 export const listActionRoute = [
   {

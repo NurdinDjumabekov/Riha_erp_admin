@@ -25,6 +25,9 @@ import pointsSlice from "./reducers/pointsSlice";
 import taskExpensesSlice from "./reducers/taskExpensesSlice";
 import reportsSlice from "./reducers/reportsSlice";
 
+import ordersAgentsSlice from "./reducers/ordersAgentsSlice";
+import standartStateSlice from "./reducers/standartStateSlice";
+
 const reducer = combineReducers({
   mainSlice,
   saveDataSlice,
@@ -38,6 +41,9 @@ const reducer = combineReducers({
   pointsSlice,
   taskExpensesSlice,
   reportsSlice,
+
+  ordersAgentsSlice,
+  standartStateSlice,
 });
 
 const persistConfig = {

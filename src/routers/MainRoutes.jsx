@@ -22,7 +22,6 @@ import MainLayouts from "../layouts/MainLayouts/MainLayouts";
 import ListApplicationPage from "../pages/ListApplicationPage/ListApplicationPage";
 import HistoryApplicationPage from "../pages/HistoryApplicationPage/HistoryApplicationPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
-import ProductionPage from "../pages/ProductionPage/ProductionPage";
 import RouterPage from "../pages/RouterPage/RouterPage";
 import PayPage from "../pages/PayPage/PayPage";
 import ReturnProdsPage from "../pages/ReturnProdsPage/ReturnProdsPage";
@@ -30,6 +29,7 @@ import TasksPage from "../pages/TasksPage/TasksPage";
 import SpendingPage from "../pages/SpendingPage/SpendingPage";
 import WareHomePages from "../pages/WareHomePages/WareHomePages";
 import ReportsAgentPage from "../pages/ReportsAgentPages/ReportsAgentPages";
+import CoptilshikPages from "../pages/CoptilshikPages/CoptilshikPages";
 
 const MainRoutes = () => {
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ const MainRoutes = () => {
           <Route path="/" element={<Navigate to="/orders/main" replace />} />
           <Route path="/orders/main" element={<ListApplicationPage />} />
           <Route path="/orders/history" element={<HistoryApplicationPage />} />
-          <Route path="/production" element={<ProductionPage />} />
+          <Route path="/production/*" element={<CoptilshikPages />} />
           <Route path="/ware_home/*" element={<WareHomePages />} />
           <Route path="/route" element={<RouterPage />} />
           <Route path="/report_ta/*" element={<ReportsAgentPage />} />

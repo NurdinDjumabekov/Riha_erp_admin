@@ -1,24 +1,24 @@
+////// hooks
 import { useState } from "react";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-////// imgs
-
 ////// style
 import "./style.scss";
 
-////// components
-
 ////// fns
+import { activeSearchAgentsFN } from "../../../../store/reducers/standartStateSlice";
 
 const SearchShop = (props) => {
-  const { search, setSearch } = props;
-
   const dispatch = useDispatch();
+
+  const { activeSearchAgents } = useSelector(
+    (state) => state.standartStateSlice
+  );
 
   const onChange = (e) => {
     const value = e?.target?.value;
-    setSearch(value);
+    dispatch(activeSearchAgentsFN(value));
   };
 
   return (
@@ -27,7 +27,7 @@ const SearchShop = (props) => {
         type="search"
         placeholder="Поиск агентов"
         onChange={onChange}
-        value={search}
+        value={activeSearchAgents}
       />
     </div>
   );

@@ -13,7 +13,11 @@ import { Tooltip } from "@mui/material";
 import user from "../../../assets/images/iAm.jpg";
 
 ////// fns
-import { getListOrders, listTAfn } from "../../../store/reducers/mainSlice";
+import {
+  getListOrders,
+  getListTitleOrders,
+  listTAfn,
+} from "../../../store/reducers/mainSlice";
 import { editListAgents } from "../../../store/reducers/mainSlice";
 
 ////// helpers
@@ -24,8 +28,9 @@ const MainMenuAgents = (props) => {
   const dispatch = useDispatch();
 
   const { listTA, activeDate } = useSelector((state) => state.mainSlice);
-
-  const [search, setSearch] = useState("");
+  const { activeSearchAgents } = useSelector(
+    (state) => state.standartStateSlice
+  );
 
   const onChange = (obj) => {
     const error = "Нельзя менять статус тестового агента!";
@@ -41,9 +46,11 @@ const MainMenuAgents = (props) => {
     if (obj?.is_checked == 0) {
       const agents_guid = [...sortList, obj?.guid];
       dispatch(getListOrders({ ...activeDate, agents_guid }));
+      dispatch(getListTitleOrders({ ...activeDate, agents_guid })); //// get данные целой недели
     } else {
       const agents_guid = sortList?.filter((guid) => guid !== obj?.guid);
       dispatch(getListOrders({ ...activeDate, agents_guid }));
+      dispatch(getListTitleOrders({ ...activeDate, agents_guid })); //// get данные целой недели
     }
     /// get обновленный список каждой заявки по часам
   };
@@ -63,18 +70,20 @@ const MainMenuAgents = (props) => {
 
     dispatch(getListOrders({ ...activeDate, agents_guid }));
     /// get обновленный список каждой заявки по часам
+    dispatch(getListTitleOrders({ ...activeDate, agents_guid })); //// get данные целой недели
 
     setMainCheckBox(!mainCheckBox);
     //// главый CheckBox на главной страние, при нажатии у всех агентов разом меняются отображения заявок
   };
 
   const filteredList = listTA?.filter((agent) =>
-    agent?.fio?.toLowerCase()?.includes(search?.toLowerCase())
+    agent?.fio?.toLowerCase()?.includes(activeSearchAgents?.toLowerCase())
   );
+
   return (
     <div className="menuLeft">
       <div className="menuLeft__inner">
-        <SearchShop search={search} setSearch={setSearch} />
+        <SearchShop />
         <div className="title" onClick={viewAllApp}>
           <h2>Торговые агенты</h2>
           <input type="checkbox" checked={mainCheckBox} />

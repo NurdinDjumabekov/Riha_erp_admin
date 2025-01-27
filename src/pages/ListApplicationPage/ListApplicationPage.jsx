@@ -9,10 +9,10 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import ruLocale from "@fullcalendar/core/locales/ru";
-import ModalOrderCRUD from "../../components/MainPage/Modals/ModalOrderCRUD/ModalOrderCRUD";
 import EveryDateInfo from "../../components/MainPage/EveryDateInfo/EveryDateInfo";
-import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/ModaIngridients";
 import MainMenuAgents from "../../components/Menu/MenuLeft/MainMenuAgents";
+import ModalOrderCRUD from "../../components/MainPage/Modals/ModalOrderCRUD/ModalOrderCRUD";
+import ModaIngridients from "../../components/MainPage/Modals/ModaIngridients/ModaIngridients";
 
 ////// helpers
 import { confirmAllDay } from "../../helpers/LocalData";
@@ -24,6 +24,7 @@ import { listStatusOrders } from "../../helpers/objs";
 
 ////// fns
 import {
+  clearListOrdersAgents,
   editInvoice,
   getListTA,
   getListTitleOrders,
@@ -101,22 +102,35 @@ const ListApplicationPage = () => {
     }
   };
 
-  useEffect(() => {
-    const agents_guid = searchActiveOrdersTA(listTA);
-    dispatch(getListOrders({ ...activeDate, agents_guid }));
-    dispatch(getListTitleOrders({ ...activeDate, agents_guid })); //// get данные целой недели
-  }, [activeDate?.date_from]);
-
-  useEffect(() => {
-    getData();
-  }, []);
-
   const getData = async () => {
     const res = await dispatch(getListTA()).unwrap();
     const agents_guid = searchActiveOrdersTA(res);
     setMainCheckBox(agents_guid?.length > 7 ? true : false);
     // главый CheckBox на главной страние, при нажатии у всех агентов разом меняются отображения заявок
   };
+
+  const getOrders = async () => {
+    const res = await dispatch(getListTA()).unwrap();
+    const agents_guid = searchActiveOrdersTA(res);
+    let send = { ...activeDate, agents_guid };
+    if (agents_guid?.length == 0) {
+      send = {
+        ...activeDate,
+        agents_guid: ["88F8CF21-F5D0-4F55-BC33-B168D739D1D4"],
+      };
+    }
+    dispatch(getListOrders(send));
+    dispatch(getListTitleOrders(send)); //// get данные целой недели
+  };
+
+  useEffect(() => {
+    getData();
+    return () => dispatch(clearListOrdersAgents());
+  }, []);
+
+  useEffect(() => {
+    getOrders();
+  }, [activeDate?.date_from]);
 
   const handleEventDrop = (content) => {
     const { invoice_guid, status } = content?.event?._def?.extendedProps;

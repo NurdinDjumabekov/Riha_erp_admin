@@ -9,33 +9,68 @@ import "./style.scss";
 import { Table, TableBody, TableCell } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
+import DatePicker from "react-datepicker";
 
 /////// helpers
 import { objStatusOrdersMini } from "../../../helpers/objs";
 import { roundingNum } from "../../../helpers/totals";
+import { ru } from "date-fns/locale";
+import { format, parse } from "date-fns";
+
+////// icons
+import EventIcon from "@mui/icons-material/EventNoteTwoTone";
 
 /////// fns
 import { getListProdsInInvoice } from "../../../store/reducers/mainSlice";
-import { setActiveInvoiceHistory } from "../../../store/reducers/mainSlice";
+import { activeDateDayFN } from "../../../store/reducers/standartStateSlice";
 
-const InfoProds = ({}) => {
+const InfoProds = (props) => {
+  const { activeInvoice, setActiveInvoice, getInvoiceProds } = props;
+
   const dispatch = useDispatch();
 
-  const { listOrders, listSendOrders, activeInvoiceHistory } = useSelector(
+  const { listOrders, listSendOrders } = useSelector(
     (state) => state.mainSlice /// список заявок и товаров каждой заявки
   );
+  const { activeAgent } = useSelector((state) => state.standartStateSlice);
+  const { activeDateDay } = useSelector((state) => state.standartStateSlice);
 
   const clickInvoice = ({ invoice_guid }) => {
-    dispatch(setActiveInvoiceHistory(invoice_guid)); /// для активной накладной
+    setActiveInvoice(invoice_guid); /// для активной накладной
     dispatch(getListProdsInInvoice(invoice_guid)); //// для получения товаров
   };
 
-  console.log(listSendOrders, "listSendOrders");
+  const onChangeDate = async (item) => {
+    ///// сортировка заявок по дате
+    dispatch(activeDateDayFN(format(item, "yyyy-MM-dd", { locale: ru })));
+
+    const data = {
+      date_from: format(item, "yyyy-MM-dd", { locale: ru }),
+      date_to: format(item, "yyyy-MM-dd", { locale: ru }),
+    };
+    const obj = { agents_guid: [activeAgent?.guid] };
+    getInvoiceProds({ ...data, ...obj, history: 1 });
+  };
 
   return (
     <div className="infoProdsApp">
       <div className="dolg">
-        <h5>Заявки</h5>
+        <div className="header">
+          <h4>Заявки</h4>
+          <div className="date inputSend">
+            <DatePicker
+              selected={parse(activeDateDay, "yyyy-MM-dd", new Date())}
+              onChange={onChangeDate}
+              yearDropdownItemNumber={100}
+              placeholderText="ДД.ММ.ГГГГ"
+              shouldCloseOnSelect={true}
+              scrollableYearDropdown
+              dateFormat="dd.MM.yyyy"
+              locale={ru}
+            />
+            <EventIcon />
+          </div>
+        </div>
         <div className="dolg__inner">
           <TableContainer
             component={Paper}
@@ -95,7 +130,7 @@ const InfoProds = ({}) => {
                         <input
                           type="checkbox"
                           name="check"
-                          checked={row?.invoice_guid === activeInvoiceHistory}
+                          checked={row?.invoice_guid == activeInvoice}
                         />
                       </div>
                     </TableCell>
@@ -223,13 +258,13 @@ const InfoProds = ({}) => {
                     Итого
                   </TableCell>
                   <TableCell align="left" style={{ fontWeight: "bold" }}>
-                    {roundingNum(listSendOrders?.[0]?.total_count)} шт
+                    {roundingNum(listSendOrders?.[0]?.total_count) || 0} шт
                   </TableCell>
                   <TableCell align="left" style={{ fontWeight: "bold" }}>
-                    {roundingNum(listSendOrders?.[0]?.total_count_kg)} кг
+                    {roundingNum(listSendOrders?.[0]?.total_count_kg || 0)} кг
                   </TableCell>
                   <TableCell align="left" style={{ fontWeight: "bold" }}>
-                    {roundingNum(listSendOrders?.[0]?.total_price)} сом
+                    {roundingNum(listSendOrders?.[0]?.total_price) || 0} сом
                   </TableCell>
                 </TableRow>
               </TableBody>

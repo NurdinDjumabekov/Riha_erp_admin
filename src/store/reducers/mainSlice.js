@@ -7,10 +7,7 @@ import { searchActiveOrdersTA } from "../../helpers/searchActiveOrdersTA";
 import { setActiveCategs, setActiveWorkShop } from "./selectsSlice";
 import { transformListsProdsEdit } from "../../helpers/transformLists";
 import { transformListsProds } from "../../helpers/transformLists";
-import {
-  generateNowWeek,
-  transformActionDate,
-} from "../../helpers/transformDate";
+import { generateNowWeek } from "../../helpers/transformDate";
 import { objStatusText } from "../../helpers/objs";
 
 const { REACT_APP_API_URL } = process.env;
@@ -30,8 +27,6 @@ const initialState = {
   activeDate: { ...generateNowWeek() },
   // Состояние для диапазона активной недели
   checkInvoice: true, //// можно ли редактировать накладную
-  activeDateHistory: transformActionDate(new Date()), /// активная дата для историй заявок
-  activeInvoiceHistory: "", /// активная накладная для историй заявок
 };
 
 ////// logInAccount - логинизация
@@ -435,31 +430,15 @@ export const actionsInvoiceAllDay = createAsyncThunk(
   }
 );
 
-////// getHistoryInvoice - get список историй заявок
-export const getHistoryInvoice = createAsyncThunk(
-  "getHistoryInvoice",
-  async function (data, { dispatch, rejectWithValue }) {
-    const url = `${REACT_APP_API_URL}/ta/get_applications`;
-    try {
-      const response = await axiosInstance.post(url, data);
-      if (response.status >= 200 && response.status < 300) {
-        const firstGuid = response?.data?.[0]?.invoice_guid;
-        dispatch(getListProdsInInvoice(firstGuid)); //// для получения товаров
-        dispatch(setActiveInvoiceHistory(firstGuid)); /// для активной накладной
-        return response?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 const mainSlice = createSlice({
   name: "mainSlice",
   initialState,
   reducers: {
+    clearListOrdersAgents: (state, action) => {
+      state.listOrders = [];
+      /// очищаю список, хрянящий заказы всех ТА
+    },
+
     editListAgents: (state, action) => {
       state.listTA = state.listTA?.map((item) => {
         if (item?.guid == action.payload) {
@@ -540,16 +519,6 @@ const mainSlice = createSlice({
         count: "",
         is_checked: false,
       }));
-    },
-
-    /////  активная дата для историй заявок
-    setActiveDateHistory: (state, action) => {
-      state.activeDateHistory = action.payload;
-    },
-
-    /////  активная накладная для историй заявок
-    setActiveInvoiceHistory: (state, action) => {
-      state.activeInvoiceHistory = action.payload;
     },
   },
 
@@ -697,10 +666,9 @@ const mainSlice = createSlice({
     ///////////// getListProdsInInvoice
     builder.addCase(getListProdsInInvoice.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listSendOrders = action.payload?.map((i) => ({
-        ...i,
-        my_status: false,
-      }));
+      state.listSendOrders = action.payload?.map((i) => {
+        return { ...i, my_status: false };
+      });
     });
     builder.addCase(getListProdsInInvoice.rejected, (state, action) => {
       state.error = action.payload;
@@ -710,24 +678,11 @@ const mainSlice = createSlice({
     builder.addCase(getListProdsInInvoice.pending, (state, action) => {
       state.preloader = true;
     });
-
-    ////////////// getHistoryInvoice
-    builder.addCase(getHistoryInvoice.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listOrders = action.payload;
-    });
-    builder.addCase(getHistoryInvoice.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-      // state.listOrders = [];
-    });
-    builder.addCase(getHistoryInvoice.pending, (state, action) => {
-      state.preloader = true;
-    });
   },
 });
 
 export const {
+  clearListOrdersAgents,
   editListAgents,
   setListTA,
   listTAfn,
@@ -741,8 +696,6 @@ export const {
   setActiveDate,
   setCheckInvoice,
   getDefaultList,
-  setActiveDateHistory,
-  setActiveInvoiceHistory,
 } = mainSlice.actions;
 
 export default mainSlice.reducer;
