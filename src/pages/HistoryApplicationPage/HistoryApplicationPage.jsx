@@ -2,7 +2,9 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-////// icons
+////// helpers
+import { addDays, format } from "date-fns";
+import { ru } from "date-fns/locale";
 
 ////// fns
 import {
@@ -35,13 +37,23 @@ const HistoryApplicationPage = () => {
 
   const clickAgent = (agent) => {
     dispatch(activeAgentFN(agent));
-    const data = { date_from: activeDateDay, date_to: activeDateDay };
+    const data = {
+      date_from: activeDateDay,
+      date_to: format(addDays(new Date(activeDateDay), 1), "yyyy-MM-dd", {
+        locale: ru,
+      }),
+    };
     const obj = { agents_guid: [agent?.guid], history: 1 };
     getInvoiceProds({ ...data, ...obj, history: 1 });
   };
 
   const getStartData = async () => {
-    const data = { date_from: activeDateDay, date_to: activeDateDay };
+    const data = {
+      date_from: activeDateDay,
+      date_to: format(addDays(new Date(activeDateDay), 1), "yyyy-MM-dd", {
+        locale: ru,
+      }),
+    };
     const obj = { agents_guid: [activeAgent?.guid] };
     if (!!activeAgent?.guid) getInvoiceProds({ ...data, ...obj, history: 1 });
   };

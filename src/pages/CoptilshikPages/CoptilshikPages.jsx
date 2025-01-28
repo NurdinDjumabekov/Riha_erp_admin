@@ -9,8 +9,9 @@ import { Route, Routes } from "react-router-dom";
 ////// icons
 
 ///// components
-import ProductionPage from "../ProductionPage/ProductionPage";
+import ProductionPage from "./ProductionPage/ProductionPage";
 import InfoCoptilshikPage from "./InfoCoptilshikPage/InfoCoptilshikPage";
+import LeftoversProdPage from "./LeftoversProdPage/LeftoversProdPage";
 
 const CoptilshikPages = () => {
   const dispatch = useDispatch();
@@ -21,8 +22,9 @@ const CoptilshikPages = () => {
 
   return (
     <Routes>
-      <Route path="/invoice" element={<ProductionPage />} />
+      <Route path="/main" element={<ProductionPage />} />
       <Route path="/coptil" element={<InfoCoptilshikPage />} />
+      <Route path="/leftovers" element={<LeftoversProdPage />} />
     </Routes>
   );
 };

@@ -9,26 +9,42 @@ import { transformActionDate } from "../../helpers/transformDate";
 const { REACT_APP_API_URL } = process.env;
 
 const initialState = {
-  preloader: false,
-  listProduction: [], /// список товаров в производстве
-  listHistoryProduction: [], /// список историй товаров в производстве
-  listProductionInvoice: [], /// список накладных в производстве
-  activeDate: transformActionDate(new Date()),
-  listLeftoversProduction: [], /// список остатков на производстве
+  preloaderPR: false,
+  listProductionInvoice: [], /// список накладных производства
+  listProductionProds: [], /// список товаров в производства
+  listLeftoversProduction: [], /// список остатков производствa
 };
 
-////// getListProdProduction - get список товаров производства
-export const getListProdProduction = createAsyncThunk(
-  "getListProdProduction",
+////// getListInvoiceProduction - get список накладных производства
+export const getListInvoiceProduction = createAsyncThunk(
+  "getListInvoiceProduction",
   async function (props, { dispatch, rejectWithValue }) {
-    const { date_from, date_to, setActiveInvoice } = props;
-    const url = `${REACT_APP_API_URL}/ta/get_production_invoice?date_from=${
-      date_from || ""
-    }&date_to=${date_to || ""}`;
+    const { date_from, setActiveInvoice } = props;
+    const date = date_from || "";
+    const url = `${REACT_APP_API_URL}/ta/get_production_invoice?date_from=${date}`;
     try {
       const response = await axiosInstance(url);
       if (response.status >= 200 && response.status < 300) {
         setActiveInvoice(response?.data?.[0]);
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////// getListProdsProduction - get список товаров производства
+export const getListProdsProduction = createAsyncThunk(
+  "getListProdsProduction",
+  async function (props, { dispatch, rejectWithValue }) {
+    const { invoice_guid } = props;
+    const url = `${REACT_APP_API_URL}/ta/get_production_products?invoice_guid=${invoice_guid}`;
+    try {
+      const response = await axiosInstance(url);
+      if (response.status >= 200 && response.status < 300) {
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -50,7 +66,7 @@ export const sendInWareHomeFN = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         myAlert("Список товаров отправлен на склад");
         const obj = { date_from: "", date_to: "", setActiveInvoice };
-        dispatch(getListProdProduction(obj));
+        dispatch(getListInvoiceProduction(obj));
         //// для обновление списка товаров произ-ва
 
         const agents_guid = searchActiveOrdersTA(listTA);
@@ -108,58 +124,52 @@ export const addListLeftoversInProduction = createAsyncThunk(
 const productionSlice = createSlice({
   name: "productionSlice",
   initialState,
-  reducers: {
-    setListProduction: (state, action) => {
-      state.listProduction = action.payload;
-    },
-
-    /////изменение ключа count в списке товаров производства
-    changeCountProduction: (state, action) => {
-      const { product_guid, count_kg } = action.payload;
-      state.listProduction = state.listProduction?.map((i) =>
-        i?.product_guid === product_guid ? { ...i, count_kg } : i
-      );
-    },
-
-    setActiveDate: (state, action) => {
-      state.activeDate = action.payload;
-    },
-  },
+  reducers: {},
 
   extraReducers: (builder) => {
-    ////////////// getListProdProduction
-    builder.addCase(getListProdProduction.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.listProduction = action.payload?.[0]?.products?.map((i) => ({
-        ...i,
-        countOld: i.count_kg,
-      }));
+    ////////////// getListInvoiceProduction
+    builder.addCase(getListInvoiceProduction.fulfilled, (state, action) => {
+      state.preloaderPR = false;
       state.listProductionInvoice = action.payload;
     });
-    builder.addCase(getListProdProduction.rejected, (state, action) => {
+    builder.addCase(getListInvoiceProduction.rejected, (state, action) => {
       state.error = action.payload;
-      state.preloader = false;
+      state.listProductionInvoice = [];
+      state.preloaderPR = false;
     });
-    builder.addCase(getListProdProduction.pending, (state, action) => {
-      state.preloader = true;
+    builder.addCase(getListInvoiceProduction.pending, (state, action) => {
+      state.preloaderPR = true;
+    });
+
+    ////////////// getListProdsProduction
+    builder.addCase(getListProdsProduction.fulfilled, (state, action) => {
+      state.preloaderPR = false;
+      state.listProductionProds = action.payload;
+    });
+    builder.addCase(getListProdsProduction.rejected, (state, action) => {
+      state.error = action.payload;
+      state.listProductionProds = [];
+      state.preloaderPR = false;
+    });
+    builder.addCase(getListProdsProduction.pending, (state, action) => {
+      state.preloaderPR = true;
     });
 
     ///////////// getListLeftoversProduction
     builder.addCase(getListLeftoversProduction.fulfilled, (state, action) => {
-      state.preloader = false;
+      state.preloaderPR = false;
       state.listLeftoversProduction = action.payload;
     });
     builder.addCase(getListLeftoversProduction.rejected, (state, action) => {
       state.error = action.payload;
-      state.preloader = false;
+      state.preloaderPR = false;
     });
     builder.addCase(getListLeftoversProduction.pending, (state, action) => {
-      state.preloader = true;
+      state.preloaderPR = true;
     });
   },
 });
 
-export const { setListProduction, changeCountProduction, setActiveDate } =
-  productionSlice.actions;
+export const {} = productionSlice.actions;
 
 export default productionSlice.reducer;

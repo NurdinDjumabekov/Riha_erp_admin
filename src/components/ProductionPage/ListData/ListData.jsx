@@ -9,13 +9,15 @@ import { Table, TableBody, TableCell, Tooltip } from "@mui/material";
 import { TableContainer, TableHead } from "@mui/material";
 import { TableRow, Paper } from "@mui/material";
 import LeftoversProduction from "../LeftoversProduction/LeftoversProduction";
+import DatePicker from "react-datepicker";
 
 ////// fns
-import { changeCountProduction } from "../../../store/reducers/productionSlice";
-import { getListProdProduction } from "../../../store/reducers/productionSlice";
+import {
+  getListInvoiceProduction,
+  getListProdsProduction,
+} from "../../../store/reducers/productionSlice";
 import { sendInWareHomeFN } from "../../../store/reducers/productionSlice";
-import { setListProduction } from "../../../store/reducers/productionSlice";
-import { setInvoiceInfo } from "../../../store/reducers/mainSlice";
+import { activeDateDayFN } from "../../../store/reducers/standartStateSlice";
 
 ////// style
 import "./style.scss";
@@ -24,18 +26,22 @@ import "./style.scss";
 import { emptyCountCheck, validNums } from "../../../helpers/validations";
 import { myAlert } from "../../../helpers/MyAlert";
 import { roundingNum } from "../../../helpers/totals";
+import { ru } from "date-fns/locale";
+import { format, parse } from "date-fns";
 
 ////// icons
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import arrow from "../../../assets/icons/arrowMenu.svg";
+import EventIcon from "@mui/icons-material/EventNoteTwoTone";
 
 const ListData = () => {
   const dispatch = useDispatch();
 
   const [activeInvoice, setActiveInvoice] = useState({});
 
-  const { listTA, activeDate } = useSelector((state) => state.mainSlice);
-  const { listProduction, listProductionInvoice } = useSelector(
+  const { activeDateDay } = useSelector((state) => state.standartStateSlice);
+  const { listProductionInvoice, listProductionProds } = useSelector(
     (state) => state.productionSlice
   );
 
@@ -47,80 +53,105 @@ const ListData = () => {
       return;
     }
 
-    dispatch(changeCountProduction({ ...item, count_kg }));
     /////изменение ключа count в списке товаров производства
   };
 
   const clickInvoice = (item) => {
+    if (item?.invoice_guid == activeInvoice?.invoice_guid) return;
     setActiveInvoice(item);
-    const list = item?.products?.map((i) => ({ ...i, countOld: i?.count_kg }));
-    dispatch(setListProduction(list));
+    dispatch(getListProdsProduction(item));
   };
 
   const sendInWareHome = () => {
     //// отправить с производства на склад
-    if (emptyCountCheck(listProduction)) {
-      myAlert("Поля не должны быть пустыми или равны 0", "error");
-      return;
-    }
-
-    if (listProduction?.length == 0) {
-      myAlert("Список пустой!", "error");
-      return;
-    }
-
-    const products = listProduction?.map(
-      ({ product_guid, count_kg, price }) => {
-        return { product_guid, count: count_kg, workshop_price: price };
-      }
-    );
-
-    const data = { products, invoice_guid: activeInvoice?.invoice_guid };
-    dispatch(sendInWareHomeFN({ data, listTA, activeDate, setActiveInvoice }));
-    ///  отправка товаров на склад через функцию
-
-    if (listProductionInvoice?.length === 1) {
-      const obj = { guid: "", action: 0, listInvoice: [], setActiveInvoice };
-      dispatch(setInvoiceInfo(obj));
-      /// для закрытия модалки только когда отправляется послдений список
-    }
+    // const products = listProduction?.map(
+    //   ({ product_guid, count_kg, price }) => {
+    //     return { product_guid, count: count_kg, workshop_price: price };
+    //   }
+    // );
+    // const data = { products, invoice_guid: activeInvoice?.invoice_guid };
+    // dispatch(sendInWareHomeFN({ data, listTA, activeDate, setActiveInvoice }));
+    // ///  отправка товаров на склад через функцию
+    // if (listProductionInvoice?.length === 1) {
+    //   const obj = { guid: "", action: 0, listInvoice: [], setActiveInvoice };
+    //   dispatch(setInvoiceInfo(obj));
+    //   /// для закрытия модалки только когда отправляется послдений список
+    // }
   };
 
   useEffect(() => {
-    const obj = { date_from: "", date_to: "", setActiveInvoice };
-    dispatch(getListProdProduction(obj));
+    getStartData();
   }, []);
 
-  console.log(listProduction, "listProduction");
+  const getStartData = async () => {
+    const date_from = format(activeDateDay, "yyyy-MM-dd", { locale: ru });
+    const res = await dispatch(
+      getListInvoiceProduction({ date_from, setActiveInvoice })
+    ).unwrap();
+    if (!!res?.[0]?.invoice_guid) {
+      const send = { invoice_guid: res?.[0]?.invoice_guid };
+      dispatch(getListProdsProduction(send)).unwrap();
+    }
+  };
+
+  const onChangeDate = async (item) => {
+    ///// сортировка заявок по дате
+    const date_from = format(item, "yyyy-MM-dd", { locale: ru });
+    dispatch(activeDateDayFN(date_from));
+    dispatch(getListInvoiceProduction({ date_from, setActiveInvoice }));
+  };
 
   return (
     <div div className="productionData">
       <div className="productionData__inner">
-        <div className="invoices scroll_table_hover">
-          {listProductionInvoice?.length == 0 ? (
-            <div className="emptyDataInner">
-              <p>Список пустой</p>
-            </div>
-          ) : (
-            listProductionInvoice?.map((item) => (
-              <div
-                className="invoices__every"
-                onClick={() => clickInvoice(item)}
-              >
-                <div className="checkboxTable">
-                  <input
-                    type="checkbox"
-                    name="check"
-                    checked={item?.invoice_guid == activeInvoice?.invoice_guid}
-                  />
-                </div>
-                <div>
-                  <h6>Дата создания: {item?.date_from}</h6>
-                  <p>{item?.comment}</p>
-                </div>
+        <div className="invoices">
+          <div className="date inputSend">
+            <DatePicker
+              selected={parse(activeDateDay, "yyyy-MM-dd", new Date())}
+              onChange={onChangeDate}
+              yearDropdownItemNumber={100}
+              placeholderText="ДД.ММ.ГГГГ"
+              shouldCloseOnSelect={true}
+              scrollableYearDropdown
+              dateFormat="dd.MM.yyyy"
+              locale={ru}
+            />
+            <EventIcon />
+          </div>
+          <div className="invoices__inner scroll_table_hover">
+            {listProductionInvoice?.length == 0 ? (
+              <div className="emptyDataInner">
+                <p>Список пустой</p>
               </div>
-            ))
-          )}
+            ) : (
+              listProductionInvoice?.map((item) => (
+                <div
+                  className={`invoices__every ${
+                    item?.invoice_guid == activeInvoice?.invoice_guid
+                      ? "active"
+                      : ""
+                  }`}
+                  onClick={() => clickInvoice(item)}
+                >
+                  <div className="info">
+                    <div className="info__inner">
+                      <div>
+                        <h6>
+                          Дата создания: <b>{item?.date_from}</b>
+                        </h6>
+                        <div>
+                          <p>Накладная № {item?.codeid}</p>
+                        </div>
+                      </div>
+                      <div className="arrowRight">
+                        <img src={arrow} alt="" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
         <div className="mainList">
@@ -147,9 +178,9 @@ const ListData = () => {
                     <TableCell align="left" style={{ width: "12%" }}>
                       Вес (кг)
                     </TableCell>
-                    <TableCell align="left" style={{ width: "12%" }}>
+                    {/* <TableCell align="left" style={{ width: "12%" }}>
                       Разница (кг)
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell align="left" style={{ width: "18%" }}>
                       Дата начала изготовления
                     </TableCell>
@@ -159,7 +190,7 @@ const ListData = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {listProduction?.map((row, index) => (
+                  {listProductionProds?.map((row, index) => (
                     <TableRow key={row?.product_guid}>
                       <TableCell
                         component="th"
@@ -177,9 +208,9 @@ const ListData = () => {
                         {row?.product_name}
                       </TableCell>
                       <TableCell align="left" style={{ width: "12%" }}>
-                        {roundingNum(+row?.countOld)} кг
+                        {roundingNum(+row?.count_kg)} кг
                       </TableCell>
-                      <TableCell align="left" style={{ width: "12%" }}>
+                      {/* <TableCell align="left" style={{ width: "12%" }}>
                         <div className="countsBlock">
                           <input
                             type="text"
@@ -201,12 +232,12 @@ const ListData = () => {
                             )}
                           </div>
                         </div>
+                      </TableCell> */}
+                      <TableCell align="left" style={{ width: "18%" }}>
+                        {activeInvoice?.date_from || "..."}
                       </TableCell>
                       <TableCell align="left" style={{ width: "18%" }}>
-                        {activeInvoice?.date_from}
-                      </TableCell>
-                      <TableCell align="left" style={{ width: "18%" }}>
-                        {activeInvoice?.date_to}
+                        {activeInvoice?.date_to || "..."}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -214,7 +245,7 @@ const ListData = () => {
               </Table>
             </TableContainer>
           </div>
-          <LeftoversProduction />
+          {/* <LeftoversProduction /> */}
         </div>
       </div>
     </div>

@@ -31,6 +31,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import PeopleIcon from "@mui/icons-material/People";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 
 export const listMenu = [
   {
@@ -62,16 +63,22 @@ export const listMenu = [
     path: "/production",
     items: [
       {
+        label: "История производства",
+        icon: <ManageSearchIcon sx={{ color: "#0000008c" }} />,
+        iconActive: <ManageSearchIcon sx={{ color: "#1565c0" }} />,
+        path: `/production/main`,
+      },
+      {
         label: "Коптильщики",
         icon: <PeopleIcon sx={{ color: "#0000008c" }} />,
         iconActive: <PeopleIcon sx={{ color: "#1565c0" }} />,
         path: `/production/coptil`,
       },
       {
-        label: "История производства",
-        icon: <ManageSearchIcon sx={{ color: "#0000008c" }} />,
-        iconActive: <ManageSearchIcon sx={{ color: "#1565c0" }} />,
-        path: `/production/invoice`,
+        label: "Остатки",
+        icon: <ProductionQuantityLimitsIcon sx={{ color: "#0000008c" }} />,
+        iconActive: <ProductionQuantityLimitsIcon sx={{ color: "#1565c0" }} />,
+        path: `/production/leftovers`,
       },
     ],
   },

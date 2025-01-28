@@ -15,7 +15,7 @@ import DatePicker from "react-datepicker";
 import { objStatusOrdersMini } from "../../../helpers/objs";
 import { roundingNum } from "../../../helpers/totals";
 import { ru } from "date-fns/locale";
-import { format, parse } from "date-fns";
+import { addDays, format, parse } from "date-fns";
 
 ////// icons
 import EventIcon from "@mui/icons-material/EventNoteTwoTone";
@@ -46,7 +46,7 @@ const InfoProds = (props) => {
 
     const data = {
       date_from: format(item, "yyyy-MM-dd", { locale: ru }),
-      date_to: format(item, "yyyy-MM-dd", { locale: ru }),
+      date_to: format(addDays(item, 1), "yyyy-MM-dd", { locale: ru }),
     };
     const obj = { agents_guid: [activeAgent?.guid] };
     getInvoiceProds({ ...data, ...obj, history: 1 });

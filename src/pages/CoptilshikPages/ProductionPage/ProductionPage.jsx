@@ -2,18 +2,17 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 /////// fns
-import { clearSelects } from "../../store/reducers/selectsSlice";
-import { setListProduction } from "../../store/reducers/productionSlice";
+import { clearSelects } from "../../../store/reducers/selectsSlice";
 
 ////// components
-import ListData from "../../components/ProductionPage/ListData/ListData";
-import HistoryData from "../../components/ProductionPage/HistoryData/HistoryData";
+import ListData from "../../../components/ProductionPage/ListData/ListData";
+// import HistoryData from "../../../components/ProductionPage/HistoryData/HistoryData";
 
 ////// style
 import "./style.scss";
 
 ////// helpers
-import { menuProduction } from "../../helpers/LocalData";
+import { menuProduction } from "../../../helpers/LocalData";
 
 const ProductionPage = () => {
   const dispatch = useDispatch();
@@ -22,17 +21,17 @@ const ProductionPage = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(setListProduction([]));
       dispatch(clearSelects());
       //// при закрытии модалки очищаю списки
     };
   }, []);
 
-  const obj = { 1: <ListData />, 2: <HistoryData /> };
+  // const obj = { 1: <ListData />, 2: <HistoryData /> };
+  const obj = { 1: <ListData /> };
 
   return (
     <>
-      <div className="menuActions">
+      {/* <div className="menuActions">
         {menuProduction?.map((i) => (
           <button
             className={i?.id == active ? "active" : ""}
@@ -43,7 +42,7 @@ const ProductionPage = () => {
             <p>{i?.name}</p>
           </button>
         ))}
-      </div>
+      </div> */}
       <div className="productionPage">{obj?.[active]}</div>
     </>
   );

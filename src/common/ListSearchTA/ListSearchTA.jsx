@@ -10,9 +10,9 @@ import "./style.scss";
 
 ////// icons
 import arrow from "../../assets/icons/arrowMenu.svg";
-import { activeSearchAgentsFN } from "../../store/reducers/standartStateSlice";
 
 ////// fns
+import { activeSearchAgentsFN } from "../../store/reducers/standartStateSlice";
 
 ////// helpers
 
